@@ -1,6 +1,8 @@
 // Global Vars
 var spreadSheet = SpreadsheetApp.openById('1wClvPHRd4YSdvJrGlLBlBvd5JqhizFdhO6tWeHn1eUo');
 var sheet = spreadSheet.getSheetByName('data');
+var cal_id = 'q3qhk29ni908mhhrrvrha1lfq0@group.calendar.google.com'; // Dev
+//var cal_id = 'nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com'; // Live
 
 // Accessible Functions
 function Read() {
@@ -37,7 +39,7 @@ function createEvent(json) {
   
  	var object = JSON.parse(json);
 
- 	var calendar = CalendarApp.getCalendarById('q3qhk29ni908mhhrrvrha1lfq0@group.calendar.google.com');
+ 	var calendar = CalendarApp.getCalendarById(cal_id);
  	var event = calendar.createEvent(
  		object.group.groupName + " - " + object.group.groupType,
  		new Date(object.event_DATA.calEvent.calStart),
@@ -55,12 +57,36 @@ function createEvent(json) {
   
 }
 
+// Edit event
+function editEvent(json) {
+
+	var object = JSON.parse(json);
+
+	var calendar = CalendarApp.getCalendarById(cal_id);
+	var event = findEvent(calendar, object);
+	if (event !== false) { // event was found!
+		event.setTime(new Date(object.new_start), new Date(object.new_end));
+		var object = {
+			response: true
+		};
+		var json = JSON.stringify(object);
+		return json;
+	} else { // event wasn't found
+		var object = {
+			response: false
+		};
+		var json = JSON.stringify(object);
+		return json;
+	}
+
+}
+
 // Remove event
 function removeEvent(json) {
 
 	var object = JSON.parse(json);
 
-	var calendar = CalendarApp.getCalendarById('q3qhk29ni908mhhrrvrha1lfq0@group.calendar.google.com');
+	var calendar = CalendarApp.getCalendarById(cal_id);
 	var event = findEvent(calendar, object);
 	if (event !== false) { // event was found!
 		event.deleteEvent();

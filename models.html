@@ -55,7 +55,7 @@ app.Event = Backbone.Model.extend({
     notes: '',
     presenter: ''
   },
-  createCalendarEvent: function(date, startTime, endTime) {
+  createCalendarEvent: function(date, startTime, endTime, opts) {
 
   	var parseTime = function(input) { // time comes in XX:XX military, need to switch it to a string
 
@@ -90,11 +90,14 @@ app.Event = Backbone.Model.extend({
   		},
   		calStart: moment(date + ' ' + startTime),
   		calEnd: moment(date + ' ' + endTime),
-  		string: moment(date).format("ddd, MMM Do") + ' @ ' + parseTime(startTime) + ' - ' + parseTime(endTime),
-      eventID: ''
+  		string: moment(date).format("ddd, MMM Do") + ' @ ' + parseTime(startTime) + ' - ' + parseTime(endTime)
   	}
 
-    console.log(this.attributes);
+    if (!opts) {
+      object.eventID = '';
+    } else if (opts.keepEventId === true) {
+      object.eventID = this.attributes.calEvent.eventID;
+    }
 
   	return object;
 

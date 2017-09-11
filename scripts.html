@@ -90,7 +90,7 @@ function loadEventsForCalendar() {
 
 }
 
-function removeCalenarEvent_response(json) {
+function removeCalendarEvent_response(json) {
 
   var object = JSON.parse(json);
 
@@ -98,9 +98,25 @@ function removeCalenarEvent_response(json) {
     toastr.success('Event deleted', 'Alert');
   } else if (object.response === false) {
     toastr.error("Event not deleted from Google Calendar", 'Alert');
+  } else {
+    toastr.error('Something went wrong...', 'Alert');
   }
 
 }
+
+function editCalendarEvent_response(json) {
+
+  var object = JSON.parse(json);
+
+  if (object.response === true) {
+    toastr.success('Event updated', 'Alert');
+  } else if (object.response === false) {
+    toastr.error('Unable to update event on Google Calendar', 'Alert');
+  } else {
+    toastr.error('Something went wrong...', 'Alert');
+  }
+
+} 
 
 function updateGoogle() {
   

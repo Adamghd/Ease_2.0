@@ -254,7 +254,7 @@ app.GroupEventView = Backbone.View.extend({
 		}
 		var json = JSON.stringify(object);
 		// Remove google calendar event
-		google.script.run.withSuccessHandler(removeCalenarEvent_response)
+		google.script.run.withSuccessHandler(removeCalendarEvent_response)
 			.removeEvent(json);
 		// Delete model
 		app.eventList.remove(this.model);
@@ -298,7 +298,6 @@ app.GroupEventView = Backbone.View.extend({
 		// Send data to server
 		google.script.run.withSuccessHandler(bubble)
 			.createInvoice(json);
-
 	},
 	checkbox_invoiceSent: function(e) {
 		
@@ -334,12 +333,26 @@ app.GroupEventView = Backbone.View.extend({
 		var activity = $form.find('.activity').val();
 		var show = $form.find('.show').val();
 		var notes = $form.find('.notes').val();
+		// Create object to change google event
+		var object = {
+			new_start: moment(new_date + ' ' + new_startTime).format(),
+			new_end: moment(new_date + ' ' + new_endTime).format(),
+			start: this.model.attributes.calEvent.calStart,
+			end: this.model.attributes.calEvent.calEnd,
+			event_id: this.model.attributes.calEvent.eventID
+		};
+		var json = JSON.stringify(object);
+		google.script.run.withSuccessHandler(editCalendarEvent_response)
+			.editEvent(json);
+		// Create calEvent with internal method while keeping eventID
+		var calEvent = this.model.createCalendarEvent(new_date, new_startTime, new_endTime, {keepEventId:true});
 		this.model.set({
 			price: price,
 			presenter: presenter,
 			activity: activity,
 			show: show,
-			notes: notes
+			notes: notes,
+			calEvent: calEvent
 		});
 		app.appView.groupView();
 	},
@@ -438,7 +451,11 @@ app.AppView = Backbone.View.extend({
 	groupView: function() {
 		$('#event-view').html(' ');
 		$('#group-list').html(' ');
-		app.groupList.each(this.addGroup, this);
+		if ($('#searchVal').val() === '') { // nothing in search
+			app.groupList.each(this.addGroup, this);
+		} else {
+			this.search();
+		}
 	},
 	cal_showEventInfo: function(groupID, eventID) {
 		var model = new Backbone.Model()
