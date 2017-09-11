@@ -1,0 +1,105 @@
+<script type='text/javascript'>
+
+// Models
+
+// Group model
+app.Group = Backbone.Model.extend({
+  
+  defaults: {
+    id: '',
+    groupName: '',
+    groupType: '',
+    cellPhone: '',
+    workPhone: '',
+    email: '',
+    grade: 'None'
+  }
+  
+});
+
+// Event model
+app.Event = Backbone.Model.extend({
+  
+  defaults: {
+    id: '',
+    groupID: '',
+    show: '',
+    activity: '',
+    calEvent: {
+      date: {
+        raw: new Date(),
+        string: '',
+        iso: ''
+      },
+      startTime: {
+        raw: '',
+        string: ''
+      },
+      endTime: {
+        raw: '',
+        string: ''
+      },
+      calStart: '',
+      calEnd: '',
+      string: 'No Date Found',
+      calID: '',
+      eventID: ''
+    },
+    price: '',
+    tour: false,
+    invoiceSent: false,
+    printed: false,
+    checkReceived: false,
+    paidStatus: false,
+    finished: false,
+    notes: '',
+    presenter: ''
+  },
+  createCalendarEvent: function(date, startTime, endTime) {
+
+  	var parseTime = function(input) { // time comes in XX:XX military, need to switch it to a string
+
+  		var time = input.split(':');
+  		var hours = parseInt(time[0]);
+  		if (hours < 12) { // is am
+  			return hours + ":" + time[1] + " am";
+  		} else if (hours === 12) { // is noon
+  			return hours + ":" + time[1] + " pm";
+  		} else if (hours > 12) { // is pm
+  			hours = hours - 12;
+  			return hours + ":" + time[1] + " pm";
+  		}
+
+  	}
+
+  	var object = {
+
+  		calID: 'nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com',
+  		date: {
+  			raw: moment(date),
+  			iso: moment(date).format("YYYY-MM-DD"),
+  			string: moment(date).format("ddd, MMM Do YYYY")
+  		},
+  		startTime: {
+  			raw: startTime,
+  			string: parseTime(startTime)
+  		},
+  		endTime: {
+  			raw: endTime,
+  			string: parseTime(endTime)
+  		},
+  		calStart: moment(date + ' ' + startTime),
+  		calEnd: moment(date + ' ' + endTime),
+  		string: moment(date).format("ddd, MMM Do") + ' @ ' + parseTime(startTime) + ' - ' + parseTime(endTime),
+      eventID: ''
+  	}
+
+    console.log(this.attributes);
+
+  	return object;
+
+  }
+  
+});
+
+</script>

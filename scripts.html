@@ -1,0 +1,135 @@
+<script type='text/javascript'>
+
+// Get initial data from google
+google.script.run.withSuccessHandler(load)
+  .Read();
+
+google.script.run.withSuccessHandler(load_2)
+  .getJeansSchedule();
+
+// Scripts for EASE
+
+var app = {}; // Application namespace
+
+// ----------
+// Initializers
+// ----------
+
+function load(json) {
+
+  var object = JSON.parse(json);
+  var test_data = object;
+
+  // Instantiate collection
+  app.groupList = new app.GroupList(test_data.groups);
+
+  // Instantiate collection
+  app.eventList = new app.EventList(test_data.events);
+
+  // Create View
+  app.appView = new app.AppView();
+
+}
+
+// Second load from google
+var jeansSchedule;
+function load_2(json) {
+
+  jeansSchedule = JSON.parse(json);
+
+}
+
+// ----------
+// External Functions
+// ----------
+
+function bubble(json) {
+
+  var object = JSON.parse(json);
+
+  // Clear out modals
+  $('#modals').html(' ');
+
+  // Get template
+  var template = _.template($('#bubble-template').html());
+
+  // Push to modals
+  $('#modals').html(template);
+
+  // Add content
+  $('#bubble-landing').html(object.html);
+
+  // Show modal
+  $('#modals .modal').modal('show');
+
+  // Stop loading
+  stopLoading();
+
+
+}
+
+function loadEventsForCalendar() {
+
+  var events = [];
+  for (var i = 0; i < app.eventList.models.length; i++) {
+    
+    var event = app.eventList.models[i];
+    
+    var object = {
+      title: event.attributes.show,
+      start: moment(event.attributes.calEvent.calStart),
+      end: moment(event.attributes.calEvent.calEnd),
+      id: event.attributes.id,
+      groupID: event.attributes.groupID
+    }
+    events.push(object);
+    
+  }
+
+  return events;
+
+}
+
+function removeCalenarEvent_response(json) {
+
+  var object = JSON.parse(json);
+
+  if (object.response === true) {
+    toastr.success('Event deleted', 'Alert');
+  } else if (object.response === false) {
+    toastr.error("Event not deleted from Google Calendar", 'Alert');
+  }
+
+}
+
+function updateGoogle() {
+  
+  startLoading();
+
+  // Need to grab all Backbone data, properly formatted as JSON, and push to Google
+  var group_json = app.groupList.toJSON();
+  var event_json = app.eventList.toJSON();
+  var json = JSON.stringify({"groups":group_json,"events":event_json});
+  startLoading();
+  google.script.run.withSuccessHandler(updateGoogle_success)
+    .Write(json);
+  
+}
+
+function updateGoogle_success(res) {
+  
+  if (res === true) {
+    stopLoading();
+  }
+  
+}
+
+function startLoading() {
+  $('#loading').css('display', 'block');
+}
+
+function stopLoading() {
+  $('#loading').css('display', 'none');
+}
+
+</script>

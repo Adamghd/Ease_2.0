@@ -1,0 +1,430 @@
+  <script type='text/javascript'>
+
+  // Views
+
+  // Group list view
+
+  // Renders each group
+  app.GroupView = Backbone.View.extend({
+    
+    tagName: 'div',
+    template: _.template($('#group-template').html()),
+    editModalTemplate: _.template($('#group-edit-modal-template').html()),
+    newEventModalTemplate: _.template($('#group-newEvent-modal-template').html()),
+    initialize: function() {
+      this.model.on('change', this.changeRender, this);
+      this.model.on('destroy', this.remove, this); // remove: Convenience Backbone's function for removing the view from the DOM.
+    },
+    render: function() {
+      this.$el.html(this.template(this.model.toJSON()));
+      return this; // for chained calls
+    },
+    events: {
+      'click .notExpanded': 'expand',
+      'click .closeExpand': 'close',
+      'click .edit': 'edit',
+      'click .newEvent': 'newEvent',
+      'click .saveEdit': 'saveEdit',
+      'click .delete': 'destroy'
+    },
+    changeRender: function() { // this is where google push can be put
+      updateGoogle();
+      this.close();
+      this.render();
+      this.expand();
+    },
+    newEvent: function() {
+      this.$el.find('.modals').html(' '); // Clear modals
+      var view = new app.NewEventView({model: {event: new app.Event(), group: this.model}});
+      this.$el.find('.modals').html(view.render().el);
+      this.$el.find('.modals .modal').modal('show');
+    },
+    saveEdit: function() {
+      var $form = this.$el.find('.modals .modal');
+      var groupName = $form.find('.groupName').val();
+      var groupType = $form.find('.groupType').val();
+      var cellPhone = $form.find('.cellPhone').val();
+      var workPhone = $form.find('.workPhone').val();
+      var email = $form.find('.email').val();
+      this.model.set({
+        groupName: groupName,
+        groupType: groupType,
+        cellPhone: cellPhone,
+        workPhone: workPhone,
+        email: email
+      });
+      this.$el.find('.modals .modal').modal('hide');
+      $('body').removeClass('modal-open').css('padding-right', '0');
+    },
+    edit: function() {
+      this.$el.find('.modals').html(' '); // Clear modals
+      this.$el.find('.modals').html(this.editModalTemplate(this.model.toJSON()));
+      this.$el.find('.modals .modal').modal('show');
+    },
+    close: function() {
+      this.$el.removeClass('expanded');
+      this.$el.children().addClass('notExpanded');
+    },
+    expand: function() {
+      this.$el.children().removeClass('notExpanded');
+      var id = this.model.id;
+      var events = app.eventList.getID(id);
+      this.clearEvents();
+      if (events.length > 0) {
+        for (var i = 0; i < events.length; i++) {
+          this.addEvent(events[i]);
+        }
+      } else {
+        this.$el.find('.events-list').append('<br /><b>No events found</b>');
+      }
+      this.$el.addClass('expanded');
+    },
+    addEvent: function(event) {
+      var view = new app.GroupEventView({model: event});
+      this.$el.find('.events-list').append(view.render().el);
+    },
+    clearEvents: function() {
+      this.$el.find('.events-list').html('');
+    },
+    destroy: function() {
+      this.model.destroy();
+    }
+    
+  });
+
+  // New Event view
+  app.NewEventView = Backbone.View.extend({
+
+  	template: _.template($('#group-newEvent-modal-template').html()),
+  	tagName: 'div',
+  	render: function() {
+  		this.$el.html(this.template());
+  		this.createCalendar();
+  		return this;
+  	},
+  	createCalendar: function() {
+  	    // Grab events information
+  	    var events = loadEventsForCalendar();
+
+  	    // Calendar Logic
+  	    this.$el.find('.newEvent-calendar').fullCalendar({
+  	      eventSources: [
+  	        jeansSchedule,
+  	        events
+  	      ],
+  	      header: {
+  	        left: 'prev,next,today',
+  	        center: 'title',
+  	        right: 'month,agendaWeek,agendaDay'
+  	      }
+  	    });
+
+  	    this.$el.find('.newEvent-calendar-collapse').on('shown.bs.collapse', function () {
+  	        $('.newEvent-calendar').fullCalendar('today');
+  	    });    
+  	},
+  	events: {
+  		'click .saveNew': 'saveNewEvent'
+  	},
+  	saveNewEvent: function() {
+  		var $form = this.$el.find('.modal-body .container');
+  		// Get the information from the form
+  		var date = $form.find('.date').val();
+  		var startTime = $form.find('.startTime').val();
+  		var endTime = $form.find('.endTime').val();
+  		var price = $form.find('.price').val();
+  		var presenter = $form.find('.presenter').val();
+  		var activity = $form.find('.activity').val();
+  		var numofPeople = $form.find('.numOfPeople').val();
+  		var show = $form.find('.show').val();
+  		var notes = $form.find('.notes').val();
+  		// Create calendar entry
+  		var calEvent = this.model.event.createCalendarEvent(date, startTime, endTime);
+  		var object = {
+  			id: app.eventList.getNextID(),
+  			calEvent: calEvent,
+  			price: price,
+  			presenter: presenter,
+  			activity: activity,
+  			numOfPeople: numofPeople,
+  			show: show,
+  			notes: notes,
+        groupID: this.model.group.attributes.id
+  		};
+
+      // Create JSON
+  		var json = JSON.stringify({event_DATA:object, group:this.model.group.attributes});
+
+      // Show toast
+      toastr.info('Creating event', 'Alert');
+
+  		google.script.run.withSuccessHandler(this.saveNewEvent_success)
+  			.createEvent(json);
+  	},
+    saveNewEvent_success: function(json) {
+      var res = JSON.parse(json);
+      if (res.response === true) { // Calendar event created correctly
+
+        // Create the event model
+        var event = new app.Event(res.event_DATA);
+        
+        // Add the model to the collection
+        app.eventList.add(event);
+
+        // Update google
+        updateGoogle();
+
+        // Toast success
+        toastr.success('Created event!', 'Alert');
+
+
+        $('body').removeClass('modal-open').css('padding-right', '0');
+
+        // Refresh the main view
+        app.appView.groupView();
+
+      }
+    }
+
+  });
+
+  // Event view within group
+  app.GroupEventView = Backbone.View.extend({
+
+    template: _.template($('#group-event-template').html()),
+    editModalTemplate: _.template($('#group-event-modal-edit-template').html()),
+    initialize: function() {
+      this.model.on('change', this.changeRender, this);
+    },
+    render: function() {
+      this.$el.html(this.template(this.model.toJSON()));
+      return this; // for chained calls
+    },
+    changeRender: function() {
+      updateGoogle();
+      this.render();
+    },
+    events: {
+      'click .groupEventEdit': 'edit_event',
+      'click .groupEventEditSave': 'save_event',
+      'click .eventInvoice': 'createInvoice',
+      'change .invoiceSent_check': 'checkbox_invoiceSent',
+      'change .invoicePrinted_check': 'checkbox_invoicePrinted',
+      'click .eventDelete': 'delete_event'
+    },
+    delete_event: function() {
+      // Create object for Google
+      var object = {
+        event_id: this.model.attributes.calEvent.eventID,
+        start: this.model.attributes.calEvent.calStart,
+        end: this.model.attributes.calEvent.calEnd
+      }
+      var json = JSON.stringify(object);
+      // Remove google calendar event
+      google.script.run.withSuccessHandler(removeCalenarEvent_response)
+        .removeEvent(json);
+      // Delete model
+      app.eventList.remove(this.model);
+      // Update google
+      updateGoogle();
+      // Refresh appView
+      app.appView.groupView();
+    },
+    createInvoice: function() {
+
+      // Get the group from collection
+      var group = app.groupList.where({id:this.model.attributes.groupID})[0].attributes;
+
+      // Create accessible variable for event info
+      var event = this.model.attributes;
+
+      // Create the object necessary for google server
+      var object = {
+        name: group.groupName,
+        calEvent: event.calEvent.string,
+        group: group.groupType,
+        workPhone: group.workPhone,
+        cellPhone: group.cellPhone,
+        activity: event.activity,
+        show: event.show,
+        price: event.price,
+        numOfPeople: 0,
+        email: group.email,
+        grade: 0
+      };
+
+      // Create json to send to server
+      var json = JSON.stringify(object);
+
+      // Show toast
+      toastr.info("Creating Invoice", "Alert");
+
+      // Start loading
+      startLoading();
+
+      // Send data to server
+      google.script.run.withSuccessHandler(bubble)
+        .createInvoice(json);
+
+    },
+    checkbox_invoiceSent: function(e) {
+      
+    	if (this.model.attributes.invoiceSent === false) { // Isn't sent
+    		$(e.target).prop('checked', true);
+    		this.model.set({invoiceSent: true});
+    	} else { // Is sent
+    		$(e.target).prop('checked', false);
+    		this.model.set({invoiceSent: false});
+    	}
+
+    },
+    checkbox_invoicePrinted: function(e) {
+
+    	if (this.model.attributes.printed === false) { // Not printed
+    		$(e.target).prop('checked', true);
+    		this.model.set({printed: true});
+    	} else {
+    		$(e.target).prop('checked', false);
+    		this.model.set({printed: false});
+    	}
+
+    },
+    save_event: function() { // need to update this
+      this.$el.find('.eventModals .modal').modal('hide');
+      $('body').removeClass('modal-open').css('padding-right', '0');
+      var $form = this.$el.find('.eventModals .modal');
+      var new_date = $form.find('.date').val();
+      var new_startTime = $form.find('.startTime').val();
+      var new_endTime = $form.find('.endTime').val();
+      var price = $form.find('.price').val();
+      var presenter = $form.find('.presenter').val();
+      var activity = $form.find('.activity').val();
+      var show = $form.find('.show').val();
+      var notes = $form.find('.notes').val();
+      this.model.set({
+        price: price,
+        presenter: presenter,
+        activity: activity,
+        show: show,
+        notes: notes
+      });
+      app.appView.groupView();
+    },
+    edit_event: function() {
+      console.log(this.model.attributes);
+      this.$el.find('.eventModals').html(' '); // Clear out modals
+      this.$el.find('.eventModals').html(this.editModalTemplate(this.model.toJSON()));
+      this.$el.find('.eventModals .modal').modal('show');
+    }
+
+  });
+
+  // Event Calendar View
+  app.CalendarView = Backbone.View.extend({
+
+    template: _.template($('#event-calendar-template').html()),
+    render: function() {
+      this.$el.html(this.template());
+      return this; // for chained calls
+    }
+
+  });
+
+  app.CalendarViewInfo = Backbone.View.extend({
+
+    template: _.template($('#event-calendar-info-template').html()),
+    render: function() {
+      var json = {
+        "group": this.attributes.group[0].toJSON(),
+        "event": this.attributes.event[0].toJSON()
+      };
+      this.$el.html(this.template(json));
+      return this;
+    }
+    
+  });
+
+  // Primary view
+  app.AppView = Backbone.View.extend({
+    
+    el: '#main',
+    initialize: function() {
+      app.groupList.each(this.addGroup, this);
+    },
+    events: {
+      'keyup #searchVal': 'search',
+      'focusin #searchVal': 'search_large',
+      'focusout #searchVal': 'search_small',
+      'click #eventViewClick': 'eventView',
+      'click #groupViewClick': 'groupView'
+    },
+    eventView: function() {
+      $('#group-list').html(' ');
+      var view = new app.CalendarView();
+      $('#event-view').html(view.render().el);
+      
+      // Grab events information
+      var events = loadEventsForCalendar();
+
+      // Make proxy for view
+      var proxy = this;
+      
+      // Full Calendar init logic
+      $('#calendar').fullCalendar({
+        events: events,
+        eventClick: function(calEvent, jsEvent, view) {
+          proxy.cal_showEventInfo(calEvent.groupID, calEvent.id);
+        },
+        header: {
+          left: 'today prev,next',
+          center: 'title',
+          right: 'month, listMonth, listWeek, listDay'
+        },
+        buttonText: {
+          month: 'Month',
+          listMonth: 'Month list',
+          listWeek: 'Week list',
+          listDay: 'Day list'
+        }
+      });
+      
+    },
+    groupView: function() {
+      $('#event-view').html(' ');
+      $('#group-list').html(' ');
+      app.groupList.each(this.addGroup, this);
+    },
+    cal_showEventInfo: function(groupID, eventID) {
+      var model = new Backbone.Model()
+      model.set({group: app.groupList.where({id: groupID}), event: app.eventList.where({id: eventID})});
+      var view = new app.CalendarViewInfo(model);
+      $('#modals').html(view.render().el);
+      $('#modals .modal').modal('show');
+    },
+    search: function() {
+      var val = $('#searchVal').val().toLowerCase();
+      this.resetGroups(); // reset the group list
+      var output = [];
+      for (var i = 0; i < app.groupList.models.length; i++) {
+        if (app.groupList.models[i].attributes.groupName.toLowerCase().includes(val) || app.groupList.models[i].attributes.email.toLowerCase().includes(val)) {
+          this.addGroup(app.groupList.models[i]);
+        }
+      }
+    },
+    search_small: function() {
+      $('#searchVal').css('width', '146px');
+    },
+    search_large: function() {
+      $('#searchVal').css('width', '200px');
+    },
+    addGroup: function(group) {
+      var view = new app.GroupView({model: group});
+      $('#group-list').append(view.render().el);
+    },
+    resetGroups: function() { // reset the group list
+      $('#group-list').html('');
+    }
+    
+  });
+
+  </script>

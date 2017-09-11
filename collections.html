@@ -1,0 +1,48 @@
+<script type='text/javascript'>
+
+// Collections
+
+// Group list collection
+app.GroupList = Backbone.Collection.extend({
+  
+  model: app.Group
+  
+});
+
+// Event list collection
+app.EventList = Backbone.Collection.extend({
+  
+  model: app.Event,
+  initialize: function() {
+    this.sort();
+  },
+  comparator: function(event) {
+    return new Date(event.attributes.calEvent.calStart).getTime() * -1;
+  },
+  getID: function(id) {
+    var output = [];
+    for (var i = 0; i < this.models.length; i++) {
+      if (this.models[i].attributes.groupID === id) {
+        output.push(this.models[i]);
+      }
+    }
+    return output;
+  },
+  getNextID: function() {
+
+  	var id = 0;
+  	for (var i = 0; i < this.models.length; i++) {
+
+  		if (parseInt(this.models[i].attributes.id) > id) {
+  			id = this.models[i].attributes.id;
+  		}
+
+  	}
+  	++id;
+  	return id;
+
+  }
+  
+});
+
+</script>
