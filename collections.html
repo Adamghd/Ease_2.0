@@ -65,4 +65,30 @@ app.EventList = Backbone.Collection.extend({
   
 });
 
+// Transaction Collection
+app.TransactionList = Backbone.Collection.extend({
+  
+  model: app.TransactionModel,
+  initialize: function() {
+    this.sort();
+  },
+  comparator: function(transaction) { // sort ascending by date posted
+    return new Date(transaction.attributes.datePosted) * -1;
+  }
+  
+});
+
+// Payment Collection
+app.PaymentList = Backbone.Collection.extend({
+  
+  model: app.PaymentModel,
+  initialize: function() {
+    this.sort();
+  },
+  comparator: function(payment) { // sort ascending by date posted
+    return new Date(payment.attributes.datePosted) * -1;
+  }
+  
+});
+
 </script>
