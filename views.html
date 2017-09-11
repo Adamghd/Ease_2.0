@@ -386,6 +386,13 @@ app.CalendarViewInfo = Backbone.View.extend({
 		};
 		this.$el.html(this.template(json));
 		return this;
+	},
+	events: {
+		'click .cal_viewGroup': 'viewGroup'
+	},
+	viewGroup: function() {
+		$('#event-view').html(' '); // Clear out calendar
+		app.appView.viewOneGroup(this.attributes.group[0]);
 	}
 	
 });
@@ -483,6 +490,13 @@ app.AppView = Backbone.View.extend({
 	addGroup: function(group) {
 		var view = new app.GroupView({model: group});
 		$('#group-list').append(view.render().el);
+	},
+	viewOneGroup: function(group) {
+		$('.modal').modal('hide'); // hide modals
+		$('#group-list').html(' '); // clear all other groups
+		var view = new app.GroupView({model: group});
+		$('#group-list').html(view.render().el);
+		view.expand();
 	},
 	resetGroups: function() { // reset the group list
 		$('#group-list').html('');
