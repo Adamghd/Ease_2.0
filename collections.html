@@ -5,7 +5,27 @@
 // Group list collection
 app.GroupList = Backbone.Collection.extend({
   
-  model: app.Group
+  model: app.Group,
+  initialize: function() {
+    this.sort();
+  },
+  comparator: function(group) {
+    return group.attributes.groupName;
+  },
+  getNextID: function() {
+
+    var id = 0;
+    for (var i = 0; i < this.models.length; i++) {
+
+      if (parseInt(this.models[i].attributes.id) > id) {
+        id = this.models[i].attributes.id;
+      }
+
+    }
+    ++id;
+    return id;
+
+  }
   
 });
 

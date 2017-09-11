@@ -140,7 +140,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Create <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href='#'><i class="fa fa-user" aria-hidden="true"></i> Group</a></li>
+                  <li class='newGroup_click'><a href='#'><i class="fa fa-user" aria-hidden="true"></i> Group</a></li>
                   <li><a href='#'><i class="fa fa-plus-square" aria-hidden="true"></i> Transaction</a></li>
                 </ul>
               </li>
@@ -175,6 +175,50 @@
     </div>
     
     <!-- Templates -->
+
+    <script type='text/template' id='new-group-template'>
+
+      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">New Group</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Name</span>
+                  <input type='text' class='form-control groupName' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Type</span>
+                  <input type='text' class='form-control groupType' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Cell Phone</span>
+                  <input type='text' class='form-control cellPhone' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Work Phone</span>
+                  <input type='text' class='form-control workPhone' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Email</span>
+                  <input type='text' class='form-control email' />
+                </div>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary create_Group"><i class="fa fa-floppy-o" aria-hidden="true"></i> Create Group</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>      
+
+    </script>
+
     <script type='text/template' id='group-template'>
       <div class='view group notExpanded'>
       <div class='modals'></div>
