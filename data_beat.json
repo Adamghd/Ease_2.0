@@ -1,24 +1,6 @@
 {  
    "groups":[  
       {  
-         "id":"1",
-         "groupName":"Sam",
-         "groupType":"Birthday",
-         "cellPhone":"999-999-9999",
-         "workPhone":"999-999-9999",
-         "email":"test@test.test",
-         "grade":"N/A"
-      },
-      {  
-         "id":"4",
-         "groupName":"Heather Ryan ",
-         "groupType":"Youth Programs Coordinator ",
-         "cellPhone":"",
-         "workPhone":"414-768-6173",
-         "email":"h.ryan@ocfsd.or",
-         "grade":"Oak Creek Franklin Joint School District "
-      },
-      {  
          "id":"5",
          "groupName":"AstroBreak",
          "groupType":"Planetarium Event",
@@ -26,69 +8,6 @@
          "workPhone":"",
          "email":"",
          "grade":""
-      },
-      {  
-         "id":"6",
-         "groupName":"Friday Night Show Series ",
-         "groupType":"Planetarium Event",
-         "cellPhone":"",
-         "workPhone":"",
-         "email":"",
-         "grade":""
-      },
-      {  
-         "id":"7",
-         "groupName":"Jennifer Paasch",
-         "groupType":"School",
-         "cellPhone":"(414) 581-2974",
-         "workPhone":"(414) 447-0266",
-         "email":"jpaasch@shermanparklutheran.org",
-         "grade":"Sherman Park Lutheran School"
-      },
-      {  
-         "id":"8",
-         "groupName":"Melissa DuBois",
-         "groupType":"Birthday Party",
-         "cellPhone":"(414) 238-4585",
-         "workPhone":"",
-         "email":"msdubois@gmail.com",
-         "grade":""
-      },
-      {  
-         "id":"9",
-         "groupName":"Becky Moss",
-         "groupType":"Birthday Parties",
-         "cellPhone":"(608) 770-0883",
-         "workPhone":"",
-         "email":"Beckym.moss@gmail.com",
-         "grade":""
-      },
-      {  
-         "id":"10",
-         "groupName":"Stephanie Henderson",
-         "groupType":"Birthday Party",
-         "cellPhone":"(414) 379-4253",
-         "workPhone":"",
-         "email":"shenderson2209@yahoo.com",
-         "grade":""
-      },
-      {  
-         "id":"11",
-         "groupName":"Daryl Ransom",
-         "groupType":"Mobile Program",
-         "cellPhone":"",
-         "workPhone":"414-769-2244",
-         "email":"daryl.ransom@mcfls.org",
-         "grade":"Cudahy Family Library"
-      },
-      {  
-         "id":"12",
-         "groupName":"Heide Piehler",
-         "groupType":"Solar Eclipses Mobil Show",
-         "cellPhone":"",
-         "workPhone":"414-847-2670",
-         "email":"heide.piehler@mcfls.org",
-         "grade":"Shorewood Public Library"
       },
       {  
          "id":"13",
@@ -100,40 +19,13 @@
          "grade":"Hearts for Home"
       },
       {  
-         "id":"14",
-         "groupName":"Ricky Heldt",
-         "groupType":"class",
-         "cellPhone":"4148473242",
-         "workPhone":"4148473242",
-         "email":"rickyheldt@miad.edu",
-         "grade":"MIAD"
-      },
-      {  
-         "id":"15",
-         "groupName":"David Cecsarini",
-         "groupType":"Private",
-         "cellPhone":" 414-940-7780",
-         "workPhone":"414-278-7780 ",
-         "email":"cez@nextact.org",
-         "grade":"Next Act Theatre"
-      },
-      {  
-         "id":"16",
-         "groupName":"Sarah Lasanske",
-         "groupType":"Private Show",
-         "cellPhone":"(414) 975-4307",
-         "workPhone":"(414) 967-8198",
-         "email":"slasanske@jccmilwaukee.org",
-         "grade":"Jewish Community Center Chaverim "
-      },
-      {  
-         "id":"17",
-         "groupName":"Erin Bailey",
-         "groupType":"School Show",
-         "cellPhone":"(414) 745-6315",
-         "workPhone":"(414) 212-3200",
-         "email":"baileyem@milwaukee.k12.wi.us",
-         "grade":"Golda Meir School"
+         "id":"9",
+         "groupName":"Becky Moss",
+         "groupType":"Birthday Parties",
+         "cellPhone":"(608) 770-0883",
+         "workPhone":"",
+         "email":"Beckym.moss@gmail.com",
+         "grade":""
       },
       {  
          "id":"18",
@@ -145,49 +37,22 @@
          "grade":"Plymouth Church UCC"
       },
       {  
-         "id":"19",
-         "groupName":"Kim Leinweber",
-         "groupType":"School",
+         "id":"11",
+         "groupName":"Daryl Ransom",
+         "groupType":"Mobile Program",
          "cellPhone":"",
-         "workPhone":"2627522500",
-         "email":"prairieschool.com",
-         "grade":"The Prairie School"
+         "workPhone":"414-769-2244",
+         "email":"daryl.ransom@mcfls.org",
+         "grade":"Cudahy Family Library"
       },
       {  
-         "id":"20",
-         "groupName":"Sarah Vigeland",
-         "groupType":"students",
-         "cellPhone":"",
-         "workPhone":"",
-         "email":"vigeland@uwm.edu",
-         "grade":"Astronomy 103 "
-      },
-      {  
-         "id":"21",
-         "groupName":"LaQuetta Clipps",
-         "groupType":"School Group",
-         "cellPhone":"(414) 530-1696",
-         "workPhone":" (414) 264-3374",
-         "email":"divinedestinyschoolinc@gmail.com",
-         "grade":"Divine Destiny School"
-      },
-      {  
-         "id":"22",
-         "groupName":"Sarah Vigeland",
-         "groupType":"Students",
-         "cellPhone":"",
-         "workPhone":"",
-         "email":"vigeland@uwm.edu",
-         "grade":"Astronomy 103"
-      },
-      {  
-         "id":"23",
-         "groupName":"Moons and Myths",
-         "groupType":"",
-         "cellPhone":"",
-         "workPhone":"",
-         "email":"",
-         "grade":"Friday Night Show"
+         "id":"15",
+         "groupName":"David Cecsarini",
+         "groupType":"Private",
+         "cellPhone":" 414-940-7780",
+         "workPhone":"414-278-7780 ",
+         "email":"cez@nextact.org",
+         "grade":"Next Act Theatre"
       },
       {  
          "id":"24",
@@ -208,6 +73,177 @@
          "grade":""
       },
       {  
+         "id":"28",
+         "groupName":"Dora Del Toro",
+         "groupType":"School group",
+         "cellPhone":"248 4683",
+         "workPhone":"414-227 4468",
+         "email":"dora.deltoro@dpi.wi.gov",
+         "grade":"Vieau School GEAR-UP"
+      },
+      {  
+         "id":29,
+         "groupName":"Egyptian Program",
+         "groupType":"",
+         "cellPhone":"",
+         "workPhone":"",
+         "email":"",
+         "grade":"None"
+      },
+      {  
+         "id":"17",
+         "groupName":"Erin Bailey",
+         "groupType":"School Show",
+         "cellPhone":"(414) 745-6315",
+         "workPhone":"(414) 212-3200",
+         "email":"baileyem@milwaukee.k12.wi.us",
+         "grade":"Golda Meir School"
+      },
+      {  
+         "id":"6",
+         "groupName":"Friday Night Show Series ",
+         "groupType":"Planetarium Event",
+         "cellPhone":"",
+         "workPhone":"",
+         "email":"",
+         "grade":""
+      },
+      {  
+         "id":"4",
+         "groupName":"Heather Ryan ",
+         "groupType":"Youth Programs Coordinator ",
+         "cellPhone":"",
+         "workPhone":"414-768-6173",
+         "email":"h.ryan@ocfsd.or",
+         "grade":"Oak Creek Franklin Joint School District "
+      },
+      {  
+         "id":"12",
+         "groupName":"Heide Piehler",
+         "groupType":"Solar Eclipses Mobil Show",
+         "cellPhone":"",
+         "workPhone":"414-847-2670",
+         "email":"heide.piehler@mcfls.org",
+         "grade":"Shorewood Public Library"
+      },
+      {  
+         "id":"3",
+         "groupName":"Hobbes",
+         "groupType":"School",
+         "cellPhone":"777-777-7777",
+         "workPhone":"777-777-7777",
+         "email":"hobbes@a.b",
+         "grade":"Calvin Elementary"
+      },
+      {  
+         "id":"7",
+         "groupName":"Jennifer Paasch",
+         "groupType":"School",
+         "cellPhone":"(414) 581-2974",
+         "workPhone":"(414) 447-0266",
+         "email":"jpaasch@shermanparklutheran.org",
+         "grade":"Sherman Park Lutheran School"
+      },
+      {  
+         "id":"19",
+         "groupName":"Kim Leinweber",
+         "groupType":"School",
+         "cellPhone":"",
+         "workPhone":"2627522500",
+         "email":"prairieschool.com",
+         "grade":"The Prairie School"
+      },
+      {  
+         "id":"21",
+         "groupName":"LaQuetta Clipps",
+         "groupType":"School Group",
+         "cellPhone":"(414) 530-1696",
+         "workPhone":" (414) 264-3374",
+         "email":"divinedestinyschoolinc@gmail.com",
+         "grade":"Divine Destiny School"
+      },
+      {  
+         "id":"27",
+         "groupName":"Matthew Gutierrez",
+         "groupType":"School show",
+         "cellPhone":"414.718.5328",
+         "workPhone":"202-1132",
+         "email":"gutiermj@milwaukee.k12.wi.us",
+         "grade":"Rogers Street Academy"
+      },
+      {  
+         "id":"8",
+         "groupName":"Melissa DuBois",
+         "groupType":"Birthday Party",
+         "cellPhone":"(414) 238-4585",
+         "workPhone":"",
+         "email":"msdubois@gmail.com",
+         "grade":""
+      },
+      {  
+         "id":"23",
+         "groupName":"Moons and Myths",
+         "groupType":"",
+         "cellPhone":"",
+         "workPhone":"",
+         "email":"",
+         "grade":"Friday Night Show"
+      },
+      {  
+         "id":"14",
+         "groupName":"Ricky Heldt",
+         "groupType":"class",
+         "cellPhone":"4148473242",
+         "workPhone":"4148473242",
+         "email":"rickyheldt@miad.edu",
+         "grade":"MIAD"
+      },
+      {  
+         "id":"1",
+         "groupName":"Sam Gallagher",
+         "groupType":"Birthday",
+         "cellPhone":"999-999-9999",
+         "workPhone":"999-999-9999",
+         "email":"test@test.test",
+         "grade":"N/A"
+      },
+      {  
+         "id":"16",
+         "groupName":"Sarah Lasanske",
+         "groupType":"Private Show",
+         "cellPhone":"(414) 975-4307",
+         "workPhone":"(414) 967-8198",
+         "email":"slasanske@jccmilwaukee.org",
+         "grade":"Jewish Community Center Chaverim "
+      },
+      {  
+         "id":"22",
+         "groupName":"Sarah Vigeland",
+         "groupType":"Students",
+         "cellPhone":"",
+         "workPhone":"",
+         "email":"vigeland@uwm.edu",
+         "grade":"Astronomy 103"
+      },
+      {  
+         "id":"20",
+         "groupName":"Sarah Vigeland (B)",
+         "groupType":"students",
+         "cellPhone":"",
+         "workPhone":"",
+         "email":"vigeland@uwm.edu",
+         "grade":"Astronomy 103 "
+      },
+      {  
+         "id":"10",
+         "groupName":"Stephanie Henderson",
+         "groupType":"Birthday Party",
+         "cellPhone":"(414) 379-4253",
+         "workPhone":"",
+         "email":"shenderson2209@yahoo.com",
+         "grade":""
+      },
+      {  
          "id":"26",
          "groupName":"Taino Project",
          "groupType":"",
@@ -215,6 +251,15 @@
          "workPhone":"",
          "email":"",
          "grade":""
+      },
+      {  
+         "id":"2",
+         "groupName":"Tony",
+         "groupType":"Private",
+         "cellPhone":"888-888-8888",
+         "workPhone":"888-888-8888",
+         "email":"tony@a.b",
+         "grade":"N/A"
       }
    ],
    "events":[  
@@ -244,12 +289,12 @@
             "eventID":"2a591qsmrbk7cvprckj1of649c@google.com"
          },
          "price":"60",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -279,12 +324,12 @@
             "eventID":"o9rfprt18800ej1nae5bvgum40@google.com"
          },
          "price":"60",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Jean"
       },
@@ -314,12 +359,12 @@
             "eventID":"gf0k72ml1eppemg2t3cgvda9u8@google.com"
          },
          "price":"40",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -349,12 +394,12 @@
             "eventID":"hju2700o6ou7dfa1f4436nsd6o@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"Part 2 of two shows",
          "presenter":""
       },
@@ -384,12 +429,12 @@
             "eventID":"b2q1q005i84nsjsd9j4bgdnrok@google.com"
          },
          "price":"120",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"Part one of two shows",
          "presenter":""
       },
@@ -419,6 +464,41 @@
             "eventID":"3qlrrrpbbb7kkm30944ae6i680@google.com"
          },
          "price":"150",
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
+         "notes":"",
+         "presenter":""
+      },
+      {  
+         "id":49,
+         "groupID":29,
+         "show":"Celestial Realm: The Ancient Egyptian Sky",
+         "activity":"",
+         "calEvent":{  
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "date":{  
+               "raw":"2017-11-29T06:00:00.000Z",
+               "iso":"2017-11-29",
+               "string":"Wed, Nov 29th 2017"
+            },
+            "startTime":{  
+               "raw":"19:00",
+               "string":"7:00 pm"
+            },
+            "endTime":{  
+               "raw":"20:00",
+               "string":"8:00 pm"
+            },
+            "calStart":"2017-11-30T01:00:00.000Z",
+            "calEnd":"2017-11-30T02:00:00.000Z",
+            "string":"Wed, Nov 29th @ 7:00 pm - 8:00 pm",
+            "eventID":"vh3oqah3rl9dcu119s6ff185qs@google.com"
+         },
+         "price":"",
          "tour":false,
          "invoiceSent":false,
          "printed":false,
@@ -426,7 +506,8 @@
          "paidStatus":false,
          "finished":false,
          "notes":"",
-         "presenter":""
+         "presenter":"",
+         "numOfPeople":""
       },
       {  
          "id":"34",
@@ -454,12 +535,12 @@
             "eventID":"nkdbkg1cqsu5d2d6nti8h49ick@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Danielle or Kristina"
       },
@@ -489,12 +570,12 @@
             "eventID":"1s1lk1k6c8nbencjdmbape5o24@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Danielle or Kristina"
       },
@@ -524,14 +605,84 @@
             "eventID":"d1rkfil5g5g9c2l7m5l6oclobk@google.com"
          },
          "price":"100",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"Adults with special needs",
          "presenter":"Jean"
+      },
+      {  
+         "id":"46",
+         "groupID":"27",
+         "show":"Solar system II",
+         "activity":"",
+         "calEvent":{  
+            "date":{  
+               "raw":"2017-10-31T05:00:00.000Z",
+               "string":"Tue Oct 31 2017",
+               "iso":"2017-10-31"
+            },
+            "startTime":{  
+               "raw":"09:30",
+               "string":"9:30am"
+            },
+            "endTime":{  
+               "raw":"10:15",
+               "string":"10:15am"
+            },
+            "calStart":"2017-10-31T14:30:00.000Z",
+            "calEnd":"2017-10-31T15:15:00.000Z",
+            "string":"10/31/2017 9:30am - 10:15am",
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "eventID":"9iogjibf0nrg63h0kcrkfvs67c@google.com"
+         },
+         "price":"40",
+         "tour":"true",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
+         "notes":"",
+         "presenter":"Jean Creighton"
+      },
+      {  
+         "id":"47",
+         "groupID":"28",
+         "show":"Solar System II",
+         "activity":"N/A",
+         "calEvent":{  
+            "date":{  
+               "raw":"2017-10-23T05:00:00.000Z",
+               "string":"Mon Oct 23 2017",
+               "iso":"2017-10-23"
+            },
+            "startTime":{  
+               "raw":"13:00",
+               "string":"1:00pm"
+            },
+            "endTime":{  
+               "raw":"13:45",
+               "string":"1:45pm"
+            },
+            "calStart":"2017-10-23T18:00:00.000Z",
+            "calEnd":"2017-10-23T18:45:00.000Z",
+            "string":"10/23/2017 1:00pm - 1:45pm",
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "eventID":"53cmmmivroafthmc3uvg308qik@google.com"
+         },
+         "price":"60",
+         "tour":"true",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
+         "notes":"",
+         "presenter":"Jean "
       },
       {  
          "id":"36",
@@ -561,12 +712,12 @@
             "string":"10/20/2017 10:00am - 11:00am"
          },
          "price":"60",
-         "tour":false,
-         "invoiceSent":true,
-         "printed":true,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"true",
+         "printed":"true",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -596,12 +747,12 @@
             "eventID":"hcma89fahnlf2nmnprlurmi1ag@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Shasvath or Debnandini or Shaon"
       },
@@ -631,12 +782,12 @@
             "eventID":"ifbb6l1597aqse4hjm8haaqa1k@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Shasvath or Debnandini or Shaon"
       },
@@ -646,33 +797,33 @@
          "show":"Doors Open",
          "activity":"",
          "calEvent":{  
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-09-24T05:00:00.000Z",
-               "string":"Sun Sep 24 2017",
-               "iso":"2017-09-24"
+               "iso":"2017-09-24",
+               "string":"Sun, Sep 24th 2017"
             },
             "startTime":{  
                "raw":"10:00",
-               "string":"10:00am"
+               "string":"10:00 am"
             },
             "endTime":{  
                "raw":"17:00",
-               "string":"5:00pm"
+               "string":"5:00 pm"
             },
             "calStart":"2017-09-24T15:00:00.000Z",
             "calEnd":"2017-09-24T22:00:00.000Z",
-            "string":"9/24/2017 10:00am - 5:00pm",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "string":"Sun, Sep 24th @ 10:00 am - 5:00 pm",
             "eventID":"kfeli58jq5p1duc1cd1f1fmtj4@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"",
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
+         "notes":"No invoice needed, free hosted event",
          "presenter":""
       },
       {  
@@ -681,33 +832,33 @@
          "show":"Doors Open",
          "activity":"",
          "calEvent":{  
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-09-23T05:00:00.000Z",
-               "string":"Sat Sep 23 2017",
-               "iso":"2017-09-23"
+               "iso":"2017-09-23",
+               "string":"Sat, Sep 23rd 2017"
             },
             "startTime":{  
                "raw":"10:00",
-               "string":"10:00am"
+               "string":"10:00 am"
             },
             "endTime":{  
                "raw":"17:00",
-               "string":"5:00pm"
+               "string":"5:00 pm"
             },
             "calStart":"2017-09-23T15:00:00.000Z",
             "calEnd":"2017-09-23T22:00:00.000Z",
-            "string":"9/23/2017 10:00am - 5:00pm",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "string":"Sat, Sep 23rd @ 10:00 am - 5:00 pm",
             "eventID":"dk0m688a0kor6bmunhb7ug6i3c@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"",
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
+         "notes":"No invoice needed, free hosted event",
          "presenter":""
       },
       {  
@@ -736,12 +887,12 @@
             "eventID":"qs58nsdipv7tkq8bkupk7ecrik@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Jean"
       },
@@ -771,12 +922,12 @@
             "eventID":"sp4ur89gtdv6845ngagj7t2i5o@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Jean"
       },
@@ -806,12 +957,12 @@
             "eventID":"tdr4049fm9jsh1rcmk6uqooh90@google.com"
          },
          "price":"350",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"There is 20/20 catering made directly. Program begins at 7. Guests mingle first.",
          "presenter":"Jean"
       },
@@ -821,32 +972,32 @@
          "show":"Astronomy 103",
          "activity":"",
          "calEvent":{  
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-09-13T05:00:00.000Z",
-               "string":"Wed Sep 13 2017",
-               "iso":"2017-09-13"
+               "iso":"2017-09-13",
+               "string":"Wed, Sep 13th 2017"
             },
             "startTime":{  
                "raw":"17:30",
-               "string":"5:30pm"
+               "string":"5:30 pm"
             },
             "endTime":{  
                "raw":"18:45",
-               "string":"6:45pm"
+               "string":"6:45 pm"
             },
             "calStart":"2017-09-13T22:30:00.000Z",
             "calEnd":"2017-09-13T23:45:00.000Z",
-            "string":"9/13/2017 5:30pm - 6:45pm",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "string":"Wed, Sep 13th @ 5:30 pm - 6:45 pm",
             "eventID":"k73n70mjl12q44kcv6er8m74rs@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Jean"
       },
@@ -878,50 +1029,14 @@
             "string":"9/13/2017 12:15pm - 12:45pm"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":"Joseph Swiggum or Sarah Vigeland"
-      },
-      {  
-         "id":51,
-         "groupID":"1",
-         "show":"asdf",
-         "activity":"asdf",
-         "calEvent":{  
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "date":{  
-               "raw":"2017-09-12T05:00:00.000Z",
-               "iso":"2017-09-12",
-               "string":"Tue, Sep 12th 2017"
-            },
-            "startTime":{  
-               "raw":"03:00",
-               "string":"3:00 am"
-            },
-            "endTime":{  
-               "raw":"05:00",
-               "string":"5:00 am"
-            },
-            "calStart":"2017-09-12T08:00:00.000Z",
-            "calEnd":"2017-09-12T10:00:00.000Z",
-            "string":"Tue, Sep 12th @ 3:00 am - 5:00 am",
-            "eventID":"rdllbrnuunb8h4f5u8lrl7s2io@google.com"
-         },
-         "price":"60",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"asdf",
-         "presenter":"asdf",
-         "numOfPeople":"60"
       },
       {  
          "id":"38",
@@ -929,178 +1044,34 @@
          "show":"Astronomy 103",
          "activity":"",
          "calEvent":{  
-            "date":{  
-               "raw":"2017-09-11T05:00:00.000Z",
-               "string":"Mon Sep 11 2017",
-               "iso":"2017-09-11"
-            },
-            "startTime":{  
-               "raw":"17:30",
-               "string":"5:30pm"
-            },
-            "endTime":{  
-               "raw":"18:45",
-               "string":"6:45pm"
-            },
-            "calStart":"2017-09-11T22:30:00.000Z",
-            "calEnd":"2017-09-11T23:45:00.000Z",
-            "string":"9/11/2017 5:30pm - 6:45pm",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "eventID":"lc05vejqms10s04d72hcd96ec0@google.com"
-         },
-         "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"constellations and seasons and galaxies",
-         "presenter":"Jean"
-      },
-      {  
-         "id":49,
-         "groupID":"1",
-         "show":"Solar System II",
-         "activity":"",
-         "calEvent":{  
             "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-09-11T05:00:00.000Z",
-               "iso":"2017-09-11T00:00:00-05:00",
+               "iso":"2017-09-11",
                "string":"Mon, Sep 11th 2017"
             },
             "startTime":{  
-               "raw":"10:30",
-               "string":"10:30 am"
-            },
-            "endTime":{  
-               "raw":"11:30",
-               "string":"11:30 am"
-            },
-            "calStart":"2017-09-11T15:30:00.000Z",
-            "calEnd":"2017-09-11T16:30:00.000Z",
-            "string":"Mon, Sep 11th @ 10:30 am - 11:30 am",
-            "eventID":"34417lnaslpth21c4ci5cslit0@google.com"
-         },
-         "price":"60",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"",
-         "presenter":"Jean",
-         "numOfPeople":"48"
-      },
-      {  
-         "id":48,
-         "groupID":"1",
-         "show":"Solar System II",
-         "activity":"Star Charts",
-         "calEvent":{  
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "date":{  
-               "raw":"2017-09-10T05:00:00.000Z",
-               "iso":"2017-09-10T00:00:00-05:00",
-               "string":"Sun, Sep 10th 2017"
-            },
-            "startTime":{  
-               "raw":"16:00",
-               "string":"4:00 pm"
-            },
-            "endTime":{  
                "raw":"17:30",
                "string":"5:30 pm"
             },
-            "calStart":"2017-09-10T21:00:00.000Z",
-            "calEnd":"2017-09-10T22:30:00.000Z",
-            "string":"Sun, Sep 10th @ 4:00 pm - 5:30 pm",
-            "eventID":"4e4tns7dcfmvsjr31upm0edvkk@google.com"
-         },
-         "price":"120",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"",
-         "presenter":"Elisabeth",
-         "numOfPeople":"32"
-      },
-      {  
-         "id":47,
-         "groupID":"1",
-         "show":"Northern Lights",
-         "activity":"Star Charts",
-         "calEvent":{  
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "date":{  
-               "raw":"2017-09-10T05:00:00.000Z",
-               "iso":"2017-09-10T00:00:00-05:00",
-               "string":"Sun, Sep 10th 2017"
-            },
-            "startTime":{  
-               "raw":"13:00",
-               "string":"1:00 pm"
-            },
             "endTime":{  
-               "raw":"15:30",
-               "string":"3:30 pm"
+               "raw":"18:45",
+               "string":"6:45 pm"
             },
-            "calStart":"2017-09-10T18:00:00.000Z",
-            "calEnd":"2017-09-10T20:30:00.000Z",
-            "string":"Sun, Sep 10th @ 1:00 pm - 3:30 pm",
-            "eventID":"0bd7dlkaclmf8rd8iooqc9keso@google.com"
+            "calStart":"2017-09-11T22:30:00.000Z",
+            "calEnd":"2017-09-11T23:45:00.000Z",
+            "string":"Mon, Sep 11th @ 5:30 pm - 6:45 pm",
+            "eventID":"lc05vejqms10s04d72hcd96ec0@google.com"
          },
-         "price":"120",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"Small children",
-         "presenter":"Sam",
-         "numOfPeople":"32"
-      },
-      {  
-         "id":50,
-         "groupID":"1",
-         "show":"Journey to Jupiter",
-         "activity":"Telescopes",
-         "calEvent":{  
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "date":{  
-               "raw":"2017-09-09T05:00:00.000Z",
-               "iso":"2017-09-09T00:00:00-05:00",
-               "string":"Sat, Sep 9th 2017"
-            },
-            "startTime":{  
-               "raw":"19:30",
-               "string":"7:30 pm"
-            },
-            "endTime":{  
-               "raw":"20:30",
-               "string":"8:30 pm"
-            },
-            "calStart":"2017-09-10T00:30:00.000Z",
-            "calEnd":"2017-09-10T01:30:00.000Z",
-            "string":"Sat, Sep 9th @ 7:30 pm - 8:30 pm",
-            "eventID":"2pi94joa9r9g8or9ab1v8aaeh4@google.com"
-         },
-         "price":"180",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"Special show",
-         "presenter":"Sam",
-         "numOfPeople":"12"
+         "price":"0",
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
+         "notes":"constellations and seasons and galaxies",
+         "presenter":"Jean"
       },
       {  
          "id":"17",
@@ -1130,50 +1101,50 @@
             "string":"9/9/2017 11:00am - 12:00pm"
          },
          "price":"190",
-         "tour":false,
-         "invoiceSent":true,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"true",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
       {  
-         "id":46,
-         "groupID":"1",
-         "show":"asdf",
-         "activity":"asdf",
+         "id":48,
+         "groupID":"6",
+         "show":"Moons and Myths",
+         "activity":"",
          "calEvent":{  
             "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
-               "raw":"2017-09-09T05:00:00.000Z",
-               "iso":"2017-09-09T00:00:00-05:00",
-               "string":"Sat, Sep 9th 2017"
+               "raw":"2017-09-08T05:00:00.000Z",
+               "iso":"2017-09-08",
+               "string":"Fri, Sep 8th 2017"
             },
             "startTime":{  
-               "raw":"03:00",
-               "string":"3:00 am"
+               "raw":"19:00",
+               "string":"7:00 pm"
             },
             "endTime":{  
-               "raw":"05:00",
-               "string":"5:00 am"
+               "raw":"20:00",
+               "string":"8:00 pm"
             },
-            "calStart":"2017-09-09T08:00:00.000Z",
-            "calEnd":"2017-09-09T10:00:00.000Z",
-            "string":"Sat, Sep 9th @ 3:00 am - 5:00 am",
-            "eventID":"j94mve0euk06mad6nf6u9mj480@google.com"
+            "calStart":"2017-09-09T00:00:00.000Z",
+            "calEnd":"2017-09-09T01:00:00.000Z",
+            "string":"Fri, Sep 8th @ 7:00 pm - 8:00 pm",
+            "eventID":"bjvr38h789qi8mvfpunhf7kqac@google.com"
          },
-         "price":"60",
+         "price":"",
          "tour":false,
          "invoiceSent":false,
          "printed":false,
          "checkReceived":false,
          "paidStatus":false,
          "finished":false,
-         "notes":"asdf",
-         "presenter":"asdf",
-         "numOfPeople":"60"
+         "notes":"We need more moons and less myths!",
+         "presenter":"Jean/Elise",
+         "numOfPeople":""
       },
       {  
          "id":"29",
@@ -1201,12 +1172,12 @@
             "eventID":"fgn4a5uiqjter6jte91dvhoogk@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1236,12 +1207,12 @@
             "eventID":"h6ktbs78nujmp86qn26i3fpnt8@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"Jolien we are so lucky!",
          "presenter":""
       },
@@ -1271,12 +1242,12 @@
             "eventID":"m74o1i67cg9h9k8pl0oi58a2i8@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1306,12 +1277,12 @@
             "eventID":"68m684srfurjnaqi9ivofcfks4@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1341,12 +1312,12 @@
             "eventID":"idr7m1p8npldpedcno3l3654sg@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1376,12 +1347,12 @@
             "eventID":"8ucbrttnkp0smluvu8hmhvfgq4@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1413,12 +1384,12 @@
             "string":"8/15/2017 6:30pm - 7:45pm"
          },
          "price":"180",
-         "tour":false,
-         "invoiceSent":true,
-         "printed":true,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"true",
+         "printed":"true",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1450,12 +1421,12 @@
             "string":"8/12/2017 1:00pm - 2:00pm"
          },
          "price":"190",
-         "tour":false,
-         "invoiceSent":true,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"true",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"Reserve Room",
          "presenter":""
       },
@@ -1485,12 +1456,12 @@
             "eventID":"42pqsruhfsil7faehv97ed68o4@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1522,12 +1493,12 @@
             "string":"8/8/2017 6:30pm - 8:00pm"
          },
          "price":"200",
-         "tour":false,
-         "invoiceSent":true,
-         "printed":true,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"true",
+         "printed":"true",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1557,12 +1528,12 @@
             "eventID":"i8u0f9pvjssv5htq430r2a8itk@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1592,12 +1563,12 @@
             "eventID":"9b7pbna85pdkibcbp3glpp79d0@google.com"
          },
          "price":"",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1607,32 +1578,32 @@
          "show":"Astronomy from the Outback: The Murchison Widefield Array (Speaker: David Kaplan)",
          "activity":"",
          "calEvent":{  
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-07-26T05:00:00.000Z",
-               "string":"Wed Jul 26 2017",
-               "iso":"2017-07-26"
+               "iso":"2017-07-26",
+               "string":"Wed, Jul 26th 2017"
             },
             "startTime":{  
                "raw":"12:15",
-               "string":"12:15pm"
+               "string":"12:15 pm"
             },
             "endTime":{  
                "raw":"12:45",
-               "string":"12:45pm"
+               "string":"12:45 pm"
             },
             "calStart":"2017-07-26T17:15:00.000Z",
             "calEnd":"2017-07-26T17:45:00.000Z",
-            "string":"7/26/2017 12:15pm - 12:45pm",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "string":"Wed, Jul 26th @ 12:15 pm - 12:45 pm",
             "eventID":"ik2lljj8eihiqt3mis9hv1pmuc@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1662,12 +1633,12 @@
             "eventID":"hp4f3rhna1a3imc91es93renes@google.com"
          },
          "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1699,12 +1670,12 @@
             "string":"7/18/2017 11:45am - 12:45pm"
          },
          "price":"300",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1734,86 +1705,12 @@
             "eventID":"2i88qqq31ch7pcvpsd9j3d8e98@google.com"
          },
          "price":"300",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"",
-         "presenter":""
-      },
-      {  
-         "id":"1",
-         "groupID":"1",
-         "show":"Solar System",
-         "activity":"Solar System to Scale",
-         "calEvent":{  
-            "calID":"idhere",
-            "eventID":"idhere",
-            "date":{  
-               "raw":"2017-06-14T05:00:00.000Z",
-               "string":"Wed Jun 14 2017",
-               "iso":"2017-06-14"
-            },
-            "startTime":{  
-               "raw":"10:00",
-               "string":"10:00am"
-            },
-            "endTime":{  
-               "raw":"11:00",
-               "string":"11:00am"
-            },
-            "calStart":"2017-07-14T15:00:00.000Z",
-            "calEnd":"2017-07-14T16:00:00.000Z",
-            "prevCalStart":"2017-07-15T15:00:00.000Z",
-            "prevCalEnd":"2017-07-15T16:00:00.000Z",
-            "string":"6/14/2017 @ 10:00am - 11:00am"
-         },
-         "price":"60",
-         "tour":true,
-         "invoiceSent":true,
-         "printed":false,
-         "checkReceived":true,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"",
-         "presenter":""
-      },
-      {  
-         "id":"2",
-         "groupID":"1",
-         "show":"Solar System",
-         "activity":"None",
-         "calEvent":{  
-            "calID":"q3qhk29ni908mhhrrvrha1lfq0@group.calendar.google.com",
-            "eventID":"fqfbf92li9jb279fjjqdtig1gg@google.com",
-            "date":{  
-               "raw":"2017-07-07T05:00:00.000Z",
-               "string":"Fri Jul 07 2017",
-               "iso":"2017-07-07"
-            },
-            "startTime":{  
-               "raw":"10:30",
-               "string":"10:30am"
-            },
-            "endTime":{  
-               "raw":"11:30",
-               "string":"11:30am"
-            },
-            "calStart":"2017-07-07T15:30:00.000Z",
-            "calEnd":"2017-07-07T16:30:00.000Z",
-            "prevCalStart":"2017-07-06T15:30:00.000Z",
-            "prevCalEnd":"2017-07-06T16:30:00.000Z",
-            "string":"7/7/2017 10:30am - 11:30am"
-         },
-         "price":"60",
-         "tour":false,
-         "invoiceSent":true,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
       },
@@ -1843,119 +1740,14 @@
             "eventID":"j0boee4n9ggpe2oqud4d9mm1p4@google.com"
          },
          "price":"$60",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
+         "tour":"false",
+         "invoiceSent":"false",
+         "printed":"false",
+         "checkReceived":"false",
+         "paidStatus":"false",
+         "finished":"false",
          "notes":"",
          "presenter":""
-      },
-      {  
-         "id":"23",
-         "groupID":"15",
-         "show":"Cepheid variables",
-         "activity":"",
-         "calEvent":{  
-            "date":{  
-               "raw":"2017-09-14T05:00:00.000Z",
-               "string":"Thu Sep 14 2017",
-               "iso":"2017-09-14"
-            },
-            "startTime":{  
-               "raw":"06:30 PM",
-               "string":"6:30 PMam"
-            },
-            "endTime":{  
-               "raw":"08:30 PM",
-               "string":"8:30 PMam"
-            },
-            "calStart":null,
-            "calEnd":null,
-            "string":"9/14/2017 6:30 PMam - 8:30 PMam",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "eventID":"eqlb0vrvlsm93m3d44l3p9hv2s@google.com"
-         },
-         "price":"$350",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"There is 20|20 catering that David arranged directly.  The actual program will begin at 7:00 pm. Guests can mingle first.",
-         "presenter":"Jean Creighton"
-      },
-      {  
-         "id":"35",
-         "groupID":"20",
-         "show":"Special Astronomy 103",
-         "activity":"",
-         "calEvent":{  
-            "date":{  
-               "raw":"2017-09-11T05:00:00.000Z",
-               "string":"Mon Sep 11 2017",
-               "iso":"2017-09-11"
-            },
-            "startTime":{  
-               "raw":"05:30:00PM",
-               "string":"5:30am"
-            },
-            "endTime":{  
-               "raw":"06:45:00PM",
-               "string":"6:45am"
-            },
-            "calStart":null,
-            "calEnd":null,
-            "string":"9/11/2017 5:30am - 6:45am",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "eventID":"tpolbd3t2sb0de7t1iq9iul7dg@google.com"
-         },
-         "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"2 shows: circumpolar and seasonal constellations",
-         "presenter":"Jean Creighton"
-      },
-      {  
-         "id":"37",
-         "groupID":"22",
-         "show":"General program for Astronomy 103",
-         "activity":"",
-         "calEvent":{  
-            "date":{  
-               "raw":"2017-09-11T05:00:00.000Z",
-               "string":"Mon Sep 11 2017",
-               "iso":"2017-09-11"
-            },
-            "startTime":{  
-               "raw":"",
-               "string":"NaN:undefinedam"
-            },
-            "endTime":{  
-               "raw":"",
-               "string":"NaN:undefinedam"
-            },
-            "calStart":null,
-            "calEnd":null,
-            "string":"9/11/2017 NaN:undefinedam - NaN:undefinedam",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
-            "eventID":"r5l6qrontqbgbcr5brsrek3chs@google.com"
-         },
-         "price":"0",
-         "tour":false,
-         "invoiceSent":false,
-         "printed":false,
-         "checkReceived":false,
-         "paidStatus":false,
-         "finished":false,
-         "notes":"constellations, seasons, daily motion, galaxies",
-         "presenter":"Jean Creighton"
       }
    ]
 }
