@@ -26,6 +26,20 @@ function load(json) {
   // Instantiate collection
   app.eventList = new app.EventList(test_data.events);
 
+  // Instantiate transaction collection
+  app.transactionList = new app.TransactionList(test_data.transactions);
+
+  // Instantiate payment collection
+  app.paymentList = new app.PaymentList(test_data.payments);
+
+  // Set correct dates for transactions and payments
+  var setDates = function(model) {
+    model.setDates();
+  };
+
+  _.each(app.transactionList.models, setDates);
+  _.each(app.paymentList.models, setDates);
+
   // Create View
   app.appView = new app.AppView();
 
