@@ -10,6 +10,15 @@
          "grade":""
       },
       {  
+         "id":30,
+         "groupName":"Astronomy Club",
+         "groupType":"Private group",
+         "cellPhone":"",
+         "workPhone":"",
+         "email":"erbd@uwm.edu",
+         "grade":"None"
+      },
+      {  
          "id":"13",
          "groupName":"Becky Bohhne",
          "groupType":"Homeschool",
@@ -515,23 +524,23 @@
          "show":"Future Frontiers in Astoromy",
          "activity":"",
          "calEvent":{  
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-11-08T06:00:00.000Z",
-               "string":"Wed Nov 08 2017",
-               "iso":"2017-11-08"
+               "iso":"2017-11-08",
+               "string":"Wed, Nov 8th 2017"
             },
             "startTime":{  
                "raw":"12:15",
-               "string":"12:15pm"
+               "string":"12:15 pm"
             },
             "endTime":{  
                "raw":"12:45",
-               "string":"12:45pm"
+               "string":"12:45 pm"
             },
             "calStart":"2017-11-08T18:15:00.000Z",
             "calEnd":"2017-11-08T18:45:00.000Z",
-            "string":"11/8/2017 12:15pm - 12:45pm",
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "string":"Wed, Nov 8th @ 12:15 pm - 12:45 pm",
             "eventID":"nkdbkg1cqsu5d2d6nti8h49ick@google.com"
          },
          "price":"0",
@@ -757,6 +766,42 @@
          "presenter":"Shasvath or Debnandini or Shaon"
       },
       {  
+         "id":50,
+         "groupID":30,
+         "show":"Moons and Myths",
+         "activity":"",
+         "calEvent":{  
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
+            "date":{  
+               "raw":"2017-10-02T05:00:00.000Z",
+               "iso":"2017-10-02",
+               "string":"Mon, Oct 2nd 2017"
+            },
+            "startTime":{  
+               "raw":"16:00",
+               "string":"4:00 pm"
+            },
+            "endTime":{  
+               "raw":"17:00",
+               "string":"5:00 pm"
+            },
+            "calStart":"2017-10-02T21:00:00.000Z",
+            "calEnd":"2017-10-02T22:00:00.000Z",
+            "string":"Mon, Oct 2nd @ 4:00 pm - 5:00 pm",
+            "eventID":"gotqemg4brfbtqjvacc41loqm0@google.com"
+         },
+         "price":"0",
+         "tour":false,
+         "invoiceSent":false,
+         "printed":false,
+         "checkReceived":false,
+         "paidStatus":false,
+         "finished":false,
+         "notes":"More moons and less myths...",
+         "presenter":"Jean",
+         "numOfPeople":""
+      },
+      {  
          "id":"31",
          "groupID":"5",
          "show":"More Things That Go Bump in the Night: LIGO Ushering in a New Era in Astrophysics",
@@ -972,23 +1017,23 @@
          "show":"Astronomy 103",
          "activity":"",
          "calEvent":{  
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-09-13T05:00:00.000Z",
-               "iso":"2017-09-13",
-               "string":"Wed, Sep 13th 2017"
+               "string":"Wed Sep 13 2017",
+               "iso":"2017-09-13"
             },
             "startTime":{  
                "raw":"17:30",
-               "string":"5:30 pm"
+               "string":"5:30pm"
             },
             "endTime":{  
                "raw":"18:45",
-               "string":"6:45 pm"
+               "string":"6:45pm"
             },
             "calStart":"2017-09-13T22:30:00.000Z",
             "calEnd":"2017-09-13T23:45:00.000Z",
-            "string":"Wed, Sep 13th @ 5:30 pm - 6:45 pm",
+            "string":"9/13/2017 5:30pm - 6:45pm",
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "eventID":"k73n70mjl12q44kcv6er8m74rs@google.com"
          },
          "price":"0",
@@ -1065,8 +1110,8 @@
          },
          "price":"0",
          "tour":"false",
-         "invoiceSent":"false",
-         "printed":"false",
+         "invoiceSent":false,
+         "printed":false,
          "checkReceived":"false",
          "paidStatus":"false",
          "finished":"false",
@@ -1578,23 +1623,23 @@
          "show":"Astronomy from the Outback: The Murchison Widefield Array (Speaker: David Kaplan)",
          "activity":"",
          "calEvent":{  
-            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "date":{  
                "raw":"2017-07-26T05:00:00.000Z",
-               "iso":"2017-07-26",
-               "string":"Wed, Jul 26th 2017"
+               "string":"Wed Jul 26 2017",
+               "iso":"2017-07-26"
             },
             "startTime":{  
                "raw":"12:15",
-               "string":"12:15 pm"
+               "string":"12:15pm"
             },
             "endTime":{  
                "raw":"12:45",
-               "string":"12:45 pm"
+               "string":"12:45pm"
             },
             "calStart":"2017-07-26T17:15:00.000Z",
             "calEnd":"2017-07-26T17:45:00.000Z",
-            "string":"Wed, Jul 26th @ 12:15 pm - 12:45 pm",
+            "string":"7/26/2017 12:15pm - 12:45pm",
+            "calID":"nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com",
             "eventID":"ik2lljj8eihiqt3mis9hv1pmuc@google.com"
          },
          "price":"0",
@@ -1748,6 +1793,28 @@
          "finished":"false",
          "notes":"",
          "presenter":""
+      }
+   ],
+   "transactions":[
+      {
+         "id": "1",
+         "amount": 60,
+         "datePosted": "20170912",
+         "notes": "Test",
+         "paid": false,
+         "datePaid": null,
+         "eventID": "27",
+         "groupID": "19"
+      }
+   ],
+   "payments": [
+      {
+         "id": "1",
+         "transactionID": "1",
+         "amount": "30",
+         "paymentType": "cash",
+         "datePosted": "20170912",
+         "datePaid": null
       }
    ]
 }

@@ -40,6 +40,10 @@ function load(json) {
   _.each(app.transactionList.models, setDates);
   _.each(app.paymentList.models, setDates);
 
+  // dev
+  _.each(app.transactionList.models, console.log);
+  _.each(app.paymentList.models, console.log);
+
   // Create View
   app.appView = new app.AppView();
 

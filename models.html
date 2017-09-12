@@ -105,8 +105,22 @@ app.Event = Backbone.Model.extend({
   
 });
 
+// General Money Model
+app.MoneyModel = Backbone.Model.extend({
+
+  setDates: function() {
+    if (this.attributes.datePosted !== '' && this.attributes.datePosted !== null) {
+      this.set({datePosted: moment(this.attributes.datePosted)});
+    }
+    if (this.attributes.datePaid !== '' && this.attributes.datePaid !== null) {
+      this.set({datePaid: moment(this.attributes.datePaid)});
+    }
+  }
+
+});
+
 // Transaction Model
-app.TransactionModel = Backbone.Model.extend({
+app.TransactionModel = app.MoneyModel.extend({
   
   defaults: {
     id: '', // int
@@ -117,20 +131,12 @@ app.TransactionModel = Backbone.Model.extend({
     datePaid: '', //moment raw
     eventID: '', // int if from event, null if not
     groupID: '' // int if from group, null if not
-  },
-  setDates: function() { // set actual date objects
-    if (this.datePosted !== '' && this.datePosted !== null) {
-      this.set({datePosted: moment(this.datePosted)});
-    }
-    if (this.datePaid !== '' && this.datePaid !== null) {
-      this.set({datePaid: moment(this.datePaid)});
-    }
   }
   
 });
 
 // Payment Model
-app.PaymentModel = Backbone.Model.extend({
+app.PaymentModel = app.MoneyModel.extend({
   
   defaults: {
     id: '', // int
@@ -139,14 +145,6 @@ app.PaymentModel = Backbone.Model.extend({
     paymentType: '', // string [from options] | need config model?
     datePaid: '', // moment raw
     datePosted: '' //moment raw
-  },
-  setDates: function() {
-    if (this.datePosted !== '' && this.datePosted !== null) {
-      this.set({datePosted: moment(this.datePosted)});
-    }
-    if (this.datePaid !== '' && this.datePaid !== null) {
-      this.set({datePaid: moment(this.datePaid)});
-    }
   }
   
 });
