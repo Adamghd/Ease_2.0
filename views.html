@@ -398,6 +398,45 @@ app.CalendarViewInfo = Backbone.View.extend({
 });
 
 // Transaction view
+app.TransactionItemView = Backbone.View.extend({
+
+	tagName: 'div',
+	template: _.template($('#transaction-view-template').html()),
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this; // for chained calls
+	},
+	initialize: function() {
+		// check if there is an event / group attached to transaction
+		if (this.model.attributes.eventID !== null) { // there is!
+			var event = app.eventList.where({id: this.model.attributes.eventID});
+			var group = app.groupList.where({id: this.model.attributes.groupID});
+			this.model.set({
+				event: event[0].attributes,
+				group: group[0].attributes
+			});
+		} else if (this.model.attributes.groupID !== null) { // there is a group associated, but no event
+			var group = app.groupList.where({id: this.model.attributes.groupID});
+			this.model.set({
+				group: group[0].attributes
+			});
+		}
+	},
+	events: {
+		'click .notExpanded': 'expand',
+		'click .closeExpand': 'close'
+	},
+	expand: function() {
+		this.$el.children().removeClass('notExpanded');
+		var id = this.model.id;
+		this.$el.addClass('expanded');
+	},
+	close: function() {
+		this.$el.removeClass('expanded');
+		this.$el.children().addClass('notExpanded');
+	}
+
+});
 
 // Primary view
 app.AppView = Backbone.View.extend({
@@ -412,6 +451,7 @@ app.AppView = Backbone.View.extend({
 		'focusout #searchVal': 'search_small',
 		'click #eventViewClick': 'eventView',
 		'click #groupViewClick': 'groupView',
+		'click #transactionViewClick': 'transactionView',
 		'click .newGroup_click': 'newGroup',
 		'click .create_Group': 'newGroup_save_CLOSE'
 	},
@@ -427,7 +467,7 @@ app.AppView = Backbone.View.extend({
 		$('#modals .modal').modal('show');
 	},
 	eventView: function() {
-		$('#group-list').html(' ');
+		this.clearAllContent(); // clear the screen
 		var view = new app.CalendarView();
 		$('#event-view').html(view.render().el);
 		
@@ -458,13 +498,20 @@ app.AppView = Backbone.View.extend({
 		
 	},
 	groupView: function() {
-		$('#event-view').html(' ');
-		$('#group-list').html(' ');
+		this.clearAllContent(); // clear the screen
 		if ($('#searchVal').val() === '') { // nothing in search
 			app.groupList.each(this.addGroup, this);
 		} else {
 			this.search();
 		}
+	},
+	transactionView: function() {
+		this.clearAllContent(); // clear the screen
+		app.transactionList.each(this.addTransaction, this);
+	},
+	addTransaction: function(transaction) {
+		var view = new app.TransactionItemView({model: transaction});
+		$('#transaction-view').append(view.render().el);
 	},
 	cal_showEventInfo: function(groupID, eventID) {
 		var model = new Backbone.Model()
@@ -475,7 +522,7 @@ app.AppView = Backbone.View.extend({
 	},
 	search: function() {
 		var val = $('#searchVal').val().toLowerCase();
-		this.resetGroups(); // reset the group list
+		this.clearAllContent(); // reset the group list
 		var output = [];
 		for (var i = 0; i < app.groupList.models.length; i++) {
 			if (app.groupList.models[i].attributes.groupName.toLowerCase().includes(val) || app.groupList.models[i].attributes.email.toLowerCase().includes(val)) {
@@ -502,6 +549,11 @@ app.AppView = Backbone.View.extend({
 	},
 	resetGroups: function() { // reset the group list
 		$('#group-list').html('');
+	},
+	clearAllContent: function() { // clear all content
+		$('#group-list').html(' ');
+		$('#event-view').html(' ');
+		$('#transaction-view').html(' ');
 	}
 	
 });

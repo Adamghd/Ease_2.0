@@ -143,7 +143,9 @@ function updateGoogle() {
   // Need to grab all Backbone data, properly formatted as JSON, and push to Google
   var group_json = app.groupList.toJSON();
   var event_json = app.eventList.toJSON();
-  var json = JSON.stringify({"groups":group_json,"events":event_json});
+  var transaction_json = app.transactionList.toJSON();
+  var payment_json = app.paymentList.toJSON();
+  var json = JSON.stringify({"groups":group_json,"events":event_json,"transactions":transaction_json,"payments":payment_json});
   startLoading();
   google.script.run.withSuccessHandler(updateGoogle_success)
     .Write(json);
