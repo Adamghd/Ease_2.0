@@ -15,7 +15,33 @@ var app = {}; // Application namespace
 // Initializers
 // ----------
 
+function refresh() { // to notify user and refresh application
+
+  // Alert user
+  setTimeout(function() {
+    toastr.options = {
+      "progressBar": true,
+      "timeOut": "20000",
+    };
+    toastr.warning("System will refresh in 20 seconds", "Alert");
+    toastr.options = {
+      "progressBar": false,
+      "timeOut": "5000"
+    }
+  }, 84000);
+
+  // Refresh Data
+  setTimeout(function() {
+    google.script.run.withSuccessHandler(load)
+      .Read();
+  }, 120000);
+
+}
+
 function load(json) {
+
+  // Refresh data timeout
+  refresh();
 
   var object = JSON.parse(json);
   var test_data = object;
