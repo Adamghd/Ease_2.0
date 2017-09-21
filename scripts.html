@@ -80,7 +80,7 @@ function load_3(json) {
 
   if (object.response === false) { // data has changed
 
-    // find_add algorithm
+    /* find_add algorithm attempt
     var find_add = function(collection, array) {
 
       for (var i = 0; i < array.length; i++) {
@@ -88,6 +88,7 @@ function load_3(json) {
         var bool = collection.findWhere({id: array[i].id});
         if (bool === undefined) { // isn't in collection
           collection.add(array[i]);
+          console.log(array[i]);
         }
 
       }
@@ -99,13 +100,41 @@ function load_3(json) {
     find_add(app.transactionList, object.ease.transactions); // Transactions
     find_add(app.paymentList, object.ease.payments); // Payments
 
+    */
+
+    // Rewrite collections
+    app.groupList = new app.GroupList(object.ease.groups);
+
+    // Instantiate collection
+    app.eventList = new app.EventList(object.ease.events);
+
+    // Instantiate transaction collection
+    app.transactionList = new app.TransactionList(object.ease.transactions);
+
+    // Instantiate payment collection
+    app.paymentList = new app.PaymentList(object.ease.payments);
+
+    // Set correct dates for transactions and payments
+    var setDates = function(model) {
+      model.setDates();
+    };
+
+    _.each(app.transactionList.models, setDates);
+    _.each(app.paymentList.models, setDates);
+
     time = object.time;
     console.log(time);
 
-    toastr.success('New data loaded', 'Alert');
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
+    toastr.options.onclick = function() { app.appView.groupView(); }
+    toastr.info('New data loaded, please click here to refresh.', 'Alert');
+
+    toastr.options.timeOut = 5000;
+    toastr.options.onclick = null;
 
   } else if (object.response === true) { // data hasn't changed
-
+    // Do nothing
   }
 
 }

@@ -89,7 +89,9 @@ function Write(json) {
 	} else if (object.time === server_time) { // is the same state as the client
 
 		writeData(json);
-		var response_json = response({response:true, time: object.time});
+		var client_time = new Date().getTime(); // Make new timestamp
+		config_sheet.getRange(5, 1).setValue(client_time);
+		var response_json = response({response:true, time: client_time});
 		return response_json;
 
 	} else if (object.time !== server_time) { // isn't the same state as the client
@@ -97,6 +99,7 @@ function Write(json) {
 		var new_json = merge(json, Read()); // Create a new json string from new + old data
 		writeData(new_json);
 		var client_time = new Date().getTime();
+		config_sheet.getRange(5, 1).setValue(client_time);
 		var response_json = response({response:true, time:client_time});
 		return response_json;
 
@@ -135,7 +138,6 @@ function writeData(json) {
 					temp = temp.substring(1, temp.length);
 				}
 				array.push(temp);
-				config_sheet.getRange(1, 5).setValue(i);
 			}
 			config_sheet.getRange(index, 1).setValue(i / 50000);
 			return array;
