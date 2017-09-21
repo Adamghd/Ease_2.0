@@ -243,7 +243,31 @@ app.GroupEventView = Backbone.View.extend({
 		'click .eventInvoice': 'createInvoice',
 		'change .invoiceSent_check': 'checkbox_invoiceSent',
 		'change .invoicePrinted_check': 'checkbox_invoicePrinted',
-		'click .eventDelete': 'delete_event'
+		'click .eventDelete': 'delete_event',
+		'click .viewTransaction_click': 'viewTransaction_click'
+	},
+	viewTransaction_click: function() {
+
+		// See if a transaction for this event exists
+		var transaction = app.transactionList.findWhere({eventID: this.model.attributes.id});
+		if (transaction === undefined) { // No transaction found, must create one
+			toastr.info('Creating transaction...', 'Alert');
+			transaction_object = { // Create transaction data
+				id: app.transactionList.getNextID(),
+				amount: this.model.attributes.price,
+				datePosted: moment(),
+				notes: '',
+				paid: false,
+				datePaid: null,
+				eventID: this.model.attributes.id,
+				groupID: this.model.attributes.groupID
+			};
+			app.transactionList.add(transaction_object);
+			transaction = app.transactionList.findWhere({eventID: this.model.attributes.id});
+		}
+		updateGoogle();
+		app.appView.singleTransactionView(transaction); // Display transaction
+
 	},
 	delete_event: function() {
 		// Create object for Google
@@ -256,6 +280,11 @@ app.GroupEventView = Backbone.View.extend({
 		// Remove google calendar event
 		google.script.run.withSuccessHandler(removeCalendarEvent_response)
 			.removeEvent(json);
+		// Remove any transaction associated with it
+		var transaction = app.transactionList.findWhere({eventID: this.model.attributes.id});
+		if (transaction !== undefined) {
+			app.transactionList.remove(transaction); // remove transaction if no payments posted
+		}
 		// Delete model
 		app.eventList.remove(this.model);
 		// Update google
@@ -512,6 +541,10 @@ app.AppView = Backbone.View.extend({
 	addTransaction: function(transaction) {
 		var view = new app.TransactionItemView({model: transaction});
 		$('#transaction-view').append(view.render().el);
+	},
+	singleTransactionView: function(transaction) {
+		this.clearAllContent(); // Clear the screen
+		this.addTransaction(transaction);
 	},
 	cal_showEventInfo: function(groupID, eventID) {
 		var model = new Backbone.Model()
