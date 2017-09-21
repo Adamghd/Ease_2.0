@@ -1,5 +1,8 @@
 <script type='text/javascript'>
 
+// Set timestamp for data state
+var time = null;
+
 // Get initial data from google
 google.script.run.withSuccessHandler(load)
   .Read();
@@ -15,35 +18,21 @@ var app = {}; // Application namespace
 // Initializers
 // ----------
 
-function refresh() { // to notify user and refresh application
+function refresh() {
 
-  // Alert user
   setTimeout(function() {
-    toastr.options = {
-      "progressBar": true,
-      "timeOut": "20000",
-    };
-    toastr.warning("System will refresh in 20 seconds", "Alert");
-    toastr.options = {
-      "progressBar": false,
-      "timeOut": "5000"
-    }
-  }, 84000);
-
-  // Refresh Data
-  setTimeout(function() {
-    google.script.run.withSuccessHandler(load)
-      .Read();
-  }, 120000);
+    google.script.run.withSuccessHandler(load_3)
+      .Read_2(time);
+  }, 5000); // Every 5 seconds
 
 }
 
 function load(json) {
 
-  // Refresh data timeout
   refresh();
 
   var object = JSON.parse(json);
+  console.log(object);
   var test_data = object;
 
   // Instantiate collection
@@ -66,12 +55,11 @@ function load(json) {
   _.each(app.transactionList.models, setDates);
   _.each(app.paymentList.models, setDates);
 
-  // dev
-  _.each(app.transactionList.models, console.log);
-  _.each(app.paymentList.models, console.log);
-
   // Create View
   app.appView = new app.AppView();
+
+  // Update Google with new time
+  updateGoogle();
 
 }
 
@@ -80,6 +68,45 @@ var jeansSchedule;
 function load_2(json) {
 
   jeansSchedule = JSON.parse(json);
+
+}
+
+// Refresh load
+function load_3(json) {
+
+  refresh();
+
+  var object = JSON.parse(json);
+
+  if (object.response === false) { // data has changed
+
+    // find_add algorithm
+    var find_add = function(collection, array) {
+
+      for (var i = 0; i < array.length; i++) {
+
+        var bool = collection.findWhere({id: array[i].id});
+        if (bool === undefined) { // isn't in collection
+          collection.add(array[i]);
+        }
+
+      }
+
+    }
+
+    find_add(app.groupList, object.ease.groups); // Groups
+    find_add(app.eventList, object.ease.events); // Events
+    find_add(app.transactionList, object.ease.transactions); // Transactions
+    find_add(app.paymentList, object.ease.payments); // Payments
+
+    time = object.time;
+    console.log(time);
+
+    toastr.success('New data loaded', 'Alert');
+
+  } else if (object.response === true) { // data hasn't changed
+
+  }
 
 }
 
@@ -163,24 +190,32 @@ function editCalendarEvent_response(json) {
 } 
 
 function updateGoogle() {
-  
-  startLoading();
 
   // Need to grab all Backbone data, properly formatted as JSON, and push to Google
   var group_json = app.groupList.toJSON();
   var event_json = app.eventList.toJSON();
   var transaction_json = app.transactionList.toJSON();
   var payment_json = app.paymentList.toJSON();
-  var json = JSON.stringify({"groups":group_json,"events":event_json,"transactions":transaction_json,"payments":payment_json});
+  var json = JSON.stringify({"groups":group_json,"events":event_json,"transactions":transaction_json,"payments":payment_json,"time":time});
   startLoading();
   google.script.run.withSuccessHandler(updateGoogle_success)
     .Write(json);
   
 }
 
-function updateGoogle_success(res) {
+function updateGoogle_success(json) {
   
-  if (res === true) {
+  var res = JSON.parse(json);
+  if (res.response === true) {
+    stopLoading();
+    time = res.time;
+    toastr.success("Data updated", "Alert");
+    console.log(res);
+  } else if (res.response === false) {
+    toastr.error("Something went wrong...", "Alert");
+    stopLoading();
+  } else {
+    toastr.error("Something REALLY went wrong... please refresh", "Alert");
     stopLoading();
   }
   
