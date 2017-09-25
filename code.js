@@ -15,7 +15,8 @@ function dev() {
 function dev_2() {
 
 	var json = Read();
-	sheet.getRange(7, 1).setValue(json);	
+	var object = JSON.parse(json);
+	Logger.log(json.length);
 
 }
 

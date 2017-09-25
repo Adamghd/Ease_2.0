@@ -280,10 +280,17 @@ app.GroupEventView = Backbone.View.extend({
 		// Remove google calendar event
 		google.script.run.withSuccessHandler(removeCalendarEvent_response)
 			.removeEvent(json);
-		// Remove any transaction associated with it
+		// Remove any transaction associated with it if not payments posted
 		var transaction = app.transactionList.findWhere({eventID: this.model.attributes.id});
-		if (transaction !== undefined) {
-			app.transactionList.remove(transaction); // remove transaction if no payments posted
+		if (transaction !== undefined) { // If there is a transaction present
+			var payments = app.paymentList.where({transactionID: transaction.attributes.id});
+			if (payments.length > 0) { // Payments exist in transaction
+				// Do nothing
+				toastr.info('Associated transaction has payments posted, skipping deletion.', 'Alert');
+			} else { // No payments exist in transaction
+				app.transactionList.remove(transaction); // Remove the transaction
+				toastr.info('Associated transaction deleted.', 'Alert');
+			}
 		}
 		// Delete model
 		app.eventList.remove(this.model);
