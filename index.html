@@ -198,8 +198,12 @@
             <div class="modal-body">
               <p>
                 <div class='input-group'>
-                  <span class='input-group-addon'>Name</span>
+                  <span class='input-group-addon'>Contact Name</span>
                   <input type='text' class='form-control groupName' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Group Name</span>
+                  <input type='text' class='form-control groupGroup' />
                 </div>
                 <div class='input-group'>
                   <span class='input-group-addon'>Type</span>
@@ -250,6 +254,9 @@
             <br />
             <div class='row'>
               <div class='col-md-3'>
+                <b>Group Name:</b> <%- groupGroup %>
+              </div>
+              <div class='col-md-3'>
                 <b>Group type:</b> <%- groupType %>
               </div>
               <div class='col-md-3'>
@@ -290,8 +297,12 @@
             <div class="modal-body">
               <p>
                 <div class='input-group'>
-                  <span class='input-group-addon'>Name</span>
+                  <span class='input-group-addon'>Contact Name</span>
                   <input type='text' class='form-control groupName' value='<%- groupName %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Group Name</span>
+                  <input type='text' class='form-control groupGroup' value='<%- groupGroup %>' />
                 </div>
                 <div class='input-group'>
                   <span class='input-group-addon'>Type</span>

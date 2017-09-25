@@ -26,22 +26,22 @@ function Read() {
 	// Groups
 	var groups_length = config_sheet.getRange(1, 1).getValue();
 	var groups_array = sheet.getRange(1, 1, 1, groups_length).getValues();
-	var groups_json = groups_array.join('');
+	var groups_json = groups_array[0].join('');
 
 	// Events
 	var events_length = config_sheet.getRange(2, 1).getValue();
 	var events_array = sheet.getRange(2, 1, 1, events_length).getValues();
-	var events_json = events_array.join('');
+	var events_json = events_array[0].join('');
 
 	// Transactions
 	var transactions_length = config_sheet.getRange(3, 1).getValue();
 	var transactions_array = sheet.getRange(3, 1, 1, transactions_length).getValues();
-	var transactions_json = transactions_array.join('');
+	var transactions_json = transactions_array[0].join('');
 
 	// Payments
 	var payments_length = config_sheet.getRange(4, 1).getValue();
 	var payments_array = sheet.getRange(4, 1, 1, payments_length).getValues();
-	var payments_json = payments_array.join('');
+	var payments_json = payments_array[0].join('');
 
 	// Create object
 	var object = {

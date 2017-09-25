@@ -16,6 +16,7 @@ app.NewGroupView = Backbone.View.extend({
 	newGroup_save: function() {
 		var $form = this.$el.find('.modal-body');
 		var groupName = $form.find('.groupName').val();
+		var groupGroup = $form.find('.groupGroup').val();
 		var groupType = $form.find('.groupType').val();
 		var cellPhone = $form.find('.cellPhone').val();
 		var workPhone = $form.find('.workPhone').val();
@@ -23,6 +24,7 @@ app.NewGroupView = Backbone.View.extend({
 		var id = app.groupList.getNextID();
 		var group = {
 			groupName: groupName,
+			groupGroup: groupGroup,
 			groupType: groupType,
 			cellPhone: cellPhone,
 			workPhone: workPhone,
@@ -75,12 +77,14 @@ app.GroupView = Backbone.View.extend({
 	saveEdit: function() {
 		var $form = this.$el.find('.modals .modal');
 		var groupName = $form.find('.groupName').val();
+		var groupGroup = $form.find('.groupGroup').val();
 		var groupType = $form.find('.groupType').val();
 		var cellPhone = $form.find('.cellPhone').val();
 		var workPhone = $form.find('.workPhone').val();
 		var email = $form.find('.email').val();
 		this.model.set({
 			groupName: groupName,
+			groupGroup: groupGroup,
 			groupType: groupType,
 			cellPhone: cellPhone,
 			workPhone: workPhone,
@@ -311,7 +315,7 @@ app.GroupEventView = Backbone.View.extend({
 		var object = {
 			name: group.groupName,
 			calEvent: event.calEvent.string,
-			group: group.groupType,
+			group: group.groupGroup,
 			workPhone: group.workPhone,
 			cellPhone: group.cellPhone,
 			activity: event.activity,
