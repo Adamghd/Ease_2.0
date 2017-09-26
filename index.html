@@ -32,6 +32,16 @@
         display: none;
         padding: 12px 7px 0 0;
       }
+      #dashboard-view {
+      }
+      #dashboard-view h1 {
+        width: 85%;
+        margin: auto;
+        background-color: #ffffff;
+        padding: 15px;
+        box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+        font-weight: bold;
+      }
       #event-view {
         width: 85%;
         margin: auto;
@@ -132,7 +142,7 @@
               <li class='dropdown'>
                 <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button'>View <span class='caret'></span></a>
                 <ul class='dropdown-menu'>
-                  <li><a href='#'><i class="fa fa-leaf" aria-hidden="true"></i> Dashboard</a></li>
+                  <li><a href='#' id='dashboardViewClick'><i class="fa fa-leaf" aria-hidden="true"></i> Dashboard</a></li>
                   <li><a href='#' id='groupViewClick'><i class="fa fa-users" aria-hidden="true"></i> Groups</a></li>
                   <li><a href='#' id='eventViewClick'><i class="fa fa-calendar" aria-hidden="true"></i> Calendar</a></li>
                   <li><a href='#' id='transactionViewClick'><i class="fa fa-table" aria-hidden="true"></i> Transactions</a></li>
@@ -169,6 +179,10 @@
       <div id='navSpacer'>
         
       </div>
+
+      <div id='dashboard-view'>
+
+      </div>
       
       <div id='group-list'>
         
@@ -185,6 +199,70 @@
     </div>
     
     <!-- Templates -->
+
+    <!-- Dashboard Template -->
+    <script type='text/template' id='dashboard-template'>
+
+      <h1>Upcoming Events</h1>
+      <div id='upcoming-events-landing'>
+      </div>
+
+    </script>
+
+    <script type='text/template' id='event-list-template'>
+
+      <div class='view group notExpanded'>
+      <div class='modals'></div>
+        <div class='min'>
+          <div class='name'>
+            <%- group.groupName %> - <%- event.calEvent.string %>
+          </div>
+          <div class='info'>
+            <%- group.groupType %> | <%- event.show %>
+          </div>
+        </div>
+        <div class='group-expanded'>
+          <div class='container' style='margin-left: 0'>
+            <div class='row'>
+              <div class='col-md-9'>
+                <h1><%- group.groupName %> - <%- event.calEvent.string %></h1>
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-3'>
+                <b>Group Name:</b> <%- group.groupGroup %>
+              </div>
+              <div class='col-md-3'>
+                <b>Group type:</b> <%- group.groupType %>
+              </div>
+              <div class='col-md-3'>
+                <b>Cell Phone:</b> <%- group.cellPhone %>
+              </div>
+              <div class='col-md-3'>
+                <b>Work Phone:</b> <%- group.workPhone %>
+              </div>
+              <div class='col-md-3'>
+                <b>Email:</b> <%- group.email %>
+              </div>
+              <div class='col-md-3'>
+                <b>Grade:</b> <%- group.grade %>
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-9'>
+                <button class='btn btn-primary edit' type='button'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button> <button class='btn btn-success newEvent' type='button'><i class="fa fa-plus" aria-hidden="true"></i> New Event</button> <button class='btn btn-danger delete' type='button'><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Group</button>
+              </div>
+            </div>
+          </div>
+          <br />
+          <hr />
+          <button class='btn btn-primary closeExpand' type='button'>Close</button>
+        </div>
+      </div>
+
+    </script>
 
     <script type='text/template' id='new-group-template'>
 
@@ -268,6 +346,9 @@
               <div class='col-md-3'>
                 <b>Email:</b> <%- email %>
               </div>
+              <div class='col-md-3'>
+                <b>Grade:</b> <%- grade %>
+              </div>
             </div>
             <br />
             <div class='row'>
@@ -319,6 +400,10 @@
                 <div class='input-group'>
                   <span class='input-group-addon'>Email</span>
                   <input type='text' class='form-control email' value='<%- email %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Grade</span>
+                  <input type='text' class='form-control grade' value='<%- grade %>' />
                 </div>
               </p>
             </div>

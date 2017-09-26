@@ -2,6 +2,58 @@
 
 // Views
 
+// Dashboard View
+app.DashboardView = Backbone.View.extend({
+
+	template: _.template($('#dashboard-template').html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.loadContent();
+		return this;
+	},
+	loadContent: function() { // Create appropriate content for the dashboard
+
+		// Upcoming Events
+		var upcoming_events = [];
+		var current_date = moment(); // Get current date
+		for (var i = 0; i < app.eventList.models.length; i++) { // Loop through events
+
+			var event_start = moment(app.eventList.models[i].attributes.calEvent.calStart);
+			if (event_start.isAfter(current_date)) { // if current date is before calendar start, event is in the future
+				upcoming_events.push(app.eventList.models[i]);
+			}
+
+		}
+
+		upcoming_events.reverse(); // Reverse the array for chronology
+
+		for (var j = 0; j < upcoming_events.length; j++) {
+			this.showEvent(upcoming_events[j]);
+		}
+
+	},
+	showEvent: function(event) {
+
+		var group = app.groupList.findWhere({id: event.attributes.groupID}); // Get the attached group
+		var view = new app.EventListView({model:{event:event.attributes,group:group.attributes}});
+		this.$el.find('#upcoming-events-landing').append(view.render().el);
+
+
+	}
+
+});
+
+// Event list view
+app.EventListView = Backbone.View.extend({
+
+	template: _.template($('#event-list-template').html()),
+	render: function() {
+		this.$el.html(this.template(this.model));
+		return this;
+	}
+
+});
+
 // New Group
 app.NewGroupView = Backbone.View.extend({
 
@@ -82,13 +134,15 @@ app.GroupView = Backbone.View.extend({
 		var cellPhone = $form.find('.cellPhone').val();
 		var workPhone = $form.find('.workPhone').val();
 		var email = $form.find('.email').val();
+		var grade = $form.find('.grade').val();
 		this.model.set({
 			groupName: groupName,
 			groupGroup: groupGroup,
 			groupType: groupType,
 			cellPhone: cellPhone,
 			workPhone: workPhone,
-			email: email
+			email: email,
+			grade: grade
 		});
 		this.$el.find('.modals .modal').modal('hide');
 		$('body').removeClass('modal-open').css('padding-right', '0');
@@ -323,7 +377,7 @@ app.GroupEventView = Backbone.View.extend({
 			price: event.price,
 			numOfPeople: 0,
 			email: group.email,
-			grade: 0
+			grade: group.grade
 		};
 
 		// Create json to send to server
@@ -489,11 +543,12 @@ app.AppView = Backbone.View.extend({
 		'keyup #searchVal': 'search',
 		'focusin #searchVal': 'search_large',
 		'focusout #searchVal': 'search_small',
+		'click #dashboardViewClick': 'dashboardView',
 		'click #eventViewClick': 'eventView',
 		'click #groupViewClick': 'groupView',
 		'click #transactionViewClick': 'transactionView',
 		'click .newGroup_click': 'newGroup',
-		'click .create_Group': 'newGroup_save_CLOSE'
+		'click .create_Group': 'newGroup_save_CLOSE' 
 	},
 	newGroup_save_CLOSE: function() {
 		$('#modals .modal').modal('hide');
@@ -505,6 +560,13 @@ app.AppView = Backbone.View.extend({
 		var view = new app.NewGroupView();
 		$('#modals').html(view.render().el);
 		$('#modals .modal').modal('show');
+	},
+	dashboardView: function() {
+
+		this.clearAllContent(); // Clear the screen
+		var view = new app.DashboardView();
+		$('#dashboard-view').html(view.render().el);
+
 	},
 	eventView: function() {
 		this.clearAllContent(); // clear the screen
@@ -595,6 +657,7 @@ app.AppView = Backbone.View.extend({
 		$('#group-list').html('');
 	},
 	clearAllContent: function() { // clear all content
+		$('#dashboard-view').html(' ');
 		$('#group-list').html(' ');
 		$('#event-view').html(' ');
 		$('#transaction-view').html(' ');
