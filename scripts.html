@@ -4,7 +4,9 @@
 var time = null;
 
 // Get initial data from google
-load();
+$(document).ready(function() {
+  load();
+});
 
 google.script.run.withSuccessHandler(load_2)
   .getJeansSchedule();
@@ -28,12 +30,16 @@ function load() {
 
   // Create Collections
   app.groupList = new app.GroupList();
+  app.eventList = new app.EventList();
+  app.transactionList = new app.TransactionList();
+  app.paymentList = new app.PaymentList();
 
   setTimeout(function() {
-    
+
+    console.log(app.groupList);
     app.appView = new app.AppView();
 
-  }, 250);
+  }, 1000);
 
 }
 

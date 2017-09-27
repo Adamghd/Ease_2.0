@@ -158,8 +158,21 @@ app.GroupView = Backbone.View.extend({
 	},
 	expand: function() {
 		this.$el.children().removeClass('notExpanded');
-		var id = this.model.id;
-		var events = app.eventList.getID(id);
+		var find = function(array, id) {
+
+			var output = [];
+			for (var i = 0; i < array.length; i++) {
+				if (array[i].attributes.groupID === id) {
+					output.push(array[i]);
+				}
+			}
+			return output;
+
+		}
+		var id = this.model.attributes._id;
+		console.log(id);
+		var events = app.eventList.where({groupID: id});
+		console.log(events);
 		this.clearEvents();
 		if (events.length > 0) {
 			for (var i = 0; i < events.length; i++) {
