@@ -4,15 +4,12 @@
 var time = null;
 
 // Get initial data from google
-google.script.run.withSuccessHandler(load)
-  .Read();
+load();
 
 google.script.run.withSuccessHandler(load_2)
   .getJeansSchedule();
 
 // Scripts for EASE
-
-var app = {}; // Application namespace
 
 // ----------
 // Initializers
@@ -27,24 +24,32 @@ function refresh() {
 
 }
 
-function load(json) {
+function load() {
 
-  refresh();
+  // Create Collections
+  app.groupList = new app.GroupList();
 
-  var object = JSON.parse(json);
-  var test_data = object;
+  setTimeout(function() {
+    
+    app.appView = new app.AppView();
+
+  }, 250);
+
+}
+
+function load_old() {
 
   // Instantiate collection
-  app.groupList = new app.GroupList(test_data.groups);
+  app.groupList = new app.GroupList();
 
   // Instantiate collection
-  app.eventList = new app.EventList(test_data.events);
+  app.eventList = new app.EventList();
 
   // Instantiate transaction collection
-  app.transactionList = new app.TransactionList(test_data.transactions);
+  app.transactionList = new app.TransactionList();
 
   // Instantiate payment collection
-  app.paymentList = new app.PaymentList(test_data.payments);
+  app.paymentList = new app.PaymentList();
 
   // Set correct dates for transactions and payments
   var setDates = function(model) {
@@ -58,7 +63,7 @@ function load(json) {
   app.appView = new app.AppView();
 
   // Update Google with new time
-  updateGoogle();
+  //updateGoogle();
 
 }
 

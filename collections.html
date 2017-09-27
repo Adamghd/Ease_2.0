@@ -3,9 +3,11 @@
 // Collections
 
 // Group list collection
-app.GroupList = Backbone.Collection.extend({
+app.GroupList = Backbone.Firebase.Collection.extend({
   
   model: app.Group,
+  url: 'https://ease-f60ed.firebaseio.com/groups/',
+  autoSync: true,
   initialize: function() {
     this.sort();
   },
@@ -30,9 +32,11 @@ app.GroupList = Backbone.Collection.extend({
 });
 
 // Event list collection
-app.EventList = Backbone.Collection.extend({
+app.EventList = Backbone.Firebase.Collection.extend({
   
   model: app.Event,
+  url: 'https://ease-f60ed.firebaseio.com/events/',
+  autoSync: true,
   initialize: function() {
     this.sort();
   },
@@ -66,9 +70,11 @@ app.EventList = Backbone.Collection.extend({
 });
 
 // Transaction Collection
-app.TransactionList = Backbone.Collection.extend({
+app.TransactionList = Backbone.Firebase.Collection.extend({
   
   model: app.TransactionModel,
+  url: 'https://ease-f60ed.firebaseio.com/transactions/',
+  autoSync: true,
   initialize: function() {
     this.sort();
   },
@@ -93,9 +99,11 @@ app.TransactionList = Backbone.Collection.extend({
 });
 
 // Payment Collection
-app.PaymentList = Backbone.Collection.extend({
+app.PaymentList = Backbone.Firebase.Collection.extend({
   
   model: app.PaymentModel,
+  url: 'https://ease-f60ed.firebaseio.com/payments/',
+  autoSync: true,
   initialize: function() {
     this.sort();
   },

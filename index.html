@@ -883,12 +883,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.0/fullcalendar.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+    <script src="https://cdn.firebase.com/js/client/2.0.3/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.js"></script>
     
     <!-- Custom Scripts -->
-    <?!= include('scripts'); ?>
+
+    <script type='text/javascript'>
+
+      var app = {};
+
+    </script>
+
     <?!= include('models'); ?>
     <?!= include('collections'); ?>
     <?!= include('views'); ?>
+    <?!= include('scripts'); ?>
     
   </body>
 </html>

@@ -99,7 +99,7 @@ app.GroupView = Backbone.View.extend({
 	editModalTemplate: _.template($('#group-edit-modal-template').html()),
 	newEventModalTemplate: _.template($('#group-newEvent-modal-template').html()),
 	initialize: function() {
-		this.model.on('change', this.changeRender, this);
+		this.listenTo(this.model, "change", this.render);
 		this.model.on('destroy', this.remove, this); // remove: Convenience Backbone's function for removing the view from the DOM.
 	},
 	render: function() {
@@ -537,7 +537,9 @@ app.AppView = Backbone.View.extend({
 	
 	el: '#main',
 	initialize: function() {
-		app.groupList.each(this.addGroup, this);
+
+		this.groupView();
+
 	},
 	events: {
 		'keyup #searchVal': 'search',
