@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ease</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.0/fullcalendar.min.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css' />
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        font-family: Arial;
+      }
+      body {
+        background-image: url('http://milwaukee-simplesolutions.com/ease/cloudy-day.png');
+      }
+      #nav {
+        width: 100%;
+        margin-bottom: 70px;
+      }
+      #navSpacer {
+        width: 100%:
+        height: 70px;
+      }
+      #main {
+        width: 100%;
+        margin-bottom: 50px;
+      }
+      #loading {
+        display: none;
+        padding: 12px 7px 0 0;
+      }
+      #dashboard-view {
+      }
+      #dashboard-view h1 {
+        width: 85%;
+        margin: auto;
+        background-color: #ffffff;
+        padding: 15px;
+        box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+        font-weight: bold;
+      }
+      #event-view {
+        width: 85%;
+        margin: auto;
+      }
+      #calendar {
+        padding: 15px;
+        background-color: #ffffff;
+        box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+      }
+      #searchVal {
+        transition: .5s all ease-in-out;
+        width: 146px;
+      }
+      div.group, div.transaction {
+        width: 85%;
+        margin: auto;
+        padding: 15px;
+        box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+        cursor: pointer;
+        background-color: #ffffff;
+        transition: .25s all ease-in-out;
+      }
+      div.group:hover, div.transaction:hover {
+        background-color: #f4f4f4;
+      }
+      .min .name {
+        font-size: 18px;
+        font-weight: bold;
+        padding-bottom: 3px;
+      }
+      .min .info {
+        padding-top: 3px;
+        border-top: 1px solid #f4f4f4;
+        font-style: italic;
+      }
+      .group-expanded, .transaction-expanded {
+        display: none;
+      }
+      .expanded {
+        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+      .expanded .group-expanded, .expanded .transaction-expanded {
+        display: block;
+      }
+      .expanded .min {
+        height: 0;
+        display: none;
+        padding-bottom: 15px;
+      }
+      .expanded .group, .expanded .transaction {
+        width: 90%;
+        cursor: default;
+        box-shadow: 0 0 5px 0 rgba(0,0,0,0.3);
+      }
+      .expanded div.group:hover, .expanded div.transaction:hover {
+        background-color: #ffffff;
+      }
+      .input-group {
+        margin-bottom: 5px;
+      }
+      .eventDescription .row {
+        margin-bottom: 8px;
+      }
+      .clear {
+        clear: both;
+      }
+      .fc-event-container {
+        cursor: pointer;
+      }
+    </style>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  </head>
+  <body>
+    
+    <!-- HTML -->
+    <div id='main'>
+      <div id='modals'>
+        
+      </div>
+      <div id='nav'>
+        <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Ease</a>
+          </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class='dropdown'>
+                <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button'>View <span class='caret'></span></a>
+                <ul class='dropdown-menu'>
+                  <li><a href='#' id='dashboardViewClick'><i class="fa fa-leaf" aria-hidden="true"></i> Dashboard</a></li>
+                  <li><a href='#' id='groupViewClick'><i class="fa fa-users" aria-hidden="true"></i> Groups</a></li>
+                  <li><a href='#' id='eventViewClick'><i class="fa fa-calendar" aria-hidden="true"></i> Calendar</a></li>
+                  <li><a href='#' id='transactionViewClick'><i class="fa fa-table" aria-hidden="true"></i> Transactions</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Create <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li class='newGroup_click'><a href='#'><i class="fa fa-user" aria-hidden="true"></i> Group</a></li>
+                  <li><a href='#'><i class="fa fa-plus-square" aria-hidden="true"></i> Transaction</a></li>
+                  <li><a href='#'><i class="fa fa-plus-square" aria-hidden="true"></i> Payment</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="navbar-form navbar-left">
+              <div class="form-group">
+                <div class='input-group'>
+                  <span class='input-group-addon'>Group Search</span>
+                  <input type='text' class='form-control cellPhone' id='searchVal' />
+                </div>
+              </div>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href='#'>V .5</a></li>
+              <li><div id='loading'><i class="fa fa-spinner fa-2x fa-pulse" aria-hidden="true"></i></div></li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+      </div>
+      
+      <div class='clear'></div>
+      
+      <div id='navSpacer'>
+        
+      </div>
+
+      <div id='dashboard-view'>
+
+      </div>
+      
+      <div id='group-list'>
+        
+      </div>
+      
+      <div id='event-view'>
+        
+      </div>
+
+      <div id='transaction-view'>
+
+      </div>
+      
+    </div>
+    
+    <!-- Templates -->
+
+    <!-- Dashboard Template -->
+    <script type='text/template' id='dashboard-template'>
+
+      <h1>Upcoming Events</h1>
+      <div id='upcoming-events-landing'>
+      </div>
+
+    </script>
+
+    <script type='text/template' id='event-list-template'>
+
+      <div class='view group notExpanded'>
+      <div class='modals'></div>
+        <div class='min'>
+          <div class='name'>
+            <%- group.groupName %> - <%- event.calEvent.string %>
+          </div>
+          <div class='info'>
+            <%- group.groupType %> | <%- event.show %>
+          </div>
+        </div>
+        <div class='group-expanded'>
+          <div class='container' style='margin-left: 0'>
+            <div class='row'>
+              <div class='col-md-9'>
+                <h1><%- group.groupName %> - <%- event.calEvent.string %></h1>
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-3'>
+                <b>Group Name:</b> <%- group.groupGroup %>
+              </div>
+              <div class='col-md-3'>
+                <b>Group type:</b> <%- group.groupType %>
+              </div>
+              <div class='col-md-3'>
+                <b>Cell Phone:</b> <%- group.cellPhone %>
+              </div>
+              <div class='col-md-3'>
+                <b>Work Phone:</b> <%- group.workPhone %>
+              </div>
+              <div class='col-md-3'>
+                <b>Email:</b> <%- group.email %>
+              </div>
+              <div class='col-md-3'>
+                <b>Grade:</b> <%- group.grade %>
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-9'>
+                <button class='btn btn-primary edit' type='button'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button> <button class='btn btn-success newEvent' type='button'><i class="fa fa-plus" aria-hidden="true"></i> New Event</button> <button class='btn btn-danger delete' type='button'><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Group</button>
+              </div>
+            </div>
+          </div>
+          <br />
+          <hr />
+          <button class='btn btn-primary closeExpand' type='button'>Close</button>
+        </div>
+      </div>
+
+    </script>
+
+    <script type='text/template' id='new-group-template'>
+
+      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">New Group</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Contact Name</span>
+                  <input type='text' class='form-control groupName' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Group Name</span>
+                  <input type='text' class='form-control groupGroup' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Type</span>
+                  <input type='text' class='form-control groupType' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Cell Phone</span>
+                  <input type='text' class='form-control cellPhone' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Work Phone</span>
+                  <input type='text' class='form-control workPhone' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Email</span>
+                  <input type='text' class='form-control email' />
+                </div>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary create_Group"><i class="fa fa-floppy-o" aria-hidden="true"></i> Create Group</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>      
+
+    </script>
+
+    <script type='text/template' id='group-template'>
+      <div class='view group notExpanded'>
+      <div class='modals'></div>
+        <div class='min'>
+          <div class='name'>
+            <%- groupName %>
+          </div>
+          <div class='info'>
+            <%- groupType %> | <%- email %>
+          </div>
+        </div>
+        <div class='group-expanded'>
+          <div class='container' style='margin-left: 0'>
+            <div class='row'>
+              <div class='col-md-9'>
+                <h1><%- groupName %></h1>
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-3'>
+                <b>Group Name:</b> <%- groupGroup %>
+              </div>
+              <div class='col-md-3'>
+                <b>Group type:</b> <%- groupType %>
+              </div>
+              <div class='col-md-3'>
+                <b>Cell Phone:</b> <%- cellPhone %>
+              </div>
+              <div class='col-md-3'>
+                <b>Work Phone:</b> <%- workPhone %>
+              </div>
+              <div class='col-md-3'>
+                <b>Email:</b> <%- email %>
+              </div>
+              <div class='col-md-3'>
+                <b>Grade:</b> <%- grade %>
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-9'>
+                <button class='btn btn-primary edit' type='button'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button> <button class='btn btn-success newEvent' type='button'><i class="fa fa-plus" aria-hidden="true"></i> New Event</button> <button class='btn btn-danger delete' type='button'><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Group</button>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class='events-list'>
+          </div>
+          <br />
+          <hr />
+          <button class='btn btn-primary closeExpand' type='button'>Close</button>
+        </div>
+      </div>
+    </script>
+    
+    <script type='text/template' id='group-edit-modal-template'>
+      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Group</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Contact Name</span>
+                  <input type='text' class='form-control groupName' value='<%- groupName %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Group Name</span>
+                  <input type='text' class='form-control groupGroup' value='<%- groupGroup %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Type</span>
+                  <input type='text' class='form-control groupType' value='<%- groupType %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Cell Phone</span>
+                  <input type='text' class='form-control cellPhone' value='<%- cellPhone %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Work Phone</span>
+                  <input type='text' class='form-control workPhone' value='<%- workPhone %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Email</span>
+                  <input type='text' class='form-control email' value='<%- email %>' />
+                </div>
+                <div class='input-group'>
+                  <span class='input-group-addon'>Grade</span>
+                  <input type='text' class='form-control grade' value='<%- grade %>' />
+                </div>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary saveEdit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save changes</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type='text/template' id='group-newEvent-modal-template'>
+      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">New Event</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <div class='container'>
+                  <div class='row'>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Date</span>
+                        <input type='date' class='form-control date' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Start Time</span>
+                        <input type='time' class='form-control startTime' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>End Time</span>
+                        <input type='time' class='form-control endTime' />
+                      </div>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Price</span>
+                        <input type='number' class='form-control price' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Presenter</span>
+                        <input type='text' class='form-control presenter' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Activity</span>
+                        <input type='text' class='form-control activity' />
+                      </div>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Num of People</span>
+                        <input type='number' class='form-control numOfPeople' />
+                      </div>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-9'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Show</span>
+                        <input type='text' class='form-control show' />
+                      </div>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-9'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Notes</span>
+                        <input type='text' class='form-control notes' />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class='container'>
+                  <div class='row'>
+                    <div class='col-md-4'>
+                      <button type='button' data-toggle="collapse" data-target=".newEvent-calendar-collapse" class='btn btn-primary'><i class="fa fa-calendar" aria-hidden="true"></i> View Calendar</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="collapse collapse newEvent-calendar-collapse">
+                  <br /><br />
+                  <div class='newEvent-calendar'></div>
+                </div>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success saveNew"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save event</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type='text/template' id='group-event-template'>
+      <div class='group-event'>
+        <div class='eventModals'></div>
+        <br />
+        <hr />
+        <br />
+        <div class='container eventDescription' style='margin-left: 0'>
+          <div class='row'>
+            <div class='col-md-9'>
+              <h2><%- calEvent.string %></h2>
+            </div>
+          </div>
+          <br />
+          <%if (tour === 'true') { %>
+            <div class='row'>
+              <div class='col-md-3'>
+                <div class='well'>
+                  <b>Tour Group</b>
+                </div>
+              </div>
+            </div>
+          <% } %>
+          <div class='row'>
+            <div class='col-md-3'>
+              <b>Show:</b> <%- show %>
+            </div>
+            <div class='col-md-3'>
+              <b>Price:</b> <%- price %>
+            </div>
+          </div>
+          <div class='row'>
+          <%if (activity !== '') { %>
+            <div class='col-md-3'>
+              <b>Activity:</b> <%- activity %>
+            </div>
+          <% } %>
+          <%if (presenter !== '') { %>
+            <div class='col-md-3'>
+              <b>Presenter:</b> <%- presenter %>
+            </div>
+          <% } %>
+          </div>
+          <%if (notes !== '') {%>
+            <div class='row'>
+              <div class='col-md-9'>
+                <b>Notes:</b> <%- notes %>
+              </div>
+            </div>
+          <% } %>
+          <div class='row'>
+            <div class='col-md-3'>
+              <label>Invoice Sent:</label>
+              <input class='invoiceSent_check' type='checkbox' <%if (invoiceSent === true) { %>checked<% } %> />
+            </div>
+            <div class='col-md-3'>
+              <label>Invoice Printed:</label>
+              <input class='invoicePrinted_check' type='checkbox' <%if (printed === true) { %>checked<% } %> />
+            </div>
+            <div class='col-md-3'>
+
+            </div>
+          </div>
+          <div class='row'>
+            <div class='col-md-9'>
+              <button type='button' class='btn btn-primary groupEventEdit'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button> <button type='button' class='btn btn-success eventInvoice'><i class="fa fa-file-text-o" aria-hidden="true"></i> Invoice</button> <button type='button' class='btn btn-info viewTransaction_click'><i class="fa fa-money" aria-hidden="true"></i> View Transaction</button> <button type='button' class='btn btn-danger eventDelete'><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Event</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type='text/template' id='group-event-modal-edit-template'>
+      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Event</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <div class='container eventEdit'>
+                  <div class='row'>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Date</span>
+                        <input type='date' class='form-control date' value='<%- calEvent.date.iso %>' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Start Time</span>
+                        <input type='time' class='form-control startTime' value='<%- calEvent.startTime.raw %>' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>End Time</span>
+                        <input type='time' class='form-control endTime' value='<%- calEvent.endTime.raw %>' />
+                      </div>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Price</span>
+                        <input type='number' class='form-control price' value='<%- price %>' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Presenter</span>
+                        <input type='text' class='form-control presenter' value='<%- presenter %>' />
+                      </div>
+                    </div>
+                    <div class='col-md-3'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Activity</span>
+                        <input type='text' class='form-control activity' value='<%- activity %>' />
+                      </div>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-9'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Show</span>
+                        <input type='text' class='form-control show' value='<%- show %>' />
+                      </div>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-9'>
+                      <div class='input-group'>
+                        <span class='input-group-addon'>Notes</span>
+                        <input type='text' class='form-control notes' value='<%- notes %>' />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary groupEventEditSave"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save changes</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+    <!-- Calendar View -->
+    
+    <script type='text/template' id='event-calendar-template'>
+      
+      <div id='calendar'></div>
+      
+    </script>
+    
+    <script type='text/template' id='event-calendar-info-template'>
+      
+      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Event</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <div class='container' style='width: 100%'>
+                  <div class='row'>
+                    <div class='col-md-6'>
+                      <h3><%- group.groupName %></h3>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-4'>
+                      <b>Cell Phone:</b> <%- group.cellPhone %>
+                    </div>
+                    <div class='col-md-4'>
+                      <b>Work Phone:</b> <%- group.workPhone %>
+                    </div>
+                    <div class='col-md-4'>
+                      <b>Email:</b> <%- group.email %>
+                    </div>
+                  </div>
+                  <br />
+                  <div class='row'>
+                    <div class='col-md-3'>
+                      <button type='button' class='btn btn-primary cal_viewGroup'>View Group</button>
+                    </div>
+                  </div>
+                  <br />
+                  <hr />
+                  <br />
+                  <div class='row'>
+                    <div class='col-md-6'>
+                      <b>Event Time:</b> <%- event.calEvent.string %>
+                    </div>
+                  </div>
+                  <div class='row'>
+                    <div class='col-md-4'>
+                      <b>Show:</b> <%- event.show %>
+                    </div>
+                    <%if (event.tour === 'true') { %>
+                      <div class='col-md-4'>
+                        <b>Tour Group</b>
+                      </div>
+                    <% } %>
+                    <%if (event.activity !== '') { %>
+                      <div class='col-md-4'>
+                        <b>Activity:</b> <%- event.activity %>
+                      </div>
+                    <% } %>
+                    <%if (event.presenter !== '') { %>
+                      <div class='col-md-4'>
+                        <b>Presenter:</b> <%- event.presenter %>
+                      </div>
+                    <% } %>
+                  </div>
+                  <%if (event.notes !== '') { %>
+                    <div class='row'>
+                      <div class='col-md-6'>
+                        <b>Notes:</b> <%- event.notes %>
+                      </div>
+                    </div>
+                  <% } %>
+                  <br />
+                </div>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </script>
+
+    <!-- Transaction View -->
+
+    <script type='text/template' id='transaction-view-template'>
+
+      <div class='view transaction notExpanded'>
+      <div class='modals'></div>
+        <div class='min'>
+          <%if (eventID !== null) {%>
+            <div class='name'>
+              <%- group.groupName %> - <%- event.calEvent.string %>
+            </div>
+          <% } else if (groupID !== null) { %>
+            <div class='name'>
+              <%- group.groupName %>
+            </div>
+          <% } else { %>
+            <div class='name'>
+              <%- datePosted.format("dddd, MMMM Do YYYY") %>
+            </div>
+          <% } %>
+          <div class='info'>
+            <b>Amount:</b> $<%- amount %> | <b>Posted:</b> <%- datePosted.format("dddd, MMMM Do YYYY") %>
+          </div>
+        </div>
+        <div class='transaction-expanded'>
+          <div class='container' style='margin-left: 0;width: 100%;'>
+            <div class='row'>
+              <div class='col-md-12'>
+                <%if (eventID !== null) { %>
+                  <h1><%- group.groupName %> - <%- event.calEvent.string %></h1>
+                <% } else if (groupID !== null) { %>
+                  <h1><%- group.groupName %></h1>
+                <% } else { %>
+                  <h1><%- datePosted.format("dddd, MMMM Do YYYY") %>
+                <% } %>
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-4'>
+                <b>Amount:</b> $<%- amount %>
+              </div>
+              <div class='col-md-4'>
+                <b>Date Posted:</b> <%- datePosted.format("dddd, MMMM Do YYYY") %>
+              </div>
+            </div>
+            <%if (groupID !== null) { %>
+              <div class='row'>
+                <div class='col-md-4'>
+                  <b>Cell Phone:</b> <%- group.cellPhone %>
+                </div>
+                <div class='col-md-4'>
+                  <b>Work Phone:</b> <%- group.workPhone %>
+                </div>
+                <div class='col-m4-4'>
+                  <b>Email:</b> <%- group.email %>
+                </div>
+              </div>
+            <% } %>
+            <%if (notes !== '') { %>
+              <div class='row'>
+                <div class='col-md-4'>
+                  <b>Notes:</b> <%- notes %>
+                </div>
+              </div>
+            <% } %>
+            <div class='row'>
+              <div class='col-md-3'>
+                <b>Paid:</b> <input type='checkbox' <%if (paid === true) { %> checked <% } %> />
+              </div>
+            </div>
+            <br />
+            <div class='row'>
+              <div class='col-md-9'>
+                <button class='btn btn-primary edit' type='button'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button> <button class='btn btn-success newEvent' type='button'><i class="fa fa-plus" aria-hidden="true"></i> New Payment</button> <button class='btn btn-danger delete' type='button'><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Transaction</button>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class='events-list'>
+          </div>
+          <br />
+          <hr />
+          <button class='btn btn-primary closeExpand' type='button'>Close</button>
+        </div>        
+      </div>
+
+    </script>
+
+    <!-- Bubble -->
+    <script type='text/template' id='bubble-template'>
+
+      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Bubble Alert</h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <div class='container' style='width: 100%'>
+                  <div class='row'>
+                    <div class='col-md-6'>
+                      <div id='bubble-landing'>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>      
+
+    </script>
+    
+    <!-- Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.0/fullcalendar.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+    <script src="https://cdn.firebase.com/js/client/2.0.3/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.js"></script>
+    
+    <!-- Custom Scripts -->
+
+    <script type='text/javascript'>
+
+      var app = {};
+
+    </script>
+
+    <?!= include('models'); ?>
+    <?!= include('collections'); ?>
+    <?!= include('views'); ?>
+    <?!= include('scripts'); ?>
+    
+  </body>
+</html>

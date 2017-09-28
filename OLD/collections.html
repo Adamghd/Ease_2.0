@@ -65,36 +65,6 @@ app.EventList = Backbone.Firebase.Collection.extend({
   	++id;
   	return id;
 
-  },
-  getUpcomingEvents: function() {
-
-    var current_date = moment();
-    var output = [];
-    for (var i = 0; i < this.models.length; i++) {
-
-      var event_date = moment(this.models[i].attributes.calEvent.calStart);
-      if (event_date.isAfter(current_date)) { // The event is after the current date
-        output.push(this.models[i]);
-      }
-
-    }
-    return output;
-
-  },
-  getPreviousEvents: function() {
-
-    var current_date = moment();
-    var output = [];
-    for (var i = 0; i < this.models.length; i++) {
-
-      var event_date = moment(this.models[i].attributes.calEvent.calStart);
-      if (current_date.isAfter(event_date)) { // The event is after the current date
-        output.push(this.models[i]);
-      }
-
-    }
-    return output;    
-
   }
   
 });
@@ -141,24 +111,6 @@ app.PaymentList = Backbone.Firebase.Collection.extend({
     return new Date(payment.attributes.datePosted) * -1;
   }
   
-});
-
-// Projects Collection
-app.ProjectList = Backbone.Firebase.Collection.extend({
-
-  model: app.ProjectModel,
-  url: 'https://ease-f60ed.firebaseio.com/projects/',
-  autoSync: true
-
-});
-
-// Tasks Collection
-app.TaskList = Backbone.Firebase.Collection.extend({
-
-  model: app.TaskModel,
-  url: 'https://ease-f60ed.firebaseio.com/tasks/',
-  autoSync: true
-
 });
 
 </script>

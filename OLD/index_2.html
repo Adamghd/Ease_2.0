@@ -31,6 +31,7 @@
 
 			<div id='sidebar' class='col-sm-3 col-lg-2 sidebar collapse in'>
 				<div class='profile'>
+					<span class='name'>Loading...</span><br />
 					<span class='email'>Loading...</span>
 				</div>
 				<div class='clear'></div>
@@ -38,19 +39,25 @@
 					<li class='active dashboard_view'>
 						<a href='#'><em class="fa fa-dashboard" aria-hidden="true">&nbsp;</em> Dashboard</a>
 					</li>
-					<li class='parent'>
-						<a data-toggle='collapse' href='#scheduling' class='collapsed'><em class='fa fa-bars' aria-hidden='true'>&nbsp;</em> Scheduling <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right collapsed" aria-expanded="false"><i class="fa fa-plus"></i></span></a>
-						<ul class='children collapse' id='scheduling' style='height: 0px'>
-							<li id='scheduling_dashboard_click'>
-								<a href='#'><em class='fa fa-leaf'>&nbsp;</em> Dashboard</a>
-							</li>
-							<li id='scheduling_events_click'>
-								<a href='#'><em class='fa fa-calendar'>&nbsp;</em> Events</a>
-							</li>
-							<li id='scheduling_groups_click'>
-								<a href='#'><em class='fa fa-users'>&nbsp;</em> Groups</a>
-							</li>
-						</ul>
+					<li class='project_view'>
+						<a href='#'><em class='fa fa-book' aria-hidden='true'>&nbsp;</em> Projects</a>
+					</li>
+					<li class='task_view not-active'>
+						<a href='#'><em class='fa fa-tasks' aria-hidden='true'>&nbsp;</em> Tasks</a>
+					</li>
+					<li class='groups_view not-active'>
+						<a href='#'><em class='fa fa-users' aria-hidden='true'>&nbsp;</em> Groups</a>
+					</li>
+					<li class='analytics_view'>
+						<a href='#'><em class='fa fa-bar-chart' aria-hidden='true'>&nbsp;</em> Website Analytics</a>
+					</li>
+					<li class='not-active'>
+						<a href='#'>
+							<em class='fa fa-user' aria-hidden='true'>&nbsp;</em> User Management
+						</a>
+					</li>
+					<li class='not-active'>
+						<a href='#'><em class='fa fa-cogs' aria-hidden='true'>&nbsp;</em> Settings</a>
 					</li>
 				</ul>
 			</div>
@@ -62,7 +69,7 @@
 			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
 				<div class='row'>
 					<div class='col-lg-12'>
-						<h1 class='page-header'>Dashboard</h1>
+						<h1 class='page-header'>Buckhall VFD Dashboard</h1>
 					</div>
 				</div>
 				<div class='panel panel-container'>
@@ -71,24 +78,15 @@
 							<div class='panel panel-teal panel-widget border-right'>
 								<div class='row no-padding'>
 									<em class='fa fa-xl fa-users color-blue'>&nbsp;</em>
-									<div class='large num_groups'>...</div>
-									<div class='text-muted'>Groups</div>
+									<div class='large num_users'>...</div>
+									<div class='text-muted'>Users</div>
 								</div>
 							</div>
 						</div>
 						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
 							<div class='panel panel-teal panel-widget border-right'>
 								<div class='row no-padding'>
-									<em class='fa fa-xl fa-calendar color-orange'>&nbsp;</em>
-									<div class='large num_upcoming_events'>...</div>
-									<div class='text-muted'>Upcoming Events</div>
-								</div>
-							</div>
-						</div>
-						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
-							<div class='panel panel-teal panel-widget border-right'>
-								<div class='row no-padding'>
-									<em class='fa fa-xl fa-book color-teal'>&nbsp;</em>
+									<em class='fa fa-xl fa-book color-orange'>&nbsp;</em>
 									<div class='large num_projects'>...</div>
 									<div class='text-muted'>Projects</div>
 								</div>
@@ -97,9 +95,18 @@
 						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
 							<div class='panel panel-teal panel-widget border-right'>
 								<div class='row no-padding'>
-									<em class='fa fa-xl fa-tasks color-red'>&nbsp;</em>
-									<div class='large num_incomplete_tasks'>...</div>
-									<div class='text-muted'>Incomplete Tasks</div>
+									<em class='fa fa-xl fa-tasks color-teal'>&nbsp;</em>
+									<div class='large num_tasks'>...</div>
+									<div class='text-muted'>Tasks</div>
+								</div>
+							</div>
+						</div>
+						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
+							<div class='panel panel-teal panel-widget border-right'>
+								<div class='row no-padding'>
+									<em class='fa fa-xl fa-calendar color-red'>&nbsp;</em>
+									<div class='large num_events'>...</div>
+									<div class='text-muted'>Upcoming Events</div>
 								</div>
 							</div>
 						</div>
@@ -109,10 +116,20 @@
 					<div class='col-md-6'>
 						<div class='panel panel-info'>
 							<div class='panel-heading'>
-								Upcoming Events
+								Users
 							</div>
 							<div class='panel-body'>
-								<div id='dashboard-calendar'></div>
+								<p>
+									<table id='users_land'>
+										<thead>
+											<tr>
+												<th>User</th>
+												<th>Email</th>
+												<th>Role</th>
+											</tr>
+										</thead>
+									</table>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -122,7 +139,33 @@
 								Projects
 							</div>
 							<div class='panel-body timeline-container'>
-								In progress
+								<ul class='timeline' id='dashboard-view-land'>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Calendar
+								<span class='pull-right clickable'>
+									<a href='http://calendar.google.com' target='_blank' style='color:white'>To calendar</a>
+								</span>
+							</div>
+							<div class='panel-body'>
+								<iframe src="https://calendar.google.com/calendar/embed?src=buckhallvfd.org_9revhb9t3873o8hjmtk85uhmk8%40group.calendar.google.com&ctz=America/New_York" style="border: 0;width: 100%;height: 600px;" frameborder="0" scrolling="no"></iframe>
+							</div>
+						</div>
+					</div>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Tasks assigned to me
+							</div>
+							<div class='panel-body task-pane'>
+								
 							</div>
 						</div>
 					</div>
@@ -130,58 +173,6 @@
 			</div>      
 
 		</script>
-
-		<script type='text/template' id='scheduling-dashboard-template'>
-
-			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
-				<div class='row'>
-					<div class='col-lg-12'>
-						<h1 class='page-header'>Scheduling Dashboard</h1>
-					</div>
-				</div>
-				<div class='panel panel-container'>
-					<div class='row no-padding'>
-						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
-							<div class='panel panel-teal panel-widget border-right'>
-								<div class='row no-padding'>
-									<em class='fa fa-xl fa-users color-blue'>&nbsp;</em>
-									<div class='large num_groups'>...</div>
-									<div class='text-muted'>Groups</div>
-								</div>
-							</div>
-						</div>
-						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
-							<div class='panel panel-teal panel-widget border-right'>
-								<div class='row no-padding'>
-									<em class='fa fa-xl fa-calendar color-orange'>&nbsp;</em>
-									<div class='large num_upcoming_events'>...</div>
-									<div class='text-muted'>Upcoming Events</div>
-								</div>
-							</div>
-						</div>
-						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
-							<div class='panel panel-teal panel-widget border-right'>
-								<div class='row no-padding'>
-									<em class='fa fa-xl fa-money color-teal'>&nbsp;</em>
-									<div class='large num_unpaid_events'>...</div>
-									<div class='text-muted'>Previous Unpaid Events</div>
-								</div>
-							</div>
-						</div>
-						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
-							<div class='panel panel-teal panel-widget border-right'>
-								<div class='row no-padding'>
-									<em class='fa fa-xl fa-line-chart color-red'>&nbsp;</em>
-									<div class='large num_current_attendence'>...</div>
-									<div class='text-muted'>Current Total Attendance</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>      
-
-		</script>		
 
 		<script type='text/template' id='dashboard-project-view-template'>
 

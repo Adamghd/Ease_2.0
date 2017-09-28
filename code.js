@@ -1,12 +1,18 @@
 // Global Vars
-var spreadSheet = SpreadsheetApp.openById('1wClvPHRd4YSdvJrGlLBlBvd5JqhizFdhO6tWeHn1eUo');
-var sheet = spreadSheet.getSheetByName('data_2');
-var config_sheet = spreadSheet.getSheetByName('config');
 var cal_id = 'q3qhk29ni908mhhrrvrha1lfq0@group.calendar.google.com'; // Dev
 //var cal_id = 'nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com'; // Live
 
 function response(object) {
 	return JSON.stringify(object);
+}
+
+function getProfile() {
+
+  var user_email = Session.getActiveUser().getEmail();
+  //var auth = GetAuthorization(user_email);
+  var auth = true;
+  return response({response:true,email:user_email,authorization:auth});
+
 }
 
 // Primary function

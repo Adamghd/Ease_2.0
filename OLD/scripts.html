@@ -1,0 +1,271 @@
+<script type='text/javascript'>
+
+// Set timestamp for data state
+var time = null;
+
+// Get initial data from google
+$(document).ready(function() {
+  load();
+});
+
+google.script.run.withSuccessHandler(load_2)
+  .getJeansSchedule();
+
+// Scripts for EASE
+
+// ----------
+// Initializers
+// ----------
+
+function refresh() {
+
+  setTimeout(function() {
+    google.script.run.withSuccessHandler(load_3)
+      .Read_2(time);
+  }, 5000); // Every 5 seconds
+
+}
+
+function load() {
+
+  // Create Collections
+  app.groupList = new app.GroupList();
+  app.eventList = new app.EventList();
+  app.transactionList = new app.TransactionList();
+  app.paymentList = new app.PaymentList();
+
+  setTimeout(function() {
+
+    console.log(app.groupList);
+    app.appView = new app.AppView();
+
+  }, 1000);
+
+}
+
+function load_old() {
+
+  // Instantiate collection
+  app.groupList = new app.GroupList();
+
+  // Instantiate collection
+  app.eventList = new app.EventList();
+
+  // Instantiate transaction collection
+  app.transactionList = new app.TransactionList();
+
+  // Instantiate payment collection
+  app.paymentList = new app.PaymentList();
+
+  // Set correct dates for transactions and payments
+  var setDates = function(model) {
+    model.setDates();
+  };
+
+  _.each(app.transactionList.models, setDates);
+  _.each(app.paymentList.models, setDates);
+
+  // Create View
+  app.appView = new app.AppView();
+
+  // Update Google with new time
+  //updateGoogle();
+
+}
+
+// Second load from google
+var jeansSchedule;
+function load_2(json) {
+
+  jeansSchedule = JSON.parse(json);
+
+}
+
+// Refresh load
+function load_3(json) {
+
+  refresh();
+
+  var object = JSON.parse(json);
+
+  if (object.response === false) { // data has changed
+
+    /* find_add algorithm attempt
+    var find_add = function(collection, array) {
+
+      for (var i = 0; i < array.length; i++) {
+
+        var bool = collection.findWhere({id: array[i].id});
+        if (bool === undefined) { // isn't in collection
+          collection.add(array[i]);
+          console.log(array[i]);
+        }
+
+      }
+
+    }
+
+    find_add(app.groupList, object.ease.groups); // Groups
+    find_add(app.eventList, object.ease.events); // Events
+    find_add(app.transactionList, object.ease.transactions); // Transactions
+    find_add(app.paymentList, object.ease.payments); // Payments
+
+    */
+
+    // Rewrite collections
+    app.groupList = new app.GroupList(object.ease.groups);
+
+    // Instantiate collection
+    app.eventList = new app.EventList(object.ease.events);
+
+    // Instantiate transaction collection
+    app.transactionList = new app.TransactionList(object.ease.transactions);
+
+    // Instantiate payment collection
+    app.paymentList = new app.PaymentList(object.ease.payments);
+
+    // Set correct dates for transactions and payments
+    var setDates = function(model) {
+      model.setDates();
+    };
+
+    _.each(app.transactionList.models, setDates);
+    _.each(app.paymentList.models, setDates);
+
+    time = object.time;
+    console.log(time);
+
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
+    toastr.options.onclick = function() { app.appView.groupView(); }
+    toastr.info('New data loaded, please click here to refresh.', 'Alert');
+
+    toastr.options.timeOut = 5000;
+    toastr.options.onclick = null;
+
+  } else if (object.response === true) { // data hasn't changed
+    // Do nothing
+  }
+
+}
+
+// ----------
+// External Functions
+// ----------
+
+function bubble(json) {
+
+  var object = JSON.parse(json);
+
+  // Clear out modals
+  $('#modals').html(' ');
+
+  // Get template
+  var template = _.template($('#bubble-template').html());
+
+  // Push to modals
+  $('#modals').html(template);
+
+  // Add content
+  $('#bubble-landing').html(object.html);
+
+  // Show modal
+  $('#modals .modal').modal('show');
+
+  // Stop loading
+  stopLoading();
+
+
+}
+
+function loadEventsForCalendar() {
+
+  var events = [];
+  for (var i = 0; i < app.eventList.models.length; i++) {
+    
+    var event = app.eventList.models[i];
+    
+    var object = {
+      title: event.attributes.show,
+      start: moment(event.attributes.calEvent.calStart),
+      end: moment(event.attributes.calEvent.calEnd),
+      id: event.attributes.id,
+      groupID: event.attributes.groupID
+    }
+    events.push(object);
+    
+  }
+
+  return events;
+
+}
+
+function removeCalendarEvent_response(json) {
+
+  var object = JSON.parse(json);
+
+  if (object.response === true) {
+    toastr.success('Event deleted', 'Alert');
+  } else if (object.response === false) {
+    toastr.error("Event not deleted from Google Calendar", 'Alert');
+  } else {
+    toastr.error('Something went wrong...', 'Alert');
+  }
+
+}
+
+function editCalendarEvent_response(json) {
+
+  var object = JSON.parse(json);
+
+  if (object.response === true) {
+    toastr.success('Event updated', 'Alert');
+  } else if (object.response === false) {
+    toastr.error('Unable to update event on Google Calendar', 'Alert');
+  } else {
+    toastr.error('Something went wrong...', 'Alert');
+  }
+
+} 
+
+function updateGoogle() {
+
+  // Need to grab all Backbone data, properly formatted as JSON, and push to Google
+  var group_json = app.groupList.toJSON();
+  var event_json = app.eventList.toJSON();
+  var transaction_json = app.transactionList.toJSON();
+  var payment_json = app.paymentList.toJSON();
+  var json = JSON.stringify({"groups":group_json,"events":event_json,"transactions":transaction_json,"payments":payment_json,"time":time});
+  startLoading();
+  google.script.run.withSuccessHandler(updateGoogle_success)
+    .Write(json);
+  
+}
+
+function updateGoogle_success(json) {
+  
+  var res = JSON.parse(json);
+  if (res.response === true) {
+    stopLoading();
+    time = res.time;
+    toastr.success("Data updated", "Alert");
+    console.log(res);
+  } else if (res.response === false) {
+    toastr.error("Something went wrong...", "Alert");
+    stopLoading();
+  } else {
+    toastr.error("Something REALLY went wrong... please refresh", "Alert");
+    stopLoading();
+  }
+  
+}
+
+function startLoading() {
+  $('#loading').css('display', 'block');
+}
+
+function stopLoading() {
+  $('#loading').css('display', 'none');
+}
+
+</script>
