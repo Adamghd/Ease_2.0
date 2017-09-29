@@ -21,23 +21,31 @@ app.AppView = Backbone.View.extend({
 	},
 	load: function(json) {
 
-		var user_object = JSON.parse(json);
-		User = user_object; // Set User object
-		console.log(User);
+		if (app.groupList.length === 0) {
 
-		// Welcome user
-		toastr.success("Hello " + User.email + "!");
+			this.initialize();
 
-		$('#body').html(' ');
+		} else {
 
-		if (user_object.authorization === true) { // Is an authorized user
+			var user_object = JSON.parse(json);
+			User = user_object; // Set User object
+			console.log(User);
 
-			var sidebar = new app.AuthorizedSidebarView();
-			$('#body').append(sidebar.render().el);
-			$('.profile .email').html(user_object.email);
+			// Welcome user
+			toastr.success("Hello " + User.email + "!");
 
-			var dashboard = new app.DashboardView();
-			$('#body').append(dashboard.render().el);
+			$('#body').html(' ');
+
+			if (user_object.authorization === true) { // Is an authorized user
+
+				var sidebar = new app.AuthorizedSidebarView();
+				$('#body').append(sidebar.render().el);
+				$('.profile .email').html(user_object.email);
+
+				var dashboard = new app.DashboardView();
+				$('#body').append(dashboard.render().el);
+
+			}
 
 		}
 
@@ -97,6 +105,10 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 app.DashboardView = Backbone.View.extend({
 	
 	template: _.template($('#dashboard-template').html()),
+	initialize: function() {
+		this.listenTo(app.groupList, "change", this.render);
+		this.listenTo(app.eventList, "change", this.render);
+	},
 	render: function() {
 		this.$el.html(this.template());
 		this.load();
@@ -119,28 +131,29 @@ app.DashboardView = Backbone.View.extend({
 		this.$el.find('.num_incomplete_tasks').html(tasks.length);
 
 		// Create calendar
-		var input = [];
-		for (var i = 0; i < upcoming_events.length; i++) {
-
-			var group = app.groupList.where({_id: upcoming_events[i].attributes.groupID});
-			var object = {
-				event: upcoming_events[i],
-				group: group[0]
-			};
-			input.push(object);
-
-		}
-
-		var events = Helper.parseCalendarData(input);
+		var proxy = this;
+		var events = Helper.getAllEvents();
 
 		this.$el.find('#dashboard-calendar').fullCalendar({
 			events: events,
-			defaultView: 'agendaWeek'
+			defaultView: 'agendaWeek',
+			timezone: 'local',
+			eventClick: function(calEvent) {
+				proxy.eventClick(calEvent);
+			}
 		});
 
 		setTimeout(function() {
 			$('#dashboard-calendar').fullCalendar('render');
 		}, 10);
+
+	},
+	eventClick: function(calEvent) {
+
+		var event = app.eventList.where({_id: calEvent.id});
+		var group = app.groupList.where({_id: event[0].attributes.groupID});
+		var view = new app.EventDetailView({model: {event: event[0], group: group[0]}});
+		$('#modals').html(view.render().el);
 
 	}
 	
@@ -151,6 +164,10 @@ app.DashboardView = Backbone.View.extend({
 app.SchedulingDashboardView = Backbone.View.extend({
 
 	template: _.template($('#scheduling-dashboard-template').html()),
+	initialize: function() {
+		this.listenTo(app.groupList, "change", this.render);
+		this.listenTo(app.eventList, "change", this.render);
+	},
 	render: function() {
 		this.$el.html(this.template());
 		this.load();
@@ -174,21 +191,33 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		this.$el.find('.num_current_attendance').html('12,888');
 
 		// Calendar
+		var proxy = this;
 		var events = Helper.getAllEvents();
 		this.$el.find('#scheduling-dashboard-calendar').fullCalendar({
 			events: events,
-			timezone: 'local'
+			timezone: 'local',
+			eventClick: function(calEvent) {
+				proxy.eventClick(calEvent);
+			}
 		});
 
 		setTimeout(function() {
 			$('#scheduling-dashboard-calendar').fullCalendar('render');
 		}, 10);
 
-		// Upcoming Shows | Get the next 10 shows
+		// Upcoming Shows | Get the next 4 shows
 		var upcoming_events_list = app.eventList.getNextEvents();
-		for (var i = 0; i < 6; i++) {
+		for (var i = 0; i < 4; i++) {
 			this.addEventListItem(upcoming_events_list[i], '.event-list');
 		}
+
+	},
+	eventClick: function(calEvent) {
+
+		var event = app.eventList.where({_id: calEvent.id});
+		var group = app.groupList.where({_id: event[0].attributes.groupID});
+		var view = new app.EventDetailView({model: {event: event[0], group: group[0]}});
+		$('#modals').html(view.render().el);
 
 	},
 	addEventListItem: function(event, element) {
@@ -210,11 +239,175 @@ app.EventListView = Backbone.View.extend({
 	},
 	render: function() {
 		this.$el.html(this.template({event:this.model.event.attributes,group:this.model.group.attributes}));
+		this.load();
 		return this; // chained commands
 	},
+	load: function() {
+
+		// Check invoice status
+		if (this.model.event.attributes.invoice_url !== undefined) { // Invoice url exists
+
+			// Create invoice status checkboxes
+			if (this.model.event.attributes.invoiceSent !== true || this.model.event.attributes.invoiceSent === undefined) {
+				this.$el.find('.invoice_status').append("Invoice Sent: <input type='checkbox' class='invoice-sent' />&nbsp;&nbsp;&nbsp;");
+			} else if (this.model.event.attributes.invoiceSent === true) {
+				this.$el.find('.invoice_status').append("Invoice Sent! &nbsp;&nbsp;&nbsp;");
+			}
+			if (this.model.event.attributes.invoiceFiled !== true || this.model.event.attributes.invoiceFiled === undefined) {
+				this.$el.find('.invoice_status').append("Invoice Filed: <input type='checkbox' class='invoice-filed' />");
+			} else if (this.model.event.attributes.invoiceFiled === true) {
+				this.$el.find('.invoice_status').append("Invoice Filed!");
+			}
+
+			// Set primary button
+			this.$el.find('.event-invoice').addClass('event-view-invoice').removeClass('event-invoice').html('View Invoice');
+
+		}
+
+	},
 	events: {
+		'click .event-view': 'event_view',
+		'change input:checkbox': 'change_status'
+	},
+	change_status: function(e) {
+
+		var element = $(e.currentTarget).attr('class');
+
+		if (element === 'invoice-sent') {
+			this.model.event.set({
+				invoiceSent: true
+			});
+		} else if (element === 'invoice-filed') {
+			this.model.event.set({
+				invoiceFiled: true
+			});
+		}
+
+	},
+	event_view: function() {
+
+		var view = new app.EventDetailView({model: {event: this.model.event, group: this.model.group}});
+		$('#modals').html(view.render().el);
 
 	}
+
+});
+
+app.EventDetailView = Backbone.View.extend({
+
+	template: _.template($('#event-detail-view').html()),
+	initialize: function() {
+		this.listenTo(this.model.event, "change", this.render);
+		this.listenTo(this.model.group, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template({event:this.model.event.attributes,group:this.model.group.attributes}));
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		// Create invoice status checkboxes
+		if (this.model.event.attributes.invoiceSent !== true || this.model.event.attributes.invoiceSent === undefined) {
+			this.$el.find('.invoice_status').append("Invoice Sent: <input type='checkbox' class='invoice-sent' />&nbsp;&nbsp;&nbsp;");
+		} else if (this.model.event.attributes.invoiceSent === true) {
+			this.$el.find('.invoice_status').append("Invoice Sent! &nbsp;&nbsp;&nbsp;");
+		}
+		if (this.model.event.attributes.invoiceFiled !== true || this.model.event.attributes.invoiceFiled === undefined) {
+			this.$el.find('.invoice_status').append("Invoice Filed: <input type='checkbox' class='invoice-filed' />");
+		} else if (this.model.event.attributes.invoiceFiled === true) {
+			this.$el.find('.invoice_status').append("Invoice Filed!");
+		}
+
+		// Check invoice createion status
+		if (this.model.event.attributes.invoice_url !== undefined) {
+			this.$el.find('.event-invoice').addClass('event-view-invoice').removeClass('event-invoice').html('View Invoice');
+		}
+
+		setTimeout(function() {
+			$('#modals .modal').modal('show');
+		}, 10);
+
+	},
+	events: {
+		'click .event-view': 'event_view',
+		'change input:checkbox': 'change_status',
+		'click .edit-group': 'edit_group',
+		'click .save-group': 'save_group',
+		'click .edit-event': 'edit_event',
+		'click .save-event': 'save_event'
+	},
+	change_status: function(e) {
+
+		var element = $(e.currentTarget).attr('class');
+
+		if (element === 'invoice-sent') {
+			this.model.event.set({
+				invoiceSent: true
+			});
+		} else if (element === 'invoice-filed') {
+			this.model.event.set({
+				invoiceFiled: true
+			});
+		}
+
+	},
+	edit_group: function() {
+
+		// Set edit row visible
+		this.$el.find('div.static.group').css('display', 'none');
+		this.$el.find('div.edit.group').css('display', 'block');
+
+		// Change edit button to save
+		this.$el.find('.edit-group').removeClass('edit-group').removeClass('btn-info').addClass('btn-success').addClass('save-group').html("<em class='fa fa-floppy-o'>&nbsp;</em> Save");
+
+	},
+	save_group: function() {
+
+		// Get variables
+		var groupName = this.$el.find('input.groupName').val();
+		var groupGroup = this.$el.find('input.groupGroup').val();
+		var groupType = this.$el.find('input.groupType').val();
+		var grade = this.$el.find('input.grade').val();
+		var email = this.$el.find('input.email').val();
+		var cellPhone = this.$el.find('input.cellPhone').val();
+		var workPhone = this.$el.find('input.workPhone').val();
+
+		// Set to model
+		this.model.group.set({
+			groupName: groupName,
+			groupGroup: groupGroup,
+			groupType: groupType,
+			grade: grade,
+			email: email,
+			cellPhone: cellPhone,
+			workPhone: workPhone
+		});
+
+		// Set static row visible
+		this.$el.find('div.static.group').css('display', 'block');
+		this.$el.find('div.edit.group').css('display', 'none');
+
+		// Change save button to edit
+		this.$el.find('.save-group').removeClass('save-group').removeClass('btn-success').addClass('btn-info').addClass('edit-group').html("<em class='fa fa-pencil'>&nbsp;</em> Edit");
+
+	},
+	edit_event: function() {
+
+		// Set edit row visible
+		this.$el.find('div.static.event').css('display', 'none');
+		this.$el.find('div.edit.event').css('display', 'block');
+
+		// Change edit button to save
+		this.$el.find('.edit-event').removeClass('edit-event').removeClass('btn-info').addClass('btn-success').addClass('save-event').html("<em class='fa fa-floppy-o'>&nbsp;</em> Save");
+
+	},
+	save_event: function() {
+
+		// Get variables
+
+	}
+
 
 });
 

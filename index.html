@@ -22,6 +22,8 @@
 	</head>
 	<body>
 		
+		<div id='modals'>
+		</div>
 		<div id='body'>
 		</div>
 
@@ -51,6 +53,12 @@
 								<a href='#'><em class='fa fa-users'>&nbsp;</em> Groups</a>
 							</li>
 						</ul>
+					</li>
+					<li class='project_view'>
+						<a href='#'><em class="fa fa-book" aria-hidden="true">&nbsp;</em> Projects</a>
+					</li>
+					<li class='settings_view'>
+						<a href='#'><em class="fa fa-cogs" aria-hidden="true">&nbsp;</em> Settings</a>
 					</li>
 				</ul>
 			</div>
@@ -128,6 +136,23 @@
 					</div>
 				</div>
 			</div>      
+
+		</script>
+
+		<script type='text/template' id='dashboard-project-view-template'>
+
+
+			<div class='timeline-badge'>
+				<i class='glyphicon glyphicon-pushpin'></i>
+			</div>
+			<div class='timeline-panel'>
+				<div class='timeline-heading'>
+					<h4 class='timeline-title'><%- title %></h4>
+				</div>
+				<div class='timeline-body'>
+					<p><%- description %></p>
+				</div>
+			</div>
 
 		</script>
 
@@ -210,25 +235,131 @@
 			<div class='event-item'>
 				<h4><%- group.groupName %> - <%- event.calEvent.string %></h4>
 				<p>Show: <b><%- event.show %></b> <%if (event.presenter !== '') { %>| Presenter: <b><%- event.presenter %></b> <% } %> <%if (event.activity !== '' && event.activity !== null) { %> Activity: <b><%- event.activity %></b> <% } %></p>
-				<p>Status: <b>Invoice Printed</b> | Next Step: <b>Invoice Filed</b> <input type='checkbox' />
+				<p class='invoice_status'></p>
+				<p><button class='btn btn-info event-view' role='button'>View</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button> <button class='btn btn-warning event-payment'>Add Payment</button> <button class='btn btn-success event-presented'>Show Presented</button></p>
 			</div>
 
 		</script>
 
-		<script type='text/template' id='dashboard-project-view-template'>
+		<script type='text/template' id='event-detail-view'>
 
-
-			<div class='timeline-badge'>
-				<i class='glyphicon glyphicon-pushpin'></i>
-			</div>
-			<div class='timeline-panel'>
-				<div class='timeline-heading'>
-					<h4 class='timeline-title'><%- title %></h4>
-				</div>
-				<div class='timeline-body'>
-					<p><%- description %></p>
-				</div>
-			</div>
+	      <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+	        <div class="modal-dialog modal-lg" role="document">
+	          <div class="modal-content">
+	            <div class="modal-header">
+	              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	              <h4 class="modal-title">Event</h4>
+	            </div>
+	            <div class="modal-body">
+	            	<h3>Group</h3>
+	            	<div class='row group static'>
+	            		<div class='col-md-4'>
+	            			<p>Contact Name: <b><%- group.groupName %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Group Name: <b><%- group.groupGroup %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Group Type: <b><%- group.groupType %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Grade: <b><%- group.grade %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Email: <b><%- group.email %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Cell Phone: <b><%- group.cellPhone %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Work Phone: <b><%- group.workPhone %></b></p>
+	            		</div>
+	            	</div>
+	            	<div class='row group edit'>
+	            		<div class='col-md-4'>
+	            			<p>Contact Name: <input type='text' class='groupName' value='<%- group.groupName %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Group Name: <input type='text' class='groupGroup' value='<%- group.groupGroup %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Group Type: <input type='text' class='groupType' value='<%- group.groupType %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Grade: <input type='text' class='grade' value='<%- group.grade %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Email: <input type='text' class='email' value='<%- group.email %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Cell Phone: <input type='text' class='cellPhone' value='<%- group.cellPhone %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Work Phone: <input type='text' class='workPhone' value='<%- group.workPhone %>'></p>
+	            		</div>
+	            	</div>
+	            	<p><button class='btn btn-info edit-group' role='button'><em class='fa fa-pencil'>&nbsp;</em> Edit</button></p>
+	            	<hr />
+	            	<h3>Event</h3>
+	            	<div class='row event static'>
+	            		<div class='col-md-4'>
+	            			<p>Date: <b><%- event.calEvent.date.string %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Start Time: <b><%- event.calEvent.startTime.string %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>End Time: <b><%- event.calEvent.endTime.string %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Show: <b><%- event.show %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Activity: <b><%- event.activity %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Presenter: <b><%- event.presenter %></b></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Price: <b>$<%- event.price %></b></p>
+	            		</div>
+	            	</div>
+	            	<div class='row event edit'>
+	            		<div class='col-md-4'>
+	            			<p>Date: <input type='date' class='date' value='<%- event.calEvent.date.iso %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Start Time: <input type='time' class='startTime' value='<%- event.calEvent.startTime.raw %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>End Time: <input type='time' class='endTime' value='<%- event.calEvent.endTime.raw %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Show: <input type='text' class='show' value='<%- event.show %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Activity: <input type='text' class='show' value='<%- event.activity %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Presenter: <input type='text' class='show' value='<%- event.presenter %>'></p>
+	            		</div>
+	            		<div class='col-md-4'>
+	            			<p>Price: <input type='number' class='show' value='<%- event.price %>'></p>
+	            		</div>
+	            	</div>
+	            	<div class='row'>
+	            		<div class='col-md-12'>
+	            			<p class='invoice_status'></p>
+	            		</div>
+	            	</div>
+	            	<p><button class='btn btn-info edit-event' role='button'><em class='fa fa-pencil'>&nbsp;</em> Edit</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button></p>
+	            </div>
+	            <div class="modal-footer">
+	              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	            </div>
+	          </div>
+	        </div>
+	      </div>  			
 
 		</script>
 
@@ -237,7 +368,7 @@
 			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
 				<div class='row'>
 					<div class='col-lg-12'>
-						<h1 class='page-header'>Buckhall VFD Projects</h1>
+						<h1 class='page-header'>Projects</h1>
 					</div>
 				</div>
 				<div class='row'>
@@ -311,67 +442,6 @@
 			</div>			
 
 		</script>
-
-		<script type='text/template' id='analytics-template'>
-
-			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
-				<div class='row'>
-					<div class='col-lg-12'>
-						<h1 class='page-header'>Buckhall VFD Analytics</h1>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-md-12'>
-						<div class='panel panel-info'>
-							<div class='panel-heading'>
-								Website Analytics
-							</div>
-							<div class='panel-body'>
-								<iframe height="1200" src="https://datastudio.google.com/embed/reporting/0B583xC7hNRpdUzE4ZHo4UHZkRGc/page/ZICI" frameborder="0" style="border:0;width: 100%" allowfullscreen></iframe>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>      
-
-		</script>
-
-		<script type='text/template' id='groups-template'>
-
-			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
-				<div class='row'>
-					<div class='col-lg-12'>
-						<h1 class='page-header'>Buckhall VFD Groups</h1>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-md-12'>
-						<div class='panel panel-info'>
-							<div class='panel-heading'>
-								Groups
-							</div>
-							<div class='panel-body'>
-							<iframe id="forum_embed"
-							  src="javascript:void(0)"
-							  scrolling="no"
-							  frameborder="0"
-							  height="700"
-							  style='width:100%;'>
-							</iframe>
-							<script type="text/javascript">
-								console.log(window.location.href);
-							  document.getElementById('forum_embed').src =
-							     'https://groups.google.com/forum/embed/?place=forum/buckhallvfd'
-							     + '&showsearch=true&showpopout=true&showtabs=false'
-							     + '&parenturl=' + encodeURIComponent(window.location.href);
-							</script>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>      
-
-		</script>		
 
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
