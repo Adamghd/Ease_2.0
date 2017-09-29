@@ -59,6 +59,17 @@ var Helper = { // General Helper object
 		}
 		return output;
 
+	},
+	updateEvent: function(json) {
+
+		var object = JSON.parse(json);
+
+		if (object.response === true) {
+			toastr.success("Event updated!");
+		} else {
+			toastr.warning("Event not updated on Google Calendar");
+		}
+
 	}
 
 }

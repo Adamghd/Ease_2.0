@@ -78,7 +78,7 @@ app.Event = Backbone.Model.extend({
 
       calID: 'nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com',
       date: {
-        raw: moment(date),
+        raw: moment(date).format(),
         iso: moment(date).format("YYYY-MM-DD"),
         string: moment(date).format("ddd, MMM Do YYYY")
       },
@@ -90,8 +90,8 @@ app.Event = Backbone.Model.extend({
         raw: endTime,
         string: parseTime(endTime)
       },
-      calStart: moment(date + ' ' + startTime),
-      calEnd: moment(date + ' ' + endTime),
+      calStart: moment(date + ' ' + startTime).format(),
+      calEnd: moment(date + ' ' + endTime).format(),
       string: moment(date).format("ddd, MMM Do") + ' @ ' + parseTime(startTime) + ' - ' + parseTime(endTime)
     };
 

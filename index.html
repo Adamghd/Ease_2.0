@@ -24,6 +24,8 @@
 		
 		<div id='modals'>
 		</div>
+		<div id='sidebar_landing'>
+		</div>
 		<div id='body'>
 		</div>
 
@@ -33,12 +35,12 @@
 
 			<div id='sidebar' class='col-sm-3 col-lg-2 sidebar collapse in'>
 				<div class='profile'>
-					<span class='email'>Loading...</span>
+					<span class='email'>UWM Planetarium</span>
 				</div>
 				<div class='clear'></div>
 				<ul class='nav menu'>
 					<li class='active dashboard_view'>
-						<a href='#'><em class="fa fa-dashboard" aria-hidden="true">&nbsp;</em> Dashboard</a>
+						<a href='#'><em class="fa fa-home" aria-hidden="true">&nbsp;</em> Home</a>
 					</li>
 					<li class='parent'>
 						<a data-toggle='collapse' href='#scheduling' class='collapsed'><em class='fa fa-bars' aria-hidden='true'>&nbsp;</em> Scheduling <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right collapsed" aria-expanded="false"><i class="fa fa-plus"></i></span></a>
@@ -70,7 +72,7 @@
 			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
 				<div class='row'>
 					<div class='col-lg-12'>
-						<h1 class='page-header'>Dashboard</h1>
+						<h1 class='page-header'>Home</h1>
 					</div>
 				</div>
 				<div class='panel panel-container'>
@@ -226,6 +228,17 @@
 						</div>
 					</div>
 				</div>
+				<div class='row'>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Previous Unpaid Shows
+							</div>
+							<div class='panel-body previous-unpaid-events'>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>      
 
 		</script>
@@ -236,7 +249,7 @@
 				<h4><%- group.groupName %> - <%- event.calEvent.string %></h4>
 				<p>Show: <b><%- event.show %></b> <%if (event.presenter !== '') { %>| Presenter: <b><%- event.presenter %></b> <% } %> <%if (event.activity !== '' && event.activity !== null) { %> Activity: <b><%- event.activity %></b> <% } %></p>
 				<p class='invoice_status'></p>
-				<p><button class='btn btn-info event-view' role='button'>View</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button> <button class='btn btn-warning event-payment'>Add Payment</button> <button class='btn btn-success event-presented'>Show Presented</button></p>
+				<p><button class='btn btn-info event-view' role='button'>View</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button> <button class='btn btn-warning event-payment' disabled="disabled">Add Payment</button> <button class='btn btn-success event-presented' disabled="disabled">Show Presented</button></p>
 			</div>
 
 		</script>
@@ -344,7 +357,7 @@
 	            			<p>Presenter: <input type='text' class='show' value='<%- event.presenter %>'></p>
 	            		</div>
 	            		<div class='col-md-4'>
-	            			<p>Price: <input type='number' class='show' value='<%- event.price %>'></p>
+	            			<p>Price: <input type='number' class='price' value='<%- event.price %>'></p>
 	            		</div>
 	            	</div>
 	            	<div class='row'>

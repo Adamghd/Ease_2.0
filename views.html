@@ -23,7 +23,7 @@ app.AppView = Backbone.View.extend({
 
 		if (app.groupList.length === 0) {
 
-			this.initialize();
+			this.wait();
 
 		} else {
 
@@ -32,23 +32,27 @@ app.AppView = Backbone.View.extend({
 			console.log(User);
 
 			// Welcome user
-			toastr.success("Hello " + User.email + "!");
+			toastr.success("Hello user!");
 
 			$('#body').html(' ');
 
 			if (user_object.authorization === true) { // Is an authorized user
 
 				var sidebar = new app.AuthorizedSidebarView();
-				$('#body').append(sidebar.render().el);
-				$('.profile .email').html(user_object.email);
+				$('#sidebar_landing').append(sidebar.render().el);
+				//$('.profile .email').html(user_object.email);
 
-				var dashboard = new app.DashboardView();
-				$('#body').append(dashboard.render().el);
+				app.appView.dashboard_view();
 
 			}
 
 		}
 
+	},
+	wait: function() {
+		setTimeout(function() {
+			this.load();
+		}, 20);
 	},
 	dashboard_view: function() {
 
@@ -65,7 +69,7 @@ app.AppView = Backbone.View.extend({
 
 	},
 	clearContent: function() {
-		$('#main').remove();
+		$('#body').html(' ');
 	}
 
 });
@@ -73,6 +77,7 @@ app.AppView = Backbone.View.extend({
 app.AuthorizedSidebarView = Backbone.View.extend({
 
 	template: _.template($('#authorized_sidebar-template').html()),
+	el: "#sidebar_landing",
 	render: function() {
 		this.$el.html(this.template());
 		return this;
@@ -211,6 +216,11 @@ app.SchedulingDashboardView = Backbone.View.extend({
 			this.addEventListItem(upcoming_events_list[i], '.event-list');
 		}
 
+		// Previous unpaid shows
+		for (var j = 0; j < unpaid_events.length; j++) {
+			this.addEventListItem(unpaid_events[j], '.previous-unpaid-events');
+		}
+
 	},
 	eventClick: function(calEvent) {
 
@@ -319,7 +329,7 @@ app.EventDetailView = Backbone.View.extend({
 			this.$el.find('.invoice_status').append("Invoice Filed!");
 		}
 
-		// Check invoice createion status
+		// Check invoice creation status
 		if (this.model.event.attributes.invoice_url !== undefined) {
 			this.$el.find('.event-invoice').addClass('event-view-invoice').removeClass('event-invoice').html('View Invoice');
 		}
@@ -405,6 +415,44 @@ app.EventDetailView = Backbone.View.extend({
 	save_event: function() {
 
 		// Get variables
+		var date = this.$el.find('input.date').val();
+		var startTime = this.$el.find('input.startTime').val();
+		var endTime = this.$el.find('input.endTime').val();
+		var show = this.$el.find('input.show').val();
+		var activity = this.$el.find('input.activity').val();
+		var presenter = this.$el.find('input.presenter').val();
+		var price = this.$el.find('input.price').val();
+
+		// Get cal event
+		var calEvent = this.model.event.createCalendarEvent(date, startTime, endTime, {keepEventId: true});
+
+		// Create object to change google event
+		var object = {
+			new_start: moment(date + ' ' + startTime).format(),
+			new_end: moment(date + ' ' + endTime).format(),
+			start: this.model.event.attributes.calEvent.calStart,
+			end: this.model.event.attributes.calEvent.calEnd,
+			event_id: this.model.event.attributes.calEvent.eventID
+		};
+		var json = JSON.stringify(object);
+		google.script.run.withSuccessHandler(Helper.updateEvent)
+			.editEvent(json);
+
+		// Set to model
+		this.model.event.set({
+			calEvent: calEvent,
+			show: show,
+			activity: activity,
+			presenter: presenter,
+			price: price
+		});
+
+		// Set static row visible
+		this.$el.find('div.static.event').css('display', 'block');
+		this.$el.find('div.edit.event').css('display', 'none');	
+		
+		// Change save button to edit
+		this.$el.find('.save-event').removeClass('save-event').removeClass('btn-success').addClass('btn-info').addClass('edit-event').html("<em class='fa fa-pencil'>&nbsp;</em> Edit");			
 
 	}
 
