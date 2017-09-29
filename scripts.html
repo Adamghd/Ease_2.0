@@ -14,6 +14,7 @@ var Helper = { // General Helper object
 		for (var i = 0; i < input.length; i++) {
 
 			var object = {
+				id: input[i].event.attributes._id,
 				title: input[i].group.attributes.groupName,
 				start: moment(input[i].event.attributes.calEvent.calStart),
 				end: moment(input[i].event.attributes.calEvent.calEnd)
@@ -32,6 +33,24 @@ var Helper = { // General Helper object
 			if (array[i].attributes[field] === value) {
 				output.push(array[i]);
 			}
+
+		}
+		return output;
+
+	},
+	getAllEvents: function() { // Get all events / group information
+
+		var output = [];
+		for (var i = 0; i < app.eventList.length; i++) {
+
+			var group = app.groupList.where({_id: app.eventList.models[i].attributes.groupID});
+			var object = {
+				id: app.eventList.models[i].attributes._id,
+				title: group[0].attributes.groupName,
+				start: app.eventList.models[i].attributes.calEvent.calStart,
+				end: app.eventList.models[i].attributes.calEvent.calEnd
+			};
+			output.push(object);
 
 		}
 		return output;

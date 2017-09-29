@@ -95,6 +95,21 @@ app.EventList = Backbone.Firebase.Collection.extend({
     }
     return output;    
 
+  },
+
+  getNextEvents: function() {
+
+    var events = this.getUpcomingEvents();
+
+    // Need to sort events by date
+    events.sort(function(a, b) {
+
+      return new Date(a.attributes.calEvent.calStart).getTime() - new Date(b.attributes.calEvent.calStart).getTime();
+
+    });
+
+    return events;
+
   }
   
 });

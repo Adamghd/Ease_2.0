@@ -171,11 +171,51 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		this.$el.find('.num_unpaid_events').html(unpaid_events.length);
 
 		// Num of current attendence
-		this.$el.find('.num_current_attendence').html('12,888');
+		this.$el.find('.num_current_attendance').html('12,888');
 
+		// Calendar
+		var events = Helper.getAllEvents();
+		this.$el.find('#scheduling-dashboard-calendar').fullCalendar({
+			events: events,
+			timezone: 'local'
+		});
+
+		setTimeout(function() {
+			$('#scheduling-dashboard-calendar').fullCalendar('render');
+		}, 10);
+
+		// Upcoming Shows | Get the next 10 shows
+		var upcoming_events_list = app.eventList.getNextEvents();
+		for (var i = 0; i < 6; i++) {
+			this.addEventListItem(upcoming_events_list[i], '.event-list');
+		}
+
+	},
+	addEventListItem: function(event, element) {
+
+		var group = app.groupList.where({_id: event.attributes.groupID});
+		var view = new app.EventListView({model: {event: event, group: group[0]}});
+		this.$el.find(element).append(view.render().el);
 
 	}
 
-})
+});
+
+app.EventListView = Backbone.View.extend({
+
+	template: _.template($('#event-list-item-view').html()),
+	initialize: function() {
+		this.listenTo(this.model.event, "change", this.render);
+		this.listenTo(this.model.group, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template({event:this.model.event.attributes,group:this.model.group.attributes}));
+		return this; // chained commands
+	},
+	events: {
+
+	}
+
+});
 
 </script>

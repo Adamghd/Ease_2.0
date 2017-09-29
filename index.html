@@ -81,7 +81,7 @@
 								<div class='row no-padding'>
 									<em class='fa fa-xl fa-calendar color-orange'>&nbsp;</em>
 									<div class='large num_upcoming_events'>...</div>
-									<div class='text-muted'>Upcoming Events</div>
+									<div class='text-muted'>Upcoming Shows</div>
 								</div>
 							</div>
 						</div>
@@ -109,7 +109,7 @@
 					<div class='col-md-6'>
 						<div class='panel panel-info'>
 							<div class='panel-heading'>
-								Upcoming Events
+								Upcoming Shows
 							</div>
 							<div class='panel-body'>
 								<div id='dashboard-calendar'></div>
@@ -172,16 +172,48 @@
 							<div class='panel panel-teal panel-widget border-right'>
 								<div class='row no-padding'>
 									<em class='fa fa-xl fa-line-chart color-red'>&nbsp;</em>
-									<div class='large num_current_attendence'>...</div>
+									<div class='large num_current_attendance'>...</div>
 									<div class='text-muted'>Current Total Attendance</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div class='row'>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Calendar
+							</div>
+							<div class='panel-body'>
+								<div id='scheduling-dashboard-calendar'></div>
+							</div>
+						</div>
+					</div>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Upcoming Shows
+							</div>
+							<div class='panel-body event-list'>
+								
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>      
 
-		</script>		
+		</script>
+
+		<script type='text/tepmlate' id='event-list-item-view'>
+
+			<div class='event-item'>
+				<h4><%- group.groupName %> - <%- event.calEvent.string %></h4>
+				<p>Show: <b><%- event.show %></b> <%if (event.presenter !== '') { %>| Presenter: <b><%- event.presenter %></b> <% } %> <%if (event.activity !== '' && event.activity !== null) { %> Activity: <b><%- event.activity %></b> <% } %></p>
+				<p>Status: <b>Invoice Printed</b> | Next Step: <b>Invoice Filed</b> <input type='checkbox' />
+			</div>
+
+		</script>
 
 		<script type='text/template' id='dashboard-project-view-template'>
 
