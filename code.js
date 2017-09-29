@@ -115,18 +115,29 @@ function findEvent(calendar, object) {
 
 }
 
+function dev() {
+
+	var json = {"id":60,"name":"Scouting Event","calEvent":"Sat, Oct 7th @ 10:00 am - 5:00 pm","group":"","workPhone":"","cellPhone":"","activity":'None',"show":"","price":"0","numOfPeople":"","email":"","grade":"None"};
+
+	var ret = createInvoice(JSON.stringify(json));
+
+}
+
 // Create Invoice Function
 function createInvoice(json) {
 
 	var object = JSON.parse(json);
 
 	var folder = DriveApp.getFolderById('0B-u8AnaoQYgrQ1dPNnFoTEZYOEE'); // get archives folder
-	var template = DriveApp.getFileById('1wvUpCYHmpVDK0d7BvhWsh9wWzYNxfUqMZbyND1pBES4'); // get template document
+	var template = DriveApp.getFileById('1kZICuh44fu3F5yLCFBZHyIE2O058LPjcRNE7hV1cbyg'); // get template document
 	var newID = template.makeCopy(object.name + "_" + object.calEvent + "_invoice", folder).getId(); // make new copy
 	var file = DocumentApp.openById(newID);	 // open file
 	var body = file.getBody(); // get body of document
 
 	var replace = function(field, value) {
+      	if (value === null) {
+      		value = ' ';
+      	}
 		body.replaceText("{" + field + "}", value);
 	}
 
@@ -145,7 +156,9 @@ function createInvoice(json) {
 
 	// Create response object
 	var object = {
-		html: "<a href='" + url + "' target='_blank'>To Invoice</a>"
+		url: url,
+		id: object.id,
+		response: true
 	}
 
 	// stringify to json

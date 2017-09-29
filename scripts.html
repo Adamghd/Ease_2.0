@@ -70,7 +70,29 @@ var Helper = { // General Helper object
 			toastr.warning("Event not updated on Google Calendar");
 		}
 
-	}
+	},
+	load_invoice: function(json) {
+
+		var object = JSON.parse(json);
+
+		if (object.response === true) {
+
+			// Alert user
+			toastr.success("Invoice created!");
+
+			var event = app.eventList.where({_id: object.id})[0];
+
+			// Set url to model
+			event.set({
+				invoice_url: object.url
+			});
+
+			// Open in new tab
+			window.open(object.url, '_blank');
+
+		}
+
+	},
 
 }
 

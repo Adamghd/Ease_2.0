@@ -23,7 +23,7 @@ app.AppView = Backbone.View.extend({
 
 		if (app.groupList.length === 0) {
 
-			this.wait();
+			app.appView.wait();
 
 		} else {
 
@@ -50,8 +50,9 @@ app.AppView = Backbone.View.extend({
 
 	},
 	wait: function() {
+		var proxy = this;
 		setTimeout(function() {
-			this.load();
+			proxy.load();
 		}, 20);
 	},
 	dashboard_view: function() {
@@ -193,7 +194,7 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		this.$el.find('.num_unpaid_events').html(unpaid_events.length);
 
 		// Num of current attendence
-		this.$el.find('.num_current_attendance').html('12,888');
+		this.$el.find('.num_current_attendance').html('12,887');
 
 		// Calendar
 		var proxy = this;
@@ -220,6 +221,14 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		for (var j = 0; j < unpaid_events.length; j++) {
 			this.addEventListItem(unpaid_events[j], '.previous-unpaid-events');
 		}
+
+	},
+	events: {
+		'click .create-event': 'create_event'
+	},
+	create_event: function() {
+
+		// What's the flow?
 
 	},
 	eventClick: function(calEvent) {
@@ -277,7 +286,9 @@ app.EventListView = Backbone.View.extend({
 	},
 	events: {
 		'click .event-view': 'event_view',
-		'change input:checkbox': 'change_status'
+		'change input:checkbox': 'change_status',
+		'click .event-invoice': 'create_invoice',
+		'click .event-view-invoice': 'view_invoice'
 	},
 	change_status: function(e) {
 
@@ -292,6 +303,42 @@ app.EventListView = Backbone.View.extend({
 				invoiceFiled: true
 			});
 		}
+
+	},
+	create_invoice: function() {
+
+		// Alert user
+		toastr.info("Creating invoice...");
+
+		// Create the invoice_object
+		var group = this.model.group.attributes;
+		var event = this.model.event.attributes;
+		var invoice_object = {
+			id: event._id,
+			name: group.groupName,
+			calEvent: event.calEvent.string,
+			group: group.groupGroup,
+			workPhone: group.workPhone,
+			cellPhone: group.cellPhone,
+			activity: event.activity,
+			show: event.show,
+			price: event.price,
+			numOfPeople: event.numOfPeople, // add to model
+			email: group.email,
+			grade: group.grade
+		};
+
+		// Create json to send to server
+		var json = JSON.stringify(invoice_object);
+
+		// Send data to server
+		google.script.run.withSuccessHandler(Helper.load_invoice)
+			.createInvoice(json);
+
+	},
+	view_invoice: function() {
+
+		window.open(this.model.event.attributes.invoice_url, '_blank');
 
 	},
 	event_view: function() {
@@ -331,7 +378,7 @@ app.EventDetailView = Backbone.View.extend({
 
 		// Check invoice creation status
 		if (this.model.event.attributes.invoice_url !== undefined) {
-			this.$el.find('.event-invoice').addClass('event-view-invoice').removeClass('event-invoice').html('View Invoice');
+			this.$el.find('.event-invoice').addClass('event-view-invoice').removeClass('event-invoice').html("View Invoice").parent().append(" <button class='btn btn-warning generate-new-invoice' role='button'>Generate new Invoice</button>");
 		}
 
 		setTimeout(function() {
@@ -342,6 +389,9 @@ app.EventDetailView = Backbone.View.extend({
 	events: {
 		'click .event-view': 'event_view',
 		'change input:checkbox': 'change_status',
+		'click .event-invoice': 'create_invoice',
+		'click .event-view-invoice': 'view_invoice',
+		'click .generate-new-invoice': 'create_invoice',
 		'click .edit-group': 'edit_group',
 		'click .save-group': 'save_group',
 		'click .edit-event': 'edit_event',
@@ -360,6 +410,42 @@ app.EventDetailView = Backbone.View.extend({
 				invoiceFiled: true
 			});
 		}
+
+	},
+	create_invoice: function() {
+
+		// Alert user
+		toastr.info("Creating invoice...");
+
+		// Create the invoice_object
+		var group = this.model.group.attributes;
+		var event = this.model.event.attributes;
+		var invoice_object = {
+			id: event._id,
+			name: group.groupName,
+			calEvent: event.calEvent.string,
+			group: group.groupGroup,
+			workPhone: group.workPhone,
+			cellPhone: group.cellPhone,
+			activity: event.activity,
+			show: event.show,
+			price: event.price,
+			numOfPeople: event.numOfPeople, // add to model
+			email: group.email,
+			grade: group.grade
+		};
+
+		// Create json to send to server
+		var json = JSON.stringify(invoice_object);
+
+		// Send data to server
+		google.script.run.withSuccessHandler(Helper.load_invoice)
+			.createInvoice(json);
+
+	},
+	view_invoice: function() {
+
+		window.open(this.model.event.attributes.invoice_url, '_blank');
 
 	},
 	edit_group: function() {
