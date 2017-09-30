@@ -93,7 +93,34 @@ var Helper = { // General Helper object
 		}
 
 	},
+	getGroupArray: function(fields, opts) { // Fields as array of attributes
 
+		var output = [];
+		for (var i = 0; i < app.groupList.length; i++) {
+
+			var object = {};
+			var model = app.groupList.models[i];
+			for (var j = 0; j < fields.length; j++) {
+
+				object[fields[j]] = model.attributes[fields[j]];
+
+			}
+			if (opts) {
+				if (opts.selectButton) {
+					object.button = "<button class='btn btn-primary select-group-click' group='" + model.attributes._id + "' role='button'>Select</button>";
+				}
+			}
+			output.push(object);
+
+		}
+		return output;
+
+	}
+
+}
+
+window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+    toastr.error("There was an error, please refresh");
 }
 
 </script>

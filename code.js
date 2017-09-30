@@ -1,4 +1,6 @@
 // Global Vars
+var presenting_staff_calendar = CalendarApp.getCalendarById('493o9l8a968b0k1thm49ll71pc@group.calendar.google.com');
+var non_presenting_staff_calendar = CalendarApp.getCalendarById('h83hlksd8o8eamj0hj3fp8s9sk@group.calendar.google.com');
 var cal_id = 'q3qhk29ni908mhhrrvrha1lfq0@group.calendar.google.com'; // Dev
 //var cal_id = 'nbqhislsj9vvnp8h6tb52dsq6c@group.calendar.google.com'; // Live
 
@@ -168,21 +170,81 @@ function createInvoice(json) {
 
 }
 
+function getSchedulingEvents() {
+
+	var jean = getJeansSchedule();
+	var events = getPresentingSchedules();
+	var object = {
+		calendar_title: "Jean",
+		events: jean
+	};
+	events.push(object);
+	return JSON.stringify(events);
+
+}
+
+function getPresentingSchedules() {
+
+  // Get current date
+  var date = new Date();
+  
+  // Get date 6 months ago
+  var six_months_ms = 15778476000;
+  var old_date = new Date(date.getTime() - six_months_ms);
+  
+  // Get date 6 months in future
+  var future_date = new Date(date.getTime() + six_months_ms);
+  
+  // Get the events in that range
+  var presenting_staff_events = presenting_staff_calendar.getEvents(old_date, future_date);
+  var non_presenting_staff_events = non_presenting_staff_calendar.getEvents(old_date, future_date);
+  
+  // Create global event object
+  var events = [];
+  
+  // Get test staff data
+  var presenting_staff = ['Elisabeth', 'Derek', 'Elise'];
+  var non_presenting_staff = ['Evan', 'Nik'];
+  for (var i = 0; i < presenting_staff.length; i++) {
+    var object = getEventSeries(presenting_staff_events, presenting_staff[i]);
+    events.push(object);
+  }
+  for (var j = 0; j < non_presenting_staff.length; j++) {
+    var object = getEventSeries(non_presenting_staff_events, non_presenting_staff[j]);
+    events.push(object);
+  }
+
+  return events;
+
+   /* Array of these objects
+  
+    {
+      calendar_title: "Elisabeth",
+      events: [
+        {
+          start: date,
+          end: date,
+          title: "Elisabeth",
+          color: color
+        }, ...
+      ]
+    }
+  
+  */ 
+
+}
+
 // Jean Schedule Function
 function getJeansSchedule() {
 
 	// Get raw data from google
 	var calendar = CalendarApp.getCalendarById('jeanmcreighton@gmail.com');
-	var month = 2600000000;
+	var month = 2600000000*6;
 	var current_date = new Date();
 	var past_date = new Date(current_date.getTime() - month);
 	var future_date = new Date(current_date.getTime() + month);
 	var google_events = calendar.getEvents(past_date, future_date);
 
-	var subtractFiveHours = function(date) {
-		date.setTime(date.getTime() - (5*60*60*1000));
-		return date;
-	}
 
 	// Transpose data into FullCalendar format
 	var events = [];
@@ -190,8 +252,8 @@ function getJeansSchedule() {
 
 		var object = {
 			title: google_events[i].getTitle(),
-			start: subtractFiveHours(google_events[i].getStartTime()),
-			end: subtractFiveHours(google_events[i].getEndTime()),
+			start: google_events[i].getStartTime(),
+			end: google_events[i].getEndTime(),
 			color: 'green'
 		}
 
@@ -199,6 +261,58 @@ function getJeansSchedule() {
 
 	}
 
-	return JSON.stringify(events);
+	return events;
 
+}
+
+function getEventSeries(events, staff) {
+  
+  var array = [];
+  var color = rainbow(Math.random(), Math.random());
+  for (var i = 0; i < events.length; i++) {
+    
+    if (events[i].getTitle().indexOf(staff) !== -1) { // If the staff name is present in the event title | CORRECT EVENT
+      
+      var object = {
+        
+        title: staff,
+        start: events[i].getStartTime(),
+        end: events[i].getEndTime(),
+        color: color
+        
+      };
+      array.push(object);
+      
+    }
+    
+  }
+  var response = {
+    
+    calendar_title: staff,
+    events: array
+    
+  };
+  return response;
+  
+}
+
+function rainbow(numOfSteps, step) {
+    // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
+    // Adam Cole, 2011-Sept-14
+    // HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+    var r, g, b;
+    var h = step / numOfSteps;
+    var i = ~~(h * 6);
+    var f = h * 6 - i;
+    var q = 1 - f;
+    switch(i % 6){
+        case 0: r = 1; g = f; b = 0; break;
+        case 1: r = q; g = 1; b = 0; break;
+        case 2: r = 0; g = 1; b = f; break;
+        case 3: r = 0; g = q; b = 1; break;
+        case 4: r = f; g = 0; b = 1; break;
+        case 5: r = 1; g = 0; b = q; break;
+    }
+    var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
+    return (c);
 }
