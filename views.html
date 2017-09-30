@@ -171,8 +171,8 @@ app.SchedulingDashboardView = Backbone.View.extend({
 
 	template: _.template($('#scheduling-dashboard-template').html()),
 	initialize: function() {
-		this.listenTo(app.groupList, "change", this.render);
-		this.listenTo(app.eventList, "change", this.render);
+		this.listenTo(app.groupList, "change", this.load);
+		this.listenTo(app.eventList, "change", this.load);
 	},
 	render: function() {
 		this.$el.html(this.template());
@@ -212,12 +212,14 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		}, 10);
 
 		// Upcoming Shows | Get the next 4 shows
+		this.$el.find('.event-list').html(' ');
 		var upcoming_events_list = app.eventList.getNextEvents();
 		for (var i = 0; i < 4; i++) {
 			this.addEventListItem(upcoming_events_list[i], '.event-list');
 		}
 
 		// Previous unpaid shows
+		this.$el.find('.previous-unpaid-events').html(' ');
 		for (var j = 0; j < unpaid_events.length; j++) {
 			this.addEventListItem(unpaid_events[j], '.previous-unpaid-events');
 		}
@@ -508,6 +510,7 @@ app.EventDetailView = Backbone.View.extend({
 		var activity = this.$el.find('input.activity').val();
 		var presenter = this.$el.find('input.presenter').val();
 		var price = this.$el.find('input.price').val();
+		var numOfPeople = this.$el.find('input.numOfPeople').val();
 
 		// Get cal event
 		var calEvent = this.model.event.createCalendarEvent(date, startTime, endTime, {keepEventId: true});
@@ -530,7 +533,8 @@ app.EventDetailView = Backbone.View.extend({
 			show: show,
 			activity: activity,
 			presenter: presenter,
-			price: price
+			price: price,
+			numOfPeople: numOfPeople
 		});
 
 		// Set static row visible
