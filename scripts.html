@@ -123,4 +123,10 @@ window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
     toastr.error("There was an error, please refresh");
 }
 
+$('.modal').on('hidden.bs.modal', function () {
+
+	$('#modals').html(' ');
+
+})
+
 </script>
