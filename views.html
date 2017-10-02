@@ -69,6 +69,13 @@ app.AppView = Backbone.View.extend({
 		$('#body').append(scheduling_dashboard.render().el);
 
 	},
+	event_view: function() {
+
+		this.clearContent();
+		var event_view = new app.EventView();
+		$('#body').append(event_view.render().el);
+
+	},
 	clearContent: function() {
 		$('#body').html(' ');
 	}
@@ -86,7 +93,8 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 	events: {
 
 		'click .dashboard_view': 'dashboard_view',
-		'click #scheduling_dashboard_click': 'scheduling_dashboard_click'
+		'click #scheduling_dashboard_click': 'scheduling_dashboard_click',
+		'click #scheduling_events_click': 'event_view'
 
 	},
 
@@ -103,6 +111,14 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		$('.nav').find('.active').removeClass('active');
 		$('#scheduling_dashboard_click').addClass('active');
 		app.appView.scheduling_dashboard_view();
+
+	},
+
+	event_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#scheduling_events_click').addClass('active');
+		app.appView.event_view();
 
 	}
 
@@ -672,6 +688,9 @@ app.NewEventView = Backbone.View.extend({
 
 		var id = $(e.currentTarget).attr('group');
 		this.group = app.groupList.where({_id: id})[0]; // Get the group based on ID
+		if (this.group === undefined) {
+			this.group = app.groupList.where({_id: parseInt(id)})[0];
+		}
 		this.select_date();
 
 	},
@@ -682,6 +701,7 @@ app.NewEventView = Backbone.View.extend({
 		this.$el.find('.select-date').css('display', 'block');
 
 		// Show group contact name
+		console.log(this.group);
 		this.$el.find('.select-date .groupName').html(this.group.attributes.groupName);
 
 		// Create scheduling calendar
@@ -824,6 +844,48 @@ app.NewEventView = Backbone.View.extend({
 		}
 
 	}
+
+});
+
+app.EventView = Backbone.View.extend({
+
+	template: _.template($("#event-view-template").html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		// Show all events
+		for (var i = 0; i < app.eventList.length; i++) {
+
+			this.addEventListItem(app.eventList.models[i], '.events-landing');
+
+		}
+
+	},
+	events: {
+		'click .create-event-click': 'create_event'
+	},
+	addEventListItem: function(event, element) {
+
+		var group = app.groupList.where({_id: event.attributes.groupID});
+		var view = new app.EventListView({model: {event: event, group: group[0]}});
+		this.$el.find(element).append(view.render().el);
+
+	},
+	create_event: function() {
+
+		// What's the flow?
+		var view = new app.NewEventView();
+		$('#modals').html(view.render().el);
+
+	},
+
+});
+
+app.GroupView = Backbone.View.extend({
 
 });
 
