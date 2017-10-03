@@ -76,6 +76,13 @@ app.AppView = Backbone.View.extend({
 		$('#body').append(event_view.render().el);
 
 	},
+	group_view: function() {
+
+		this.clearContent();
+		var group_view = new app.GroupView();
+		$('#body').append(group_view.render().el);
+
+	},
 	clearContent: function() {
 		$('#body').html(' ');
 	}
@@ -94,10 +101,10 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 
 		'click .dashboard_view': 'dashboard_view',
 		'click #scheduling_dashboard_click': 'scheduling_dashboard_click',
-		'click #scheduling_events_click': 'event_view'
+		'click #scheduling_events_click': 'event_view',
+		'click #scheduling_group_click': 'group_view'
 
 	},
-
 	dashboard_view: function() {
 		
 		$('.nav').find('.active').removeClass('active');
@@ -105,7 +112,6 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		app.appView.dashboard_view();
 
 	},
-
 	scheduling_dashboard_click: function() {
 
 		$('.nav').find('.active').removeClass('active');
@@ -113,12 +119,18 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		app.appView.scheduling_dashboard_view();
 
 	},
-
 	event_view: function() {
 
 		$('.nav').find('.active').removeClass('active');
 		$('.nav').find('#scheduling_events_click').addClass('active');
 		app.appView.event_view();
+
+	},
+	group_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#scheduling_group_click').addClass('active');
+		app.appView.group_view();
 
 	}
 
@@ -388,7 +400,7 @@ app.EventListView = Backbone.View.extend({
 		var view = new app.EventDetailView({model: {event: this.model.event, group: this.model.group}});
 		$('#modals').html(view.render().el);
 
-	}
+	},
 
 });
 
@@ -438,7 +450,9 @@ app.EventDetailView = Backbone.View.extend({
 		'click .save-group': 'save_group',
 		'click .edit-event': 'edit_event',
 		'click .save-event': 'save_event',
-		'click .delete-event': 'delete_event'
+		'click .delete-event': 'delete_event',
+		'click .view-all-events': 'view_all_events',
+		'click .hide-all-events': 'hide_all_events'
 	},
 	change_status: function(e) {
 
@@ -602,10 +616,129 @@ app.EventDetailView = Backbone.View.extend({
 
 		}
 
+	},
+	view_all_events: function() {
+
+		// Change button text
+		this.$el.find('.view-all-events').removeClass('view-all-events').addClass('hide-all-events').html("<em class='fa fa-minus'>&nbsp;</em> Hide all events");
+
+		// Get all events from this group
+		var events = app.eventList.where({groupID: this.model.group.attributes._id});
+		for (var i = 0; i < events.length; i++) {
+
+			if (events[i].attributes._id === this.model.event.attributes._id) {
+				// Do nothing
+			} else {
+				var view = new app.EventAuxView({model: events[i]});
+				this.$el.find('.aux-events-land').append(view.render().el);
+			}
+
+		}
+
+	},
+	hide_all_events: function() {
+
+		// Change button text
+		this.$el.find('.hide-all-events').removeClass('hide-all-events').addClass('view-all-events').html("<em class='fa fa-calendar'>&nbsp;</em> View all events");
+		this.$el.find('.aux-events-land').html(' ');
+
 	}
 
 
 });
+
+app.EventAuxView = Backbone.View.extend({
+
+	template: _.template($('#event-aux-view').html()),
+	initialize: function() {
+		this.listenTo(this.model, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this; // chained commands
+	},
+	events: function(){
+		var _events = {};
+		_events['click .edit-event' + this.model.attributes._id] = 'edit_event';
+		_events['click .save-event' + this.model.attributes._id] = 'save_event';
+		_events['click .event-invoice' + this.model.attributes._id] = 'create_invoice';
+		_events['click .event-view-invoice' + this.model.attributes._id] = 'view_invoice';
+		return _events;
+	},
+	edit_event: function() {
+
+		// Set edit row visible
+		this.$el.find('div.static.event').css('display', 'none');
+		this.$el.find('div.edit.event').css('display', 'block');
+
+		// Change edit button to save
+		this.$el.find('.edit-event' + this.model.attributes._id).removeClass('edit-event').removeClass('btn-info').addClass('btn-success').addClass('save-event' + this.model.attributes._id).html("<em class='fa fa-floppy-o'>&nbsp;</em> Save");
+
+	},
+	save_event: function() {
+
+		// Get variables
+		var date = this.$el.find('input.date').val();
+		var startTime = this.$el.find('input.startTime').val();
+		var endTime = this.$el.find('input.endTime').val();
+		var show = this.$el.find('input.show').val();
+		var activity = this.$el.find('input.activity').val();
+		var presenter = this.$el.find('input.presenter').val();
+		var price = this.$el.find('input.price').val();
+		var numOfPeople = this.$el.find('input.numOfPeople').val();
+
+		// Get cal event
+		var calEvent = this.model.createCalendarEvent(date, startTime, endTime, {keepEventId: true});
+
+		// Create object to change google event
+		var object = {
+			new_start: moment(date + ' ' + startTime).format(),
+			new_end: moment(date + ' ' + endTime).format(),
+			start: this.model.attributes.calEvent.calStart,
+			end: this.model.attributes.calEvent.calEnd,
+			event_id: this.model.attributes.calEvent.eventID
+		};
+		var json = JSON.stringify(object);
+		google.script.run.withSuccessHandler(Helper.updateEvent)
+			.editEvent(json);
+
+		// Set to model
+		this.model.set({
+			calEvent: calEvent,
+			show: show,
+			activity: activity,
+			presenter: presenter,
+			price: price,
+			numOfPeople: numOfPeople
+		});
+
+		// Set static row visible
+		this.$el.find('div.static.event').css('display', 'block');
+		this.$el.find('div.edit.event').css('display', 'none');	
+		
+		// Change save button to edit
+		this.$el.find('.save-event' + this.model.attributes._id).removeClass('save-event').removeClass('btn-success').addClass('btn-info').addClass('edit-event' + this.model.attributes._id).html("<em class='fa fa-pencil'>&nbsp;</em> Edit");			
+
+	},
+	delete_event: function() {
+
+		var confirm = window.confirm("Really delete this event?");
+
+		if (confirm === true) {
+
+			app.eventList.remove(this.model);
+			toastr.success("Event deleted");
+			$('#modals .modal').modal('hide');
+
+		} else {
+
+			toastr.info("Event not deleted... Phew!");
+
+		}
+
+	}
+
+})
 
 app.NewEventView = Backbone.View.extend({
 
@@ -657,7 +790,8 @@ app.NewEventView = Backbone.View.extend({
 			grade: grade,
 			email: email,
 			cellPhone: cellPhone,
-			workPhone: workPhone
+			workPhone: workPhone,
+			dateCreated: moment().format("YYYY-DD-MM")
 		};
 
 		app.groupList.add(group);
@@ -850,6 +984,9 @@ app.NewEventView = Backbone.View.extend({
 app.EventView = Backbone.View.extend({
 
 	template: _.template($("#event-view-template").html()),
+	initialize: function() {
+		this.listenTo(app.eventList, "any", this.load);
+	},
 	render: function() {
 		this.$el.html(this.template());
 		this.load();
@@ -857,6 +994,7 @@ app.EventView = Backbone.View.extend({
 	},
 	load: function() {
 
+		this.$el.find('.events-landing').html(' ');
 		// Show all events
 		for (var i = 0; i < app.eventList.length; i++) {
 
@@ -886,6 +1024,69 @@ app.EventView = Backbone.View.extend({
 });
 
 app.GroupView = Backbone.View.extend({
+
+	template: _.template($("#group-view-template").html()),
+	initialize: function() {
+		this.listenTo(app.groupList, "any", this.load);
+	},
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		this.$el.find('.group-landing').html(' ');
+		for (var i = 0; i < app.groupList.length; i++) {
+
+			this.render_group(app.groupList.models[i]);
+
+		}
+
+	},
+	events: {
+		'keyup .search-val': 'search'
+	},
+	search: function() {
+
+		var value = this.$el.find('.search-val').val();
+		var groups = Helper.collectionContains(app.groupList.models, value, ['groupName', 'groupGroup', 'email']);
+		this.$el.find('.group-landing').html(' '); // Clear html
+		for (var i = 0; i < groups.length; i++) {
+			this.render_group(groups[i]);
+		}
+
+	},
+	render_group: function(group) {
+
+		var view = new app.GroupListView({model: group});
+		this.$el.find('.group-landing').append(view.render().el);
+
+	}
+
+});
+
+app.GroupListView = Backbone.View.extend({
+
+	template: _.template($('#group-list-item-view').html()),
+	initialize: function() {
+		this.listenTo(this.model, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this; // chained commands
+	},
+	events: {
+		'click .event-view': 'view_events'
+	},
+	view_events: function() {
+
+		var event = app.eventList.where({groupID: this.model.attributes._id})[0];
+		var view = new app.EventDetailView({model:{event:event, group:this.model}});
+		$('#modals').html(view.render().el);
+		view.view_all_events();
+
+	}
 
 });
 

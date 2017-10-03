@@ -52,7 +52,7 @@
 							<li id='scheduling_events_click'>
 								<a href='#'><em class='fa fa-calendar'>&nbsp;</em> Events</a>
 							</li>
-							<li id='scheduling_groups_click'>
+							<li id='scheduling_group_click'>
 								<a href='#'><em class='fa fa-users'>&nbsp;</em> Groups</a>
 							</li>
 						</ul>
@@ -322,7 +322,7 @@
 	            			<p>Work Phone: <input type='text' class='workPhone' value='<%- group.workPhone %>'></p>
 	            		</div>
 	            	</div>
-	            	<p><button class='btn btn-info edit-group' role='button'><em class='fa fa-pencil'>&nbsp;</em> Edit</button></p>
+	            	<p><button class='btn btn-info edit-group' role='button'><em class='fa fa-pencil'>&nbsp;</em> Edit</button> <button class='btn btn-info view-all-events' role='button'><em class='fa fa-calendar'>&nbsp;</em> View all events</button></p>
 	            	<hr />
 	            	<h3>Event</h3>
 	            	<div class='row event static'>
@@ -347,9 +347,9 @@
 	            		<div class='col-md-4'>
 	            			<p>Price: <b>$<%- event.price %></b></p>
 	            		</div>
-                  <div class='col-md-4'>
-                    <p>Number of People: <b><%- event.numOfPeople %></b></p>
-                  </div>
+	                    <div class='col-md-4'>
+	                      <p>Number of People: <b><%- event.numOfPeople %></b></p>
+	                    </div>
 	            	</div>
 	            	<div class='row event edit'>
 	            		<div class='col-md-4'>
@@ -373,9 +373,9 @@
 	            		<div class='col-md-4'>
 	            			<p>Price: <input type='number' class='price' value='<%- event.price %>'></p>
 	            		</div>
-                  <div class='col-md-4'>
-                    <p>Number of People: <input type='number' class='numOfPeople' value='<%- event.numOfPeople %>'></p>
-                  </div>
+                  	  	<div class='col-md-4'>
+                    		<p>Number of People: <input type='number' class='numOfPeople' value='<%- event.numOfPeople %>'></p>
+                  	  	</div>
 	            	</div>
 	            	<div class='row'>
 	            		<div class='col-md-12'>
@@ -383,6 +383,8 @@
 	            		</div>
 	            	</div>
 	            	<p><button class='btn btn-info edit-event' role='button'><em class='fa fa-pencil'>&nbsp;</em> Edit</button> <button class='btn btn-danger delete-event' role='button'><em class='fa fa-trash'>&nbsp;</em> Delete</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button> <button class='btn btn-warning event-payment' disabled="disabled">Add Payment</button> <button class='btn btn-success event-presented' disabled="disabled">Show Presented</button></p>
+	            	<div class='aux-events-land'>
+	            	</div>
 	            </div>
 	            <div class="modal-footer">
 	              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -390,6 +392,65 @@
 	          </div>
 	        </div>
 	      </div>  			
+
+		</script>
+
+		<script type='text/template' id='event-aux-view'>
+
+			<hr />
+        	<div class='row event static'>
+        		<div class='col-md-4'>
+        			<p>Date: <b><%- calEvent.date.string %></b></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Start Time: <b><%- calEvent.startTime.string %></b></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>End Time: <b><%- calEvent.endTime.string %></b></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Show: <b><%- show %></b></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Activity: <b><%- activity %></b></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Presenter: <b><%- presenter %></b></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Price: <b>$<%- price %></b></p>
+        		</div>
+                <div class='col-md-4'>
+                  <p>Number of People: <b><%- numOfPeople %></b></p>
+                </div>
+        	</div>
+        	<div class='row event edit'>
+        		<div class='col-md-4'>
+        			<p>Date: <input type='date' class='date' value='<%- calEvent.date.iso %>'></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Start Time: <input type='time' class='startTime' value='<%- calEvent.startTime.raw %>'></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>End Time: <input type='time' class='endTime' value='<%- calEvent.endTime.raw %>'></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Show: <input type='text' class='show' value='<%- show %>'></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Activity: <input type='text' class='activity' value='<%- activity %>'></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Presenter: <input type='text' class='presenter' value='<%- presenter %>'></p>
+        		</div>
+        		<div class='col-md-4'>
+        			<p>Price: <input type='number' class='price' value='<%- price %>'></p>
+        		</div>
+          	  	<div class='col-md-4'>
+            		<p>Number of People: <input type='number' class='numOfPeople' value='<%- numOfPeople %>'></p>
+          	  	</div>
+        	</div>
+        	<p><button class='btn btn-info edit-event<%- _id %>' role='button'><em class='fa fa-pencil'>&nbsp;</em> Edit</button> <button class='btn btn-danger delete-event<%- _id %>' role='button'><em class='fa fa-trash'>&nbsp;</em> Delete</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button> <button class='btn btn-warning event-payment' disabled="disabled">Add Payment</button> <button class='btn btn-success event-presented' disabled="disabled">Show Presented</button></p>
 
 		</script>
 
@@ -527,6 +588,42 @@
 			</div>    	
 
     </script>
+
+    <script type='text/template' id='group-view-template'>
+
+			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
+				<div class='row'>
+					<div class='col-lg-12'>
+						<h1 class='page-header'>Groups</h1>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-md-12'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Groups
+							</div>
+							<div class='panel-body'>
+								<b>Search:</b> <input type='text' class='search-val' /> <button role='button' class='btn btn-primary'>Show All Groups</button><br /><hr />
+								<div class='group-landing'>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>    	
+
+    </script>  
+
+		<script type='text/template' id='group-list-item-view'>
+
+			<div class='event-item'>
+				<h4><%- groupName %> <%if (groupGroup !== '' && groupGroup !== undefined) { %>- <%- groupGroup %><% } %> - <i><%- groupType %></i></h4>
+				<p>Email: <b><%- email %></b> | Cell Phone <b><%- cellPhone %></b> | Work Phone: <b><%- workPhone %></b></p>
+				<p><button class='btn btn-info event-view' role='button'>View</button></p>
+			</div>
+
+		</script>      
 
 		<script type='text/template' id='projects-template'>
 

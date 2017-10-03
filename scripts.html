@@ -115,6 +115,25 @@ var Helper = { // General Helper object
 		}
 		return output;
 
+	},
+	collectionContains: function(collection, value, fields) {
+
+		var output = [];
+		for (var i = 0; i < collection.length; i++) {
+
+			for (var j = 0; j < fields.length; j++) {
+
+				var attribute = collection[i].attributes[fields[j]].toLowerCase();
+				if (attribute.indexOf(value.toLowerCase()) !== -1) { // is contained
+					output.push(collection[i]);
+					j = fields.length;
+				}
+
+			}
+
+		}
+		return output;
+
 	}
 
 }
