@@ -32,11 +32,28 @@
 
 		<!-- Templates -->
 
+		<script type='text/template' id='login-view'>
+
+			<div class = "container">
+				<div class="wrapper" style="width: 400px;margin: auto;margin-top:100px">
+				    <h3 class="form-signin-heading">Please Sign In</h3>
+					  <hr class="colorgraph"><br>
+					  
+					  <input type="text" class="form-control username" name="Username" placeholder="Username" required="" autofocus="" />
+					  <input type="password" class="form-control password" name="Password" placeholder="Password" required=""/>     		  
+					 
+					  <button class="btn btn-lg btn-primary btn-block login-submit" role='button'>Login</button>
+				</div>
+			</div>
+
+		</script>
+
 		<script type='text/template' id='authorized_sidebar-template'>
 
 			<div id='sidebar' class='col-sm-3 col-lg-2 sidebar collapse in'>
 				<div class='profile'>
-					<span class='email'>UWM Planetarium</span>
+					<span class='name'></span><br />
+					<span class='email'></span>
 				</div>
 				<div class='clear'></div>
 				<ul class='nav menu'>

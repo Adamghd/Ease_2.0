@@ -13,6 +13,7 @@ app.AppView = Backbone.View.extend({
 		app.paymentList = new app.PaymentList();
 		app.projectList = new app.ProjectList();
 		app.taskList = new app.TaskList();
+		app.userList = new app.UserList();
 
 		// Load user information
 		google.script.run.withSuccessHandler(this.load)
@@ -20,6 +21,12 @@ app.AppView = Backbone.View.extend({
 
 	},
 	load: function(json) {
+
+		var login_view = new app.LoginView();
+		$('#body').html(login_view.render().el);
+
+	},
+	load_2: function(json) {
 
 		if (app.groupList.length === 0) {
 
@@ -89,12 +96,81 @@ app.AppView = Backbone.View.extend({
 
 });
 
+app.LoginView = Backbone.View.extend({
+
+	template: _.template($('#login-view').html()),
+	render: function() {
+		this.$el.html(this.template());
+		return this;
+	},
+	events: {
+		'click .login-submit': 'login',
+		'keyup': 'test_key'
+	},
+	login: function() {
+
+		var username = this.$el.find('input.username').val();
+		var password = this.$el.find('input.password').val();
+
+		var users = app.userList.where({username: username});
+		if (users.length !== 0) {
+
+			for (var i = 0; i < users.length; i++) {
+
+				if (password === users[i].attributes.password) {
+
+					User = users[i];
+
+					toastr.success("Login successful! Welcome " + username);
+
+					$('#body').html(' ');
+
+					console.log(User);
+
+					if (User.attributes.authorization === true) { // Is an authorized user
+
+						var sidebar = new app.AuthorizedSidebarView();
+						$('#sidebar_landing').append(sidebar.render().el);
+						//$('.profile .email').html(user_object.email);
+
+						app.appView.dashboard_view();
+
+					}					
+
+				} else {
+
+					toastr.error("Password not correct.");
+
+				}
+
+			}
+
+		} else {
+
+			toastr.error("Username not found.");
+
+		}
+
+	},
+	test_key: function(e) {
+
+		if (e.keyCode === 13) { // Is enter key
+
+			this.login();
+
+		}
+
+	}
+
+});
+
 app.AuthorizedSidebarView = Backbone.View.extend({
 
 	template: _.template($('#authorized_sidebar-template').html()),
 	el: "#sidebar_landing",
 	render: function() {
 		this.$el.html(this.template());
+		this.load();
 		return this;
 	},
 	events: {
@@ -103,6 +179,13 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		'click #scheduling_dashboard_click': 'scheduling_dashboard_click',
 		'click #scheduling_events_click': 'event_view',
 		'click #scheduling_group_click': 'group_view'
+
+	},
+	load: function() {
+
+		// Set profile information
+		this.$el.find('.name').html(User.attributes.username);
+		this.$el.find('.email').html(User.attributes.email);
 
 	},
 	dashboard_view: function() {

@@ -176,4 +176,12 @@ app.TaskList = Backbone.Firebase.Collection.extend({
 
 });
 
+app.UserList = Backbone.Firebase.Collection.extend({
+
+  model: app.UserModel,
+  url: 'https://ease-f60ed.firebaseio.com/users/',
+  autoSync: true
+
+})
+
 </script>
