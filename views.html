@@ -861,6 +861,8 @@ app.NewEventView = Backbone.View.extend({
 		var cellPhone = this.$el.find('input.cellPhone').val();
 		var workPhone = this.$el.find('input.workPhone').val();
 
+		console.log(User);
+
 		var group = {
 			_id: app.groupList.getNextID(),
 			groupName: groupName,
@@ -871,7 +873,7 @@ app.NewEventView = Backbone.View.extend({
 			cellPhone: cellPhone,
 			workPhone: workPhone,
 			dateCreated: moment().format("YYYY-DD-MM"),
-			created_by: Users.attributes._id
+			created_by: User.attributes._id
 		};
 
 		app.groupList.add(group);
