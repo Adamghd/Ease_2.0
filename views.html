@@ -89,6 +89,13 @@ app.AppView = Backbone.View.extend({
 		$('#body').append(group_view.render().el);
 
 	},
+	settings_view: function() {
+
+		this.clearContent();
+		var settings_view = new app.SettingsView();
+		$('#body').append(settings_view.render().el);
+
+	},
 	clearContent: function() {
 		$('#body').html(' ');
 	}
@@ -116,7 +123,7 @@ app.LoginView = Backbone.View.extend({
 
 			for (var i = 0; i < users.length; i++) {
 
-				if (password === users[i].attributes.password) {
+				if (password === sjcl.decrypt(users[i].attributes.password, "encrypted-data")) {
 
 					User = users[i];
 
@@ -175,7 +182,8 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		'click .dashboard_view': 'dashboard_view',
 		'click #scheduling_dashboard_click': 'scheduling_dashboard_click',
 		'click #scheduling_events_click': 'event_view',
-		'click #scheduling_group_click': 'group_view'
+		'click #scheduling_group_click': 'group_view',
+		'click #settings_view': 'settings_view'
 
 	},
 	load: function() {
@@ -211,6 +219,13 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		$('.nav').find('.active').removeClass('active');
 		$('.nav').find('#scheduling_group_click').addClass('active');
 		app.appView.group_view();
+
+	},
+	settings_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#settings_view').addClass('active');
+		app.appView.settings_view();
 
 	}
 
@@ -1167,6 +1182,56 @@ app.GroupListView = Backbone.View.extend({
 		var view = new app.EventDetailView({model:{event:event, group:this.model}});
 		$('#modals').html(view.render().el);
 		view.view_all_events();
+
+	}
+
+});
+
+app.SettingsView = Backbone.View.extend({
+
+	template: _.template($('#settings-view-template').html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this;
+	},
+	load: function() {
+
+		var view = new app.UserView({model: User});
+		this.$el.find('.panel-body').html(view.render().el);
+
+	}
+
+});
+
+app.UserView = Backbone.View.extend({
+
+	template: _.template($('#user-view-template').html()),
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this;
+	},
+	events: {
+		'click .change-password': 'change_password'
+	},
+	change_password: function() {
+
+		var password = prompt("Please enter a new password:");
+
+		if (password !== null && password !== '') {
+
+			var password_2 = prompt("Please confirm new password:");
+
+			if (password_2 === password) {
+
+				User.set({
+					password: sjcl.encrypt(password, "data")
+				});
+				toastr.success("Password changed!");
+
+			}
+
+		}
 
 	}
 
