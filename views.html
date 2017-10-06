@@ -123,7 +123,7 @@ app.LoginView = Backbone.View.extend({
 
 			for (var i = 0; i < users.length; i++) {
 
-				if (password === sjcl.decrypt(users[i].attributes.password, "encrypted-data")) {
+				if (password === decrypt(users[i].attributes.password)) {
 
 					User = users[i];
 
@@ -1225,7 +1225,7 @@ app.UserView = Backbone.View.extend({
 			if (password_2 === password) {
 
 				User.set({
-					password: sjcl.encrypt(password, "data")
+					password: encrypt(password)
 				});
 				toastr.success("Password changed!");
 
