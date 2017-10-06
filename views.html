@@ -36,7 +36,6 @@ app.AppView = Backbone.View.extend({
 
 			var user_object = JSON.parse(json);
 			User = user_object; // Set User object
-			console.log(User);
 
 			// Welcome user
 			toastr.success("Hello user!");
@@ -124,8 +123,6 @@ app.LoginView = Backbone.View.extend({
 					toastr.success("Login successful! Welcome " + username);
 
 					$('#body').html(' ');
-
-					console.log(User);
 
 					if (User.attributes.authorization === true) { // Is an authorized user
 
@@ -232,8 +229,6 @@ app.DashboardView = Backbone.View.extend({
 		return this; // chained commands
 	},
 	load: function() {
-
-		console.log('loading');
 
 		// Num of groups
 		this.$el.find('.num_groups').html(app.groupList.length);
@@ -659,7 +654,8 @@ app.EventDetailView = Backbone.View.extend({
 			new_end: moment(date + ' ' + endTime).format(),
 			start: this.model.event.attributes.calEvent.calStart,
 			end: this.model.event.attributes.calEvent.calEnd,
-			event_id: this.model.event.attributes.calEvent.eventID
+			event_id: this.model.event.attributes.calEvent.eventID,
+			last_edited_by: Users.attributes._id
 		};
 		var json = JSON.stringify(object);
 		google.script.run.withSuccessHandler(Helper.updateEvent)
@@ -874,7 +870,8 @@ app.NewEventView = Backbone.View.extend({
 			email: email,
 			cellPhone: cellPhone,
 			workPhone: workPhone,
-			dateCreated: moment().format("YYYY-DD-MM")
+			dateCreated: moment().format("YYYY-DD-MM"),
+			created_by: Users.attributes._id
 		};
 
 		app.groupList.add(group);
@@ -917,8 +914,7 @@ app.NewEventView = Backbone.View.extend({
 		this.$el.find('.new-group').css('display', 'none');
 		this.$el.find('.select-date').css('display', 'block');
 
-		// Show group contact name
-		console.log(this.group);
+		// Show group contact names
 		this.$el.find('.select-date .groupName').html(this.group.attributes.groupName);
 
 		// Create scheduling calendar
@@ -961,7 +957,8 @@ app.NewEventView = Backbone.View.extend({
 			activity: this.activity,
 			presenter: this.presenter,
 			price: this.price,
-			numOfPeople: this.numOfPeople
+			numOfPeople: this.numOfPeople,
+			created_by: User.attributes._id
 		};
 
 		event.calEvent = app.eventList.models[0].createCalendarEvent(this.date, this.startTime, this.endTime);

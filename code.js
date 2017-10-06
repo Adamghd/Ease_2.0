@@ -32,6 +32,14 @@ function include(filename) {
 
 }
 
+// Gmail Function
+function gmail(email, subject, body) {
+
+	GmailApp.sendEmail(email, subject, body);
+	return true;
+
+}
+
 // Create Event Function
 function createEvent(json) {
   
