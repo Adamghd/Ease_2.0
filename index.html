@@ -239,6 +239,11 @@
 					</div>
 				</div>
 				<div class='row'>
+					<div class='col-md-12'>
+						<button class='btn btn-primary create-event' role='button'>Create event</button><br /><br />
+					</div>
+				</div>
+				<div class='row'>
 					<div class='col-md-6'>
 						<div class='panel panel-info'>
 							<div class='panel-heading'>
@@ -252,10 +257,10 @@
 					<div class='col-md-6'>
 						<div class='panel panel-info'>
 							<div class='panel-heading'>
-								Upcoming Shows
+								Attendance over time
 							</div>
-							<div class='panel-body event-list'>
-								
+							<div class='panel-body'>
+								<canvas id='attendance-graph' style='width:100%'></canvas>
 							</div>
 						</div>
 					</div>
@@ -264,22 +269,23 @@
 					<div class='col-md-6'>
 						<div class='panel panel-info'>
 							<div class='panel-heading'>
-								Previous Unpaid Shows
+								Upcoming Shows
 							</div>
-							<div class='panel-body previous-unpaid-events'>
+							<div class='panel-body'>
+								<div class='upcoming_shows_land'></div>
 							</div>
 						</div>
 					</div>
-          <div class='col-md-6'>
-            <div class='panel panel-info'>
-              <div class='panel-heading'>
-                Quick Actions
-              </div>
-              <div class='panel-body'>
-                <button class='btn btn-primary create-event' role='button'>Create Event</button>
-              </div>
-            </div>
-          </div>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+						  <div class='panel-heading'>
+						    Previous Shows
+						  </div>
+						  <div class='panel-body'>
+								<div class='previous_shows_land'></div>
+						  </div>
+						</div>
+					</div>
 				</div>
 			</div>      
 

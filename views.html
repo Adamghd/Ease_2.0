@@ -369,17 +369,55 @@ app.SchedulingDashboardView = Backbone.View.extend({
 
 		}
 
-		// Upcoming Shows | Get the next 4 shows
-		this.$el.find('.event-list').html(' ');
-		var upcoming_events_list = app.eventList.getNextEvents();
-		for (var i = 0; i < 4; i++) {
-			this.addEventListItem(upcoming_events_list[i], '.event-list');
-		}
+		// Attendance Graph
+		setTimeout(function() {
 
-		// Previous unpaid shows
-		this.$el.find('.previous-unpaid-events').html(' ');
-		for (var j = 0; j < unpaid_events.length; j++) {
-			this.addEventListItem(unpaid_events[j], '.previous-unpaid-events');
+			var ctx = document.getElementById('attendance-graph').getContext('2d');
+			var chart = new Chart(ctx, {
+			    // The type of chart we want to create
+			    type: 'line',
+
+			    // The data for our dataset
+			    data: {
+			        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+			        datasets: [{
+			            label: "Monthly attendance",
+			            backgroundColor: 'rgb(255, 97, 34)',
+			            borderColor: 'rgb(255, 163, 126)',
+			            data: [683, 1585, 1475, 1540, 1180, 690, 762, 3659, 1505, 526]
+			        }]
+			    },
+
+			    // Configuration options go here
+			    options: {
+					plugins: {
+						datalabels: {
+							backgroundColor: function(context) {
+								return context.dataset.backgroundColor;
+							},
+							borderRadius: 4,
+							color: 'white',
+							font: {
+								weight: 'bold'
+							},
+							formatter: Math.round
+						}
+					},
+					scales: {
+						yAxes: [{
+							stacked: true
+						}]
+					}			    	
+			    }
+			});	
+
+		}, 20);	
+
+		// Upcoming Shows | Get the next 10 shows
+		this.$el.find('.upcoming_shows_land').html(' ');
+		var upcoming_events_list = app.eventList.getNextEvents();
+		for (var i = 0; i < 10; i++) {
+			this.addEventListItem(upcoming_events_list[i], '.upcoming_shows_land');
 		}
 
 	},
@@ -685,7 +723,7 @@ app.EventDetailView = Backbone.View.extend({
 			start: this.model.event.attributes.calEvent.calStart,
 			end: this.model.event.attributes.calEvent.calEnd,
 			event_id: this.model.event.attributes.calEvent.eventID,
-			last_edited_by: Users.attributes._id
+			last_edited_by: User.attributes._id
 		};
 		var json = JSON.stringify(object);
 		google.script.run.withSuccessHandler(Helper.updateEvent)
