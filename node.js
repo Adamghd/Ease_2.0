@@ -25,5 +25,5 @@ function decrypt(data) {
 }
 
 
-var password = encrypt('password');
+var password = encrypt('f4xvnchs');
 console.log(password);

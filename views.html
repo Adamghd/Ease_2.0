@@ -96,6 +96,13 @@ app.AppView = Backbone.View.extend({
 		$('#body').append(settings_view.render().el);
 
 	},
+	accounting_dashboard_view: function() {
+
+		this.clearContent();
+		var accounting_dashboard_view = new app.AccountingDashboard();
+		$('#body').append(accounting_dashboard_view.render().el);
+
+	},
 	clearContent: function() {
 		$('#body').html(' ');
 	}
@@ -183,7 +190,8 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		'click #scheduling_dashboard_click': 'scheduling_dashboard_click',
 		'click #scheduling_events_click': 'event_view',
 		'click #scheduling_group_click': 'group_view',
-		'click #settings_view': 'settings_view'
+		'click #settings_view': 'settings_view',
+		'click #accounting_dashboard_click': 'accounting_dashboard_view'
 
 	},
 	load: function() {
@@ -226,6 +234,13 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		$('.nav').find('.active').removeClass('active');
 		$('.nav').find('#settings_view').addClass('active');
 		app.appView.settings_view();
+
+	},
+	accounting_dashboard_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#accounting_dashboard_click').addClass('active');
+		app.appView.accounting_dashboard_view();
 
 	}
 
@@ -326,7 +341,7 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		this.$el.find('.num_unpaid_events').html(unpaid_events.length);
 
 		// Num of current attendence
-		this.$el.find('.num_current_attendance').html('12,887');
+		this.$el.find('.num_current_attendance').html('13,605');
 
 		// Calendar
 		if (this.$el.find('#scheduling-dashboard-calendar').children().length > 0) { // Calendar already exists
@@ -1236,5 +1251,202 @@ app.UserView = Backbone.View.extend({
 	}
 
 });
+
+// Accounting
+app.AccountingDashboard = Backbone.View.extend({
+
+	template: _.template($('#accounting-dashboard-template').html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this;
+	},
+	load: function() {
+
+		setTimeout(function() {
+
+			// Income by month
+			var ctx = document.getElementById('chart_month').getContext('2d');
+			var chart = new Chart(ctx, {
+			    // The type of chart we want to create
+			    type: 'line',
+
+			    // The data for our dataset
+			    data: {
+			        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+			        datasets: [{
+			            label: "Monthly Income",
+			            backgroundColor: 'rgb(255, 97, 34)',
+			            borderColor: 'rgb(255, 163, 126)',
+			            data: [1482, 3189, 3128, 2568, 1911, 2450, 4370, 5544, 1825, 399]
+			        }]
+			    },
+
+			    // Configuration options go here
+			    options: {
+					plugins: {
+						datalabels: {
+							backgroundColor: function(context) {
+								return context.dataset.backgroundColor;
+							},
+							borderRadius: 4,
+							color: 'white',
+							font: {
+								weight: 'bold'
+							},
+							formatter: Math.round
+						}
+					},
+					scales: {
+						yAxes: [{
+							stacked: true
+						}]
+					}			    	
+			    }
+			});
+
+			// Total income
+			var ctx = document.getElementById('chart_total').getContext('2d');
+			var chart = new Chart(ctx, {
+			    // The type of chart we want to create
+			    type: 'line',
+
+			    // The data for our dataset
+			    data: {
+			        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+			        datasets: [{
+			            label: "Yearly Income",
+			            backgroundColor: 'rgb(255, 97, 34)',
+			            borderColor: 'rgb(255, 163, 126)',
+			            data: [1482, 4671, 7799, 10367, 12278, 14728, 19098, 24642, 26467, 26866],
+			        }]
+			    },
+
+			    // Configuration options go here
+			    options: {
+					plugins: {
+						datalabels: {
+							backgroundColor: function(context) {
+								return context.dataset.backgroundColor;
+							},
+							borderRadius: 4,
+							color: 'white',
+							font: {
+								weight: 'bold'
+							},
+							formatter: Math.round
+						}
+					},
+					scales: {
+						yAxes: [{
+							stacked: true
+						}]
+					}			    	
+			    }
+			});
+
+			// Transaction type
+			var ctx = document.getElementById('chart_transaction_type').getContext('2d');
+			var chart = new Chart(ctx, {
+			    // The type of chart we want to create
+			    type: 'doughnut',
+
+			    // The data for our dataset
+			    data: {
+			        labels: ["Cash", "Checks", "Credit Cards"],
+			        datasets: [{
+				        backgroundColor: [
+				        	'rgb(242, 164, 14)',
+				        	'rgb(181, 55, 55)',
+				        	'rgb(0, 127, 161)',
+				        	'rgb(0, 161, 103)'
+				        ],
+			        	data: [7817, 13853, 5197]
+			        }]
+			    },
+
+			    // Configuration options go here
+				options: {
+					plugins: {
+						datalabels: {
+							backgroundColor: function(context) {
+								return context.dataset.backgroundColor;
+							},
+							borderColor: 'white',
+							borderRadius: 25,
+							borderWidth: 2,
+							color: 'white',
+							display: function(context) {
+								var dataset = context.dataset;
+								var count = dataset.data.length;
+								var value = dataset.data[context.dataIndex];
+								return value > count * 1.5;
+							},
+							font: {
+								weight: 'bold'
+							},
+							formatter: Math.round
+						}
+					}
+				}
+			});			
+
+			// Grup type
+			var ctx = document.getElementById('chart_group_type').getContext('2d');
+			var chart = new Chart(ctx, {
+			    // The type of chart we want to create
+			    type: 'bar',
+
+			    // The data for our dataset
+			    data: {
+			        labels: ["Astrobreak", "Class", "Observing", "Private", "Public", "School", "UWM"],
+			        datasets: [{
+			            label: "Income by group type",
+				        backgroundColor: [
+				        	'rgb(242, 164, 14)',
+				        	'rgb(181, 55, 55)',
+				        	'rgb(0, 127, 161)',
+				        	'rgb(0, 161, 103)',
+				        	'rgb(57, 221, 158)',
+				        	'rgb(1, 181, 175)',
+				        	'rgb(43, 113, 160)'
+				        ],
+			        	data: [0, 0, -310, 5639, 13021, 7520, 0]
+			        }]
+			    },
+
+			    // Configuration options go here
+				options: {
+					plugins: {
+						datalabels: {
+							color: 'white',
+							display: function(context) {
+								return context.dataset.data[context.dataIndex] > 15;
+							},
+							font: {
+								weight: 'bold'
+							},
+							formatter: Math.round
+						}
+					},
+					scales: {
+						xAxes: [{
+							stacked: true
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					}
+				}
+			});		
+
+		}, 20);
+
+	},
+	events: {
+		'click .reload_graphs': 'load'
+	}
+
+})
 
 </script>

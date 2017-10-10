@@ -58,7 +58,7 @@
 				<div class='clear'></div>
 				<ul class='nav menu'>
 					<li class='active dashboard_view'>
-						<a href='#'><em class="fa fa-home" aria-hidden="true">&nbsp;</em> Home</a>
+						<a href='#'><em class="fa fa-space-shuttle" aria-hidden="true">&nbsp;</em> Home</a>
 					</li>
 					<li class='parent'>
 						<a data-toggle='collapse' href='#scheduling' class='collapsed'><em class='fa fa-bars' aria-hidden='true'>&nbsp;</em> Scheduling <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right collapsed" aria-expanded="false"><i class="fa fa-plus"></i></span></a>
@@ -71,6 +71,20 @@
 							</li>
 							<li id='scheduling_group_click'>
 								<a href='#'><em class='fa fa-users'>&nbsp;</em> Groups</a>
+							</li>
+						</ul>
+					</li>
+					<li class='parent'>
+						<a data-toggle='collapse' href='#accounting' class='collapsed'><em class='fa fa-bars' aria-hidden='true'>&nbsp;</em> Accounting <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right collapsed" aria-expanded="false"><i class="fa fa-plus"></i></span></a>
+						<ul class='children collapse' id='accounting' style='height: 0px'>
+							<li id='accounting_dashboard_click'>
+								<a href='#'><em class='fa fa-leaf'>&nbsp;</em> Dashboard</a>
+							</li>
+							<li id='accounting_transactions_click'>
+								<a href='#'><em class='fa fa-cubes'>&nbsp;</em> Transactions</a>
+							</li>
+							<li id='accounting_payments_click'>
+								<a href='#'><em class='fa fa-money'>&nbsp;</em> Payments</a>
 							</li>
 						</ul>
 					</li>
@@ -207,7 +221,7 @@
 						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
 							<div class='panel panel-teal panel-widget border-right'>
 								<div class='row no-padding'>
-									<em class='fa fa-xl fa-money color-teal'>&nbsp;</em>
+									<em class='fa fa-xl fa-calendar-minus-o color-teal'>&nbsp;</em>
 									<div class='large num_unpaid_events'>...</div>
 									<div class='text-muted'>Previous Unpaid Events</div>
 								</div>
@@ -681,6 +695,108 @@
 
 		</script>
 
+		<!-- Accounting -->
+		<script type='text/template' id='accounting-dashboard-template'>
+
+			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
+				<div class='row'>
+					<div class='col-lg-12'>
+						<h1 class='page-header'>Accounting Dashboard</h1>
+					</div>
+				</div>
+				<div class='panel panel-container'>
+					<div class='row no-padding'>
+						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
+							<div class='panel panel-teal panel-widget border-right'>
+								<div class='row no-padding'>
+									<em class='fa fa-xl fa-calendar color-blue'>&nbsp;</em>
+									<div class='large num_groups'>10/10/2017</div>
+									<div class='text-muted'>Deposit Period</div>
+								</div>
+							</div>
+						</div>
+						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
+							<div class='panel panel-teal panel-widget border-right'>
+								<div class='row no-padding'>
+									<em class='fa fa-xl fa-hand-spock-o color-orange'>&nbsp;</em>
+									<div class='large num_upcoming_events'>$0</div>
+									<div class='text-muted'>Cash on Hand</div>
+								</div>
+							</div>
+						</div>
+						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
+							<div class='panel panel-teal panel-widget border-right'>
+								<div class='row no-padding'>
+									<em class='fa fa-xl fa-calendar-minus-o color-teal'>&nbsp;</em>
+									<div class='large num_projects'>11</div>
+									<div class='text-muted'>Previous unpaid events</div>
+								</div>
+							</div>
+						</div>
+						<div class='col-xs-6 col-md-3 col-lg-3 no-padding'>
+							<div class='panel panel-teal panel-widget border-right'>
+								<div class='row no-padding'>
+									<em class='fa fa-xl fa-money color-red'>&nbsp;</em>
+									<div class='large num_incomplete_tasks'>$28,000</div>
+									<div class='text-muted'>Total income (year)</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-md-12'>
+						<button class='btn btn-primary reload_graphs' role='button'>Reload graphs</button> <button class='btn btn-success' role='button'>Create deposit</button><br /><br />
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Income by month
+							</div>
+							<div class='panel-body'>
+								<canvas id='chart_month' style='width:100%'></canvas>
+							</div>
+						</div>
+					</div>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Total income
+							</div>
+							<div class='panel-body'>
+								<canvas id='chart_total' style='width:100%'></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Income by transaction type
+							</div>
+							<div class='panel-body'>
+								<canvas id='chart_transaction_type' style='width:100%'></canvas>
+							</div>
+						</div>
+					</div>
+					<div class='col-md-6'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Income by group type
+							</div>
+							<div class='panel-body'>
+								<canvas id='chart_group_type' style='width:100%'></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>   			
+
+		</script>
+
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -696,6 +812,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.js"></script>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
    		<script type='text/javascript' src='https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js'></script>
+   		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+   		<script src='https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels'></script>
 
 		
 		<!-- Custom Scripts -->
