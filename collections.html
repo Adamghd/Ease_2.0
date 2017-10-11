@@ -96,7 +96,6 @@ app.EventList = Backbone.Firebase.Collection.extend({
     return output;    
 
   },
-
   getNextEvents: function() {
 
     var events = this.getUpcomingEvents();
@@ -109,6 +108,52 @@ app.EventList = Backbone.Firebase.Collection.extend({
     });
 
     return events;
+
+  },
+  getAttendanceByMonth: function() { // STARTING IN OCTOBER!
+
+    var output = [683, 1585, 1475, 1540, 1180, 690, 762, 3659, 1505, 0, 0, 0];
+    for (var i = 0; i < this.models.length; i++) {
+
+      if (this.models[i].attributes.finished === true) { // Show is finished
+
+        var month = parseInt(moment(this.models[i].attributes.calEvent.calStart).format("M")); // 1 starting list ... weird
+
+        if (month >= 10) { // October or better, NEEDS TO CHANGE EVENTUALLY!!!!
+
+          console.log(month + ' ' + this.models[i].attributes.numOfPeople);
+          output[month - 1] += parseInt(this.models[i].attributes.numOfPeople);
+
+        }
+
+      }
+
+    }
+
+    console.log(output);
+    return output;
+
+  },
+  getAttendance: function() { // STARTING IN OCTOBER!
+
+    var output = 13079;
+    for (var i = 0; i < this.models.length; i++) {
+
+      if (this.models[i].attributes.finished === true) { // Show is finished
+
+        var month = parseInt(moment(this.models[i].attributes.calEvent.calStart).format("M")); // 1 starting list ... weird
+
+        if (month >= 10) { // October or better, NEEDS TO CHANGE EVENTUALLY!!!!
+
+          output += parseInt(this.models[i].attributes.numOfPeople);
+
+        }
+
+      }
+
+    }
+
+    return output.toLocaleString();
 
   }
   

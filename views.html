@@ -150,7 +150,7 @@ app.LoginView = Backbone.View.extend({
 
 				} else {
 
-					toastr.error("Password not correct.");
+					toastr.error("Incorrect Password");
 
 				}
 
@@ -341,7 +341,8 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		this.$el.find('.num_unpaid_events').html(unpaid_events.length);
 
 		// Num of current attendence
-		this.$el.find('.num_current_attendance').html('13,605');
+		var attendence = app.eventList.getAttendance();
+		this.$el.find('.num_current_attendance').html(attendence);
 
 		// Calendar
 		if (this.$el.find('#scheduling-dashboard-calendar').children().length > 0) { // Calendar already exists
@@ -372,6 +373,7 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		// Attendance Graph
 		setTimeout(function() {
 
+			var data = app.eventList.getAttendanceByMonth();
 			var ctx = document.getElementById('attendance-graph').getContext('2d');
 			var chart = new Chart(ctx, {
 			    // The type of chart we want to create
@@ -384,7 +386,7 @@ app.SchedulingDashboardView = Backbone.View.extend({
 			            label: "Monthly attendance",
 			            backgroundColor: 'rgb(255, 97, 34)',
 			            borderColor: 'rgb(255, 163, 126)',
-			            data: [683, 1585, 1475, 1540, 1180, 690, 762, 3659, 1505, 526]
+			            data: data
 			        }]
 			    },
 
@@ -418,6 +420,13 @@ app.SchedulingDashboardView = Backbone.View.extend({
 		var upcoming_events_list = app.eventList.getNextEvents();
 		for (var i = 0; i < 10; i++) {
 			this.addEventListItem(upcoming_events_list[i], '.upcoming_shows_land');
+		}
+
+		// Previous Shows | Get the past 10 shows
+		this.$el.find('.previous_shows_land').html(' ');
+		var past_events_list = app.eventList.getPreviousEvents();
+		for (var j = 0; j < 10; j++) {
+			this.addEventListItem(past_events_list[j], '.previous_shows_land');
 		}
 
 	},
@@ -488,7 +497,8 @@ app.EventListView = Backbone.View.extend({
 		'click .event-view': 'event_view',
 		'change input:checkbox': 'change_status',
 		'click .event-invoice': 'create_invoice',
-		'click .event-view-invoice': 'view_invoice'
+		'click .event-view-invoice': 'view_invoice',
+		'click .event-presented': 'show_presented'
 	},
 	change_status: function(e) {
 
@@ -547,6 +557,18 @@ app.EventListView = Backbone.View.extend({
 		$('#modals').html(view.render().el);
 
 	},
+	show_presented: function() {
+
+		this.model.event.set({
+			finished: true
+		});
+
+		var view = new app.EventDetailView({model: {event: this.model.event, group: this.model.group}});
+		$('#modals').html(view.render().el);
+		toastr.info('Please double check the Number of People field.');
+		view.edit_event();
+
+	}
 
 });
 
@@ -598,7 +620,8 @@ app.EventDetailView = Backbone.View.extend({
 		'click .save-event': 'save_event',
 		'click .delete-event': 'delete_event',
 		'click .view-all-events': 'view_all_events',
-		'click .hide-all-events': 'hide_all_events'
+		'click .hide-all-events': 'hide_all_events',
+		'click .event-presented': 'show_presented'
 	},
 	change_status: function(e) {
 
@@ -788,6 +811,16 @@ app.EventDetailView = Backbone.View.extend({
 		// Change button text
 		this.$el.find('.hide-all-events').removeClass('hide-all-events').addClass('view-all-events').html("<em class='fa fa-calendar'>&nbsp;</em> View all events");
 		this.$el.find('.aux-events-land').html(' ');
+
+	},
+	show_presented: function() {
+
+		this.model.event.set({
+			finished: true
+		});
+
+		toastr.info('Please double check the Number of People field.');
+		this.edit_event();
 
 	}
 
