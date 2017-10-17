@@ -291,7 +291,7 @@
 
 		</script>
 
-		<script type='text/tepmlate' id='event-list-item-view'>
+		<script type='text/template' id='event-list-item-view'>
 
 			<div class='event-item'>
 				<h4><%- group.groupName %> - <%- event.calEvent.string %></h4>
@@ -825,6 +825,7 @@
 								</div>
 								<div class='row'>
 									<div class='col-md-12'>
+										<br />
 										<div class='transaction_land'>
 										</div>
 									</div>
@@ -839,7 +840,12 @@
 
 		<script type='text/template' id='transaction-list-template'>
 
-			<%- datePosted %>
+
+			<div class='event-item'>
+				<h4><b><%if (paid === true) { %>Paid<% } else { %>Unpaid<% } %></b> $<%- amount %> - <%- moment(new Date(datePosted)).format("dddd, MMMM Do YYYY") %></h4>
+				<p></p>
+				<p><button class='btn btn-info event-view' role='button'>View</button> <button class='btn btn-success add-payment'>Add Payment</button></p>
+			</div>
 
 		</script>
 
@@ -858,7 +864,18 @@
 								Payments
 							</div>
 							<div class='panel-body'>
-								Something here
+								<div class='row'>
+									<div class='col-md-12'>
+										<button class='btn btn-primary create-transaction'>Create Payment</button>
+									</div>
+								</div>
+								<div class='row'>
+									<div class='col-md-12'>
+										<br />
+										<div class='payment_land'>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -866,6 +883,17 @@
 			</div>			
 
 		</script>		
+
+		<script type='text/template' id='payment-list-template'>
+
+
+			<div class='event-item'>
+				<h4>$<%- amount %> - <%- moment(new Date(datePosted)).format("dddd, MMMM Do YYYY") %></h4>
+				<p>Payment Type: <b><%- paymentType %></b></p>
+				<p><button class='btn btn-info event-view' role='button'>View</button></p>
+			</div>
+
+		</script>
 
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

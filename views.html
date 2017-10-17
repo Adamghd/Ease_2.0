@@ -1602,6 +1602,33 @@ app.PaymentView = Backbone.View.extend({
 	},
 	load: function() {
 
+		for (var i = 0; i < app.paymentList.length; i++) {
+
+			this.renderPayment(app.paymentList.models[i]);
+
+		}
+
+	},
+	renderPayment: function(payment) {
+
+		var view = new app.PaymentListItem({model: payment});
+		this.$el.find('.payment_land').append(view.render().el);
+
+	}
+
+});
+
+app.PaymentListItem = Backbone.View.extend({
+
+	template: _.template($('#payment-list-template').html()),
+	model: app.PaymentModel,
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		this.load();
+		return this;
+	},
+	load: function() {
+
 	}
 
 });
