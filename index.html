@@ -80,10 +80,10 @@
 							<li id='accounting_dashboard_click'>
 								<a href='#'><em class='fa fa-leaf'>&nbsp;</em> Dashboard</a>
 							</li>
-							<li id='accounting_transactions_click'>
+							<li id='transaction_click'>
 								<a href='#'><em class='fa fa-cubes'>&nbsp;</em> Transactions</a>
 							</li>
-							<li id='accounting_payments_click'>
+							<li id='payment_click'>
 								<a href='#'><em class='fa fa-money'>&nbsp;</em> Payments</a>
 							</li>
 						</ul>
@@ -802,6 +802,70 @@
 			</div>   			
 
 		</script>
+
+		<script type='text/template' id='transaction-view-template'>
+
+			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
+				<div class='row'>
+					<div class='col-lg-12'>
+						<h1 class='page-header'>Transactions</h1>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-lg-12'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Transactions
+							</div>
+							<div class='panel-body'>
+								<div class='row'>
+									<div class='col-md-12'>
+										<button class='btn btn-primary create-transaction'>Create Transaction</button> <button class='btn btn-success create-deposit'>Create Deposit</button>
+									</div>
+								</div>
+								<div class='row'>
+									<div class='col-md-12'>
+										<div class='transaction_land'>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+
+		</script>
+
+		<script type='text/template' id='transaction-list-template'>
+
+			<%- datePosted %>
+
+		</script>
+
+		<script type='text/template' id='payment-view-template'>
+
+			<div id='main' class='col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2'>
+				<div class='row'>
+					<div class='col-lg-12'>
+						<h1 class='page-header'>Payments</h1>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-lg-12'>
+						<div class='panel panel-info'>
+							<div class='panel-heading'>
+								Payments
+							</div>
+							<div class='panel-body'>
+								Something here
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+
+		</script>		
 
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

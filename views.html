@@ -103,6 +103,20 @@ app.AppView = Backbone.View.extend({
 		$('#body').append(accounting_dashboard_view.render().el);
 
 	},
+	transaction_click: function() {
+
+		this.clearContent();
+		var transaction_view = new app.TransactionView();
+		$('#body').append(transaction_view.render().el);
+
+	},
+	payment_click: function() {
+
+		this.clearContent();
+		var payment_view = new app.PaymentView();
+		$('#body').append(payment_view.render().el);
+
+	},
 	clearContent: function() {
 		$('#body').html(' ');
 	}
@@ -191,7 +205,9 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		'click #scheduling_events_click': 'event_view',
 		'click #scheduling_group_click': 'group_view',
 		'click #settings_view': 'settings_view',
-		'click #accounting_dashboard_click': 'accounting_dashboard_view'
+		'click #accounting_dashboard_click': 'accounting_dashboard_view',
+		'click #transaction_click': 'transaction_click',
+		'click #payment_click': 'payment_click'
 
 	},
 	load: function() {
@@ -241,6 +257,20 @@ app.AuthorizedSidebarView = Backbone.View.extend({
 		$('.nav').find('.active').removeClass('active');
 		$('.nav').find('#accounting_dashboard_click').addClass('active');
 		app.appView.accounting_dashboard_view();
+
+	},
+	transaction_click: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#transaction_click').addClass('active');
+		app.appView.transaction_click();
+
+	},
+	payment_click: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#payment_click').addClass('active');
+		app.appView.payment_click();
 
 	}
 
@@ -1518,6 +1548,62 @@ app.AccountingDashboard = Backbone.View.extend({
 		'click .reload_graphs': 'load'
 	}
 
-})
+});
+
+app.TransactionView = Backbone.View.extend({
+
+	template: _.template($('#transaction-view-template').html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this;
+	},
+	load: function() {
+
+		// Load the transactions
+		for (var i = 0; i < app.transactionList.length; i++) {
+
+			this.renderTransaction(app.transactionList.models[i]);
+
+		}
+
+	},
+	renderTransaction: function(transaction) {
+
+		var view = new app.TransactionListItem({model: transaction});
+		this.$el.find('.transaction_land').append(view.render().el);
+
+	}
+
+});
+
+app.TransactionListItem = Backbone.View.extend({
+
+	template: _.template($('#transaction-list-template').html()),
+	model: app.TransactionModel,
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		this.load();
+		return this;
+	},
+	load: function() {
+
+	}
+
+});
+
+app.PaymentView = Backbone.View.extend({
+
+	template: _.template($('#payment-view-template').html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this;
+	},
+	load: function() {
+
+	}
+
+});
 
 </script>
