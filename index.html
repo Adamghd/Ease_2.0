@@ -297,7 +297,7 @@
 				<h4><%- group.groupName %> - <%- event.calEvent.string %></h4>
 				<p>Show: <b><%- event.show %></b> <%if (event.presenter !== '') { %>| Presenter: <b><%- event.presenter %></b> <% } %> <%if (event.activity !== '' && event.activity !== null) { %>| Activity: <b><%- event.activity %></b> <% } %></p>
 				<p class='invoice_status'></p>
-				<p><button class='btn btn-info event-view' role='button'>View</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button> <button class='btn btn-warning event-payment' disabled="disabled">Add Payment</button> <%if (event.finished === false) { %><button class='btn btn-success event-presented'>Show Presented</button><% } %></p>
+				<p><button class='btn btn-info event-view' role='button'>View</button> <button class='btn btn-primary event-invoice' role='button'>Create Invoice</button> <button class='btn btn-warning event-payment'>Add Payment</button> <%if (event.finished === false) { %><button class='btn btn-success event-presented'>Show Presented</button><% } %></p>
 			</div>
 
 		</script>

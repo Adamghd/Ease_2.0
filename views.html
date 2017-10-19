@@ -528,7 +528,8 @@ app.EventListView = Backbone.View.extend({
 		'change input:checkbox': 'change_status',
 		'click .event-invoice': 'create_invoice',
 		'click .event-view-invoice': 'view_invoice',
-		'click .event-presented': 'show_presented'
+		'click .event-presented': 'show_presented',
+		'click .event-payment': 'event_payment'
 	},
 	change_status: function(e) {
 
@@ -597,6 +598,31 @@ app.EventListView = Backbone.View.extend({
 		$('#modals').html(view.render().el);
 		toastr.info('Please double check the Number of People field.');
 		view.edit_event();
+
+	},
+	event_payment: function() {
+
+		// See if a transaction exists
+		var transaction = app.transactionList.where({eventID: this.model.event.attributes._id});
+
+		if (transaction.length === 0) {
+			// Create a transaction
+			transaction = {
+				_id: app.transactionList.getNextID(),
+				eventID: this.model.event.attributes._id,
+				groupID: this.model.group.attributes._id,
+				paid: false,
+				datePosted: new Date().toString(),
+				amount: this.model.event.attributes.price
+			};
+			app.transactionList.push(transaction);
+			toastr.success("Transaction Created");
+			// Show the transaction in detail view
+		} else {
+			// Transaction exists
+			toastr.info("Transaction exists");
+			// SHow the transaction in detail view
+		}
 
 	}
 
