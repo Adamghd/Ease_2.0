@@ -1,0 +1,988 @@
+<script type='text/javascript'>
+
+app.SchedulingDashboardView = Backbone.View.extend({
+
+	template: _.template($('#scheduling-dashboard-template').html()),
+	initialize: function() {
+		this.listenTo(app.groupList, "all", this.load);
+		this.listenTo(app.eventList, "all", this.load);
+	},
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		// Num of groups
+		this.$el.find('.num_groups').html(app.groupList.length);
+
+		// Num of upcoming events
+		var upcoming_events = app.eventList.getUpcomingEvents();
+		this.$el.find('.num_upcoming_events').html(upcoming_events.length);
+
+		// Num of unpaid events
+		var previous_events = app.eventList.getPreviousEvents();
+		var unpaid_events = Helper.arrayWhere(previous_events, 'paidStatus', false);
+		this.$el.find('.num_unpaid_events').html(unpaid_events.length);
+
+		// Num of current attendence
+		var attendence = app.eventList.getAttendance();
+		this.$el.find('.num_current_attendance').html(attendence);
+
+		// Calendar
+		if (this.$el.find('#scheduling-dashboard-calendar').children().length > 0) { // Calendar already exists
+
+			var events = Helper.getAllEvents();
+			this.$el.find('#scheduling-dashboard-calendar').fullCalendar('removeEvents'); // Remove events
+			this.$el.find('#scheduling-dashboard-calendar').fullCalendar('addEventSource', events);
+
+
+		} else { // Calendar doesn't exist
+
+			var proxy = this;
+			var events = Helper.getAllEvents();
+			this.$el.find('#scheduling-dashboard-calendar').fullCalendar({
+				events: events,
+				timezone: 'local',
+				eventClick: function(calEvent) {
+					proxy.eventClick(calEvent);
+				}
+			});
+
+			setTimeout(function() {
+				$('#scheduling-dashboard-calendar').fullCalendar('render');
+			}, 10);
+
+		}
+
+		// Attendance Graph
+		setTimeout(function() {
+
+			var data = app.eventList.getAttendanceByMonth();
+			var ctx = document.getElementById('attendance-graph').getContext('2d');
+			var chart = new Chart(ctx, {
+			    // The type of chart we want to create
+			    type: 'line',
+
+			    // The data for our dataset
+			    data: {
+			        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+			        datasets: [{
+			            label: "Monthly attendance",
+			            backgroundColor: 'rgb(255, 97, 34)',
+			            borderColor: 'rgb(255, 163, 126)',
+			            data: data
+			        }]
+			    },
+
+			    // Configuration options go here
+			    options: {
+					plugins: {
+						datalabels: {
+							backgroundColor: function(context) {
+								return context.dataset.backgroundColor;
+							},
+							borderRadius: 4,
+							color: 'white',
+							font: {
+								weight: 'bold'
+							},
+							formatter: Math.round
+						}
+					},
+					scales: {
+						yAxes: [{
+							stacked: true
+						}]
+					}			    	
+			    }
+			});	
+
+		}, 20);	
+
+		// Upcoming Shows | Get the next 10 shows
+		this.$el.find('.upcoming_shows_land').html(' ');
+		var upcoming_events_list = app.eventList.getNextEvents();
+		for (var i = 0; i < 10; i++) {
+			this.addEventListItem(upcoming_events_list[i], '.upcoming_shows_land');
+		}
+
+		// Previous Shows | Get the past 10 shows
+		this.$el.find('.previous_shows_land').html(' ');
+		var past_events_list = app.eventList.getPreviousEvents();
+		for (var j = 0; j < 10; j++) {
+			this.addEventListItem(past_events_list[j], '.previous_shows_land');
+		}
+
+	},
+	events: {
+		'click .create-event': 'create_event'
+	},
+	create_event: function() {
+
+		// What's the flow?
+		var view = new app.NewEventView();
+		$('#modals').html(view.render().el);
+
+	},
+	eventClick: function(calEvent) {
+
+		var event = app.eventList.where({_id: calEvent.id});
+		var group = app.groupList.where({_id: event[0].attributes.groupID});
+		var view = new app.EventDetailView({model: {event: event[0], group: group[0]}});
+		$('#modals').html(view.render().el);
+
+	},
+	addEventListItem: function(event, element) {
+
+		var group = app.groupList.where({_id: event.attributes.groupID});
+		var view = new app.EventListView({model: {event: event, group: group[0]}});
+		this.$el.find(element).append(view.render().el);
+
+	}
+
+});
+
+app.EventListView = Backbone.View.extend({
+
+	template: _.template($('#event-list-item-view').html()),
+	initialize: function() {
+		this.listenTo(this.model.event, "change", this.render);
+		this.listenTo(this.model.group, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template({event:this.model.event.attributes,group:this.model.group.attributes}));
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		// Check invoice status
+		if (this.model.event.attributes.invoice_url !== undefined) { // Invoice url exists
+
+			// Create invoice status checkboxes
+			if (this.model.event.attributes.invoiceSent !== true || this.model.event.attributes.invoiceSent === undefined) {
+				this.$el.find('.invoice_status').append("Invoice Sent: <input type='checkbox' class='invoice-sent' />&nbsp;&nbsp;&nbsp;");
+			} else if (this.model.event.attributes.invoiceSent === true) {
+				this.$el.find('.invoice_status').append("Invoice Sent! &nbsp;&nbsp;&nbsp;");
+			}
+			if (this.model.event.attributes.invoiceFiled !== true || this.model.event.attributes.invoiceFiled === undefined) {
+				this.$el.find('.invoice_status').append("Invoice Filed: <input type='checkbox' class='invoice-filed' />");
+			} else if (this.model.event.attributes.invoiceFiled === true) {
+				this.$el.find('.invoice_status').append("Invoice Filed!");
+			}
+
+			// Set primary button
+			this.$el.find('.event-invoice').addClass('event-view-invoice').removeClass('event-invoice').html('View Invoice');
+
+		}
+
+	},
+	events: {
+		'click .event-view': 'event_view',
+		'change input:checkbox': 'change_status',
+		'click .event-invoice': 'create_invoice',
+		'click .event-view-invoice': 'view_invoice',
+		'click .event-presented': 'show_presented',
+		'click .event-payment': 'event_payment'
+	},
+	change_status: function(e) {
+
+		var element = $(e.currentTarget).attr('class');
+
+		if (element === 'invoice-sent') {
+			this.model.event.set({
+				invoiceSent: true
+			});
+		} else if (element === 'invoice-filed') {
+			this.model.event.set({
+				invoiceFiled: true
+			});
+		}
+
+	},
+	create_invoice: function() {
+
+		// Alert user
+		toastr.info("Creating invoice...");
+
+		// Create the invoice_object
+		var group = this.model.group.attributes;
+		var event = this.model.event.attributes;
+		var invoice_object = {
+			id: event._id,
+			name: group.groupName,
+			calEvent: event.calEvent.string,
+			group: group.groupGroup,
+			workPhone: group.workPhone,
+			cellPhone: group.cellPhone,
+			activity: event.activity,
+			show: event.show,
+			price: event.price,
+			numOfPeople: event.numOfPeople, // add to model
+			email: group.email,
+			grade: group.grade
+		};
+
+		// Create json to send to server
+		var json = JSON.stringify(invoice_object);
+
+		// Send data to server
+		google.script.run.withSuccessHandler(Helper.load_invoice)
+			.createInvoice(json);
+
+	},
+	view_invoice: function() {
+
+		window.open(this.model.event.attributes.invoice_url, '_blank');
+
+	},
+	event_view: function() {
+
+		var view = new app.EventDetailView({model: {event: this.model.event, group: this.model.group}});
+		$('#modals').html(view.render().el);
+
+	},
+	show_presented: function() {
+
+		this.model.event.set({
+			finished: true
+		});
+
+		var view = new app.EventDetailView({model: {event: this.model.event, group: this.model.group}});
+		$('#modals').html(view.render().el);
+		toastr.info('Please double check the Number of People field.');
+		view.edit_event();
+
+	},
+	event_payment: function() {
+
+		// See if a transaction exists
+		var transaction = app.transactionList.where({eventID: this.model.event.attributes._id});
+
+		if (transaction.length === 0) {
+			// Create a transaction
+			transaction = {
+				_id: app.transactionList.getNextID(),
+				eventID: this.model.event.attributes._id,
+				groupID: this.model.group.attributes._id,
+				paid: false,
+				datePosted: new Date().toString(),
+				amount: this.model.event.attributes.price
+			};
+			app.transactionList.push(transaction);
+			toastr.success("Transaction Created");
+			// Show the transaction in detail view
+		} else {
+			// Transaction exists
+			toastr.info("Transaction exists");
+			// SHow the transaction in detail view
+		}
+
+	}
+
+});
+
+app.EventDetailView = Backbone.View.extend({
+
+	template: _.template($('#event-detail-view').html()),
+	initialize: function() {
+		this.listenTo(this.model.event, "change", this.render);
+		this.listenTo(this.model.group, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template({event:this.model.event.attributes,group:this.model.group.attributes}));
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		// Create invoice status checkboxes
+		if (this.model.event.attributes.invoiceSent !== true || this.model.event.attributes.invoiceSent === undefined) {
+			this.$el.find('.invoice_status').append("Invoice Sent: <input type='checkbox' class='invoice-sent' />&nbsp;&nbsp;&nbsp;");
+		} else if (this.model.event.attributes.invoiceSent === true) {
+			this.$el.find('.invoice_status').append("Invoice Sent! &nbsp;&nbsp;&nbsp;");
+		}
+		if (this.model.event.attributes.invoiceFiled !== true || this.model.event.attributes.invoiceFiled === undefined) {
+			this.$el.find('.invoice_status').append("Invoice Filed: <input type='checkbox' class='invoice-filed' />");
+		} else if (this.model.event.attributes.invoiceFiled === true) {
+			this.$el.find('.invoice_status').append("Invoice Filed!");
+		}
+
+		// Check invoice creation status
+		if (this.model.event.attributes.invoice_url !== undefined) {
+			this.$el.find('.event-invoice').addClass('event-view-invoice').removeClass('event-invoice').html("View Invoice").parent().append(" <button class='btn btn-warning generate-new-invoice' role='button'>Generate new Invoice</button>");
+		}
+
+		setTimeout(function() {
+			$('#modals .modal').modal('show');
+		}, 10);
+
+	},
+	events: {
+		'click .event-view': 'event_view',
+		'change input:checkbox': 'change_status',
+		'click .event-invoice': 'create_invoice',
+		'click .event-view-invoice': 'view_invoice',
+		'click .generate-new-invoice': 'create_invoice',
+		'click .edit-group': 'edit_group',
+		'click .save-group': 'save_group',
+		'click .edit-event': 'edit_event',
+		'click .save-event': 'save_event',
+		'click .delete-event': 'delete_event',
+		'click .view-all-events': 'view_all_events',
+		'click .hide-all-events': 'hide_all_events',
+		'click .event-presented': 'show_presented'
+	},
+	change_status: function(e) {
+
+		var element = $(e.currentTarget).attr('class');
+
+		if (element === 'invoice-sent') {
+			this.model.event.set({
+				invoiceSent: true
+			});
+		} else if (element === 'invoice-filed') {
+			this.model.event.set({
+				invoiceFiled: true
+			});
+		}
+
+	},
+	create_invoice: function() {
+
+		// Alert user
+		toastr.info("Creating invoice...");
+
+		// Create the invoice_object
+		var group = this.model.group.attributes;
+		var event = this.model.event.attributes;
+		var invoice_object = {
+			id: event._id,
+			name: group.groupName,
+			calEvent: event.calEvent.string,
+			group: group.groupGroup,
+			workPhone: group.workPhone,
+			cellPhone: group.cellPhone,
+			activity: event.activity,
+			show: event.show,
+			price: event.price,
+			numOfPeople: event.numOfPeople, // add to model
+			email: group.email,
+			grade: group.grade
+		};
+
+		// Create json to send to server
+		var json = JSON.stringify(invoice_object);
+
+		// Send data to server
+		google.script.run.withSuccessHandler(Helper.load_invoice)
+			.createInvoice(json);
+
+	},
+	view_invoice: function() {
+
+		window.open(this.model.event.attributes.invoice_url, '_blank');
+
+	},
+	edit_group: function() {
+
+		// Set edit row visible
+		this.$el.find('div.static.group').css('display', 'none');
+		this.$el.find('div.edit.group').css('display', 'block');
+
+		// Change edit button to save
+		this.$el.find('.edit-group').removeClass('edit-group').removeClass('btn-info').addClass('btn-success').addClass('save-group').html("<em class='fa fa-floppy-o'>&nbsp;</em> Save");
+
+	},
+	save_group: function() {
+
+		// Get variables
+		var groupName = this.$el.find('input.groupName').val();
+		var groupGroup = this.$el.find('input.groupGroup').val();
+		var groupType = this.$el.find('input.groupType').val();
+		var grade = this.$el.find('input.grade').val();
+		var email = this.$el.find('input.email').val();
+		var cellPhone = this.$el.find('input.cellPhone').val();
+		var workPhone = this.$el.find('input.workPhone').val();
+
+		// Set to model
+		this.model.group.set({
+			groupName: groupName,
+			groupGroup: groupGroup,
+			groupType: groupType,
+			grade: grade,
+			email: email,
+			cellPhone: cellPhone,
+			workPhone: workPhone
+		});
+
+		// Set static row visible
+		this.$el.find('div.static.group').css('display', 'block');
+		this.$el.find('div.edit.group').css('display', 'none');
+
+		// Change save button to edit
+		this.$el.find('.save-group').removeClass('save-group').removeClass('btn-success').addClass('btn-info').addClass('edit-group').html("<em class='fa fa-pencil'>&nbsp;</em> Edit");
+
+	},
+	edit_event: function() {
+
+		// Set edit row visible
+		this.$el.find('div.static.event').css('display', 'none');
+		this.$el.find('div.edit.event').css('display', 'block');
+
+		// Change edit button to save
+		this.$el.find('.edit-event').removeClass('edit-event').removeClass('btn-info').addClass('btn-success').addClass('save-event').html("<em class='fa fa-floppy-o'>&nbsp;</em> Save");
+
+	},
+	save_event: function() {
+
+		// Get variables
+		var date = this.$el.find('input.date').val();
+		var startTime = this.$el.find('input.startTime').val();
+		var endTime = this.$el.find('input.endTime').val();
+		var show = this.$el.find('input.show').val();
+		var activity = this.$el.find('input.activity').val();
+		var presenter = this.$el.find('input.presenter').val();
+		var price = this.$el.find('input.price').val();
+		var numOfPeople = this.$el.find('input.numOfPeople').val();
+
+		// Get cal event
+		var calEvent = this.model.event.createCalendarEvent(date, startTime, endTime, {keepEventId: true});
+
+		// Create object to change google event
+		var object = {
+			new_start: moment(date + ' ' + startTime).format(),
+			new_end: moment(date + ' ' + endTime).format(),
+			start: this.model.event.attributes.calEvent.calStart,
+			end: this.model.event.attributes.calEvent.calEnd,
+			event_id: this.model.event.attributes.calEvent.eventID,
+			last_edited_by: User.attributes._id
+		};
+		var json = JSON.stringify(object);
+		google.script.run.withSuccessHandler(Helper.updateEvent)
+			.editEvent(json);
+
+		// Set to model
+		this.model.event.set({
+			calEvent: calEvent,
+			show: show,
+			activity: activity,
+			presenter: presenter,
+			price: price,
+			numOfPeople: numOfPeople
+		});
+
+		// Set static row visible
+		this.$el.find('div.static.event').css('display', 'block');
+		this.$el.find('div.edit.event').css('display', 'none');	
+		
+		// Change save button to edit
+		this.$el.find('.save-event').removeClass('save-event').removeClass('btn-success').addClass('btn-info').addClass('edit-event').html("<em class='fa fa-pencil'>&nbsp;</em> Edit");			
+
+	},
+	delete_event: function() {
+
+		var confirm = window.confirm("Really delete this event?");
+
+		if (confirm === true) {
+
+			app.eventList.remove(this.model.event);
+			toastr.success("Event deleted");
+			$('#modals .modal').modal('hide');
+
+		} else {
+
+			toastr.info("Event not deleted... Phew!");
+
+		}
+
+	},
+	view_all_events: function() {
+
+		// Change button text
+		this.$el.find('.view-all-events').removeClass('view-all-events').addClass('hide-all-events').html("<em class='fa fa-minus'>&nbsp;</em> Hide all events");
+
+		// Get all events from this group
+		var events = app.eventList.where({groupID: this.model.group.attributes._id});
+		for (var i = 0; i < events.length; i++) {
+
+			if (events[i].attributes._id === this.model.event.attributes._id) {
+				// Do nothing
+			} else {
+				var view = new app.EventAuxView({model: events[i]});
+				this.$el.find('.aux-events-land').append(view.render().el);
+			}
+
+		}
+
+	},
+	hide_all_events: function() {
+
+		// Change button text
+		this.$el.find('.hide-all-events').removeClass('hide-all-events').addClass('view-all-events').html("<em class='fa fa-calendar'>&nbsp;</em> View all events");
+		this.$el.find('.aux-events-land').html(' ');
+
+	},
+	show_presented: function() {
+
+		this.model.event.set({
+			finished: true
+		});
+
+		toastr.info('Please double check the Number of People field.');
+		this.edit_event();
+
+	}
+
+
+});
+
+app.EventAuxView = Backbone.View.extend({
+
+	template: _.template($('#event-aux-view').html()),
+	initialize: function() {
+		this.listenTo(this.model, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this; // chained commands
+	},
+	events: function(){
+		var _events = {};
+		_events['click .edit-event' + this.model.attributes._id] = 'edit_event';
+		_events['click .save-event' + this.model.attributes._id] = 'save_event';
+		_events['click .event-invoice' + this.model.attributes._id] = 'create_invoice';
+		_events['click .event-view-invoice' + this.model.attributes._id] = 'view_invoice';
+		return _events;
+	},
+	edit_event: function() {
+
+		// Set edit row visible
+		this.$el.find('div.static.event').css('display', 'none');
+		this.$el.find('div.edit.event').css('display', 'block');
+
+		// Change edit button to save
+		this.$el.find('.edit-event' + this.model.attributes._id).removeClass('edit-event').removeClass('btn-info').addClass('btn-success').addClass('save-event' + this.model.attributes._id).html("<em class='fa fa-floppy-o'>&nbsp;</em> Save");
+
+	},
+	save_event: function() {
+
+		// Get variables
+		var date = this.$el.find('input.date').val();
+		var startTime = this.$el.find('input.startTime').val();
+		var endTime = this.$el.find('input.endTime').val();
+		var show = this.$el.find('input.show').val();
+		var activity = this.$el.find('input.activity').val();
+		var presenter = this.$el.find('input.presenter').val();
+		var price = this.$el.find('input.price').val();
+		var numOfPeople = this.$el.find('input.numOfPeople').val();
+
+		// Get cal event
+		var calEvent = this.model.createCalendarEvent(date, startTime, endTime, {keepEventId: true});
+
+		// Create object to change google event
+		var object = {
+			new_start: moment(date + ' ' + startTime).format(),
+			new_end: moment(date + ' ' + endTime).format(),
+			start: this.model.attributes.calEvent.calStart,
+			end: this.model.attributes.calEvent.calEnd,
+			event_id: this.model.attributes.calEvent.eventID
+		};
+		var json = JSON.stringify(object);
+		google.script.run.withSuccessHandler(Helper.updateEvent)
+			.editEvent(json);
+
+		// Set to model
+		this.model.set({
+			calEvent: calEvent,
+			show: show,
+			activity: activity,
+			presenter: presenter,
+			price: price,
+			numOfPeople: numOfPeople
+		});
+
+		// Set static row visible
+		this.$el.find('div.static.event').css('display', 'block');
+		this.$el.find('div.edit.event').css('display', 'none');	
+		
+		// Change save button to edit
+		this.$el.find('.save-event' + this.model.attributes._id).removeClass('save-event').removeClass('btn-success').addClass('btn-info').addClass('edit-event' + this.model.attributes._id).html("<em class='fa fa-pencil'>&nbsp;</em> Edit");			
+
+	},
+	delete_event: function() {
+
+		var confirm = window.confirm("Really delete this event?");
+
+		if (confirm === true) {
+
+			app.eventList.remove(this.model);
+			toastr.success("Event deleted");
+			$('#modals .modal').modal('hide');
+
+		} else {
+
+			toastr.info("Event not deleted... Phew!");
+
+		}
+
+	}
+
+})
+
+app.NewEventView = Backbone.View.extend({
+
+	template: _.template($('#new-event-view-template').html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		setTimeout(function() {
+			$('#modals .modal').modal('show');
+		}, 10);
+
+		this.select_group();
+
+	},
+	events: {
+		'click .new-group-click': 'new_group',
+		'click .save-group': 'save_group',
+		'click .select-group-click': 'select_group_click',
+		'change .calendar-status-change': 'change_scheduling_calendar',
+		'click .select-date-click': 'select_date_click',
+		'click .confirm-event': 'confirm_event'
+	},
+	new_group: function() {
+
+		this.$el.find('.select-group').css('display', 'none');
+		this.$el.find('.new-group').css('display', 'block');
+
+	},
+	save_group: function() {
+
+		// Get variables
+		var groupName = this.$el.find('input.groupName').val();
+		var groupGroup = this.$el.find('input.groupGroup').val();
+		var groupType = this.$el.find('input.groupType').val();
+		var grade = this.$el.find('input.grade').val();
+		var email = this.$el.find('input.email').val();
+		var cellPhone = this.$el.find('input.cellPhone').val();
+		var workPhone = this.$el.find('input.workPhone').val();
+
+		console.log(User);
+
+		var group = {
+			_id: app.groupList.getNextID(),
+			groupName: groupName,
+			groupGroup: groupGroup,
+			groupType: groupType,
+			grade: grade,
+			email: email,
+			cellPhone: cellPhone,
+			workPhone: workPhone,
+			dateCreated: moment().format("YYYY-DD-MM"),
+			created_by: User.attributes._id
+		};
+
+		app.groupList.add(group);
+
+		this.group = app.groupList.where({_id: group._id})[0];
+		this.select_date();
+
+	},
+	select_group: function() {
+
+		// Get groups
+		var groups = Helper.getGroupArray(['groupName', 'groupGroup', 'email'], {selectButton: true});
+
+		this.$el.find('.select-group-table').DataTable({
+			data: groups,
+			columns: [
+				{ data: 'groupName' },
+				{ data: 'groupGroup' },
+				{ data: 'email' },
+				{ data: 'button' }
+			]
+		});
+
+		this.$el.find('.select-group').css('display', 'block');
+
+	},
+	select_group_click: function(e) {
+
+		var id = $(e.currentTarget).attr('group');
+		this.group = app.groupList.where({_id: id})[0]; // Get the group based on ID
+		if (this.group === undefined) {
+			this.group = app.groupList.where({_id: parseInt(id)})[0];
+		}
+		this.select_date();
+
+	},
+	select_date: function() {
+
+		this.$el.find('.select-group').css('display', 'none');
+		this.$el.find('.new-group').css('display', 'none');
+		this.$el.find('.select-date').css('display', 'block');
+
+		// Show group contact names
+		this.$el.find('.select-date .groupName').html(this.group.attributes.groupName);
+
+		// Create scheduling calendar
+		var proxy_select = this.select_date_calendar.bind(this);
+		google.script.run.withSuccessHandler(proxy_select)
+			.getSchedulingEvents();
+
+	},
+	select_date_click: function() {
+
+		// Get the date / time data
+		this.date = this.$el.find('input.date').val();
+		this.startTime = this.$el.find('input.startTime').val();
+		this.endTime = this.$el.find('input.endTime').val();
+
+		// Get show details
+		this.show_details();
+
+	},
+	show_details: function() {
+
+		this.$el.find('.select-date').css('display', 'none');
+		this.$el.find('.show-details').css('display', 'block');
+
+	},
+	confirm_event: function() {
+
+		// Get show details
+		this.show = this.$el.find('input.show_data').val();
+		this.activity = this.$el.find('input.activity').val();
+		this.presenter = this.$el.find('input.presenter').val();
+		this.price = this.$el.find('input.price').val();
+		this.numOfPeople = this.$el.find('input.numOfPeople').val();
+
+		// Create model
+		var event = {
+			groupID: this.group.attributes._id,
+			_id: app.eventList.getNextID(),
+			show: this.show,
+			activity: this.activity,
+			presenter: this.presenter,
+			price: this.price,
+			numOfPeople: this.numOfPeople,
+			created_by: User.attributes._id
+		};
+
+		event.calEvent = app.eventList.models[0].createCalendarEvent(this.date, this.startTime, this.endTime);
+
+		// Alert user
+		toastr.info("Creating event");
+
+		var json = JSON.stringify({event_DATA:event, group:this.group.attributes});
+
+		var proxy = this.create_event.bind(this);
+		google.script.run.withSuccessHandler(proxy)
+			.createEvent(json);
+
+	},
+	create_event: function(json) {
+
+		var object = JSON.parse(json);
+		if (object.response === true) {
+
+			toastr.success("Created event");
+			app.eventList.add(object.event_DATA);
+			var event = app.eventList.where({_id:object.event_DATA._id})[0];
+
+			// Show event detail
+			var view = new app.EventDetailView({model:{event:event,group:this.group}});
+			$('#modals .modal').modal('hide');
+
+			setTimeout(function() {
+				$('#modals').html(view.render().el);
+			}, 200);
+
+		}
+
+	},
+	select_date_calendar: function(json) {
+
+		this.events = JSON.parse(json);
+
+		// Get EASE events
+		var object = {
+			events: Helper.getAllEvents(),
+			calendar_title: "Ease"
+		};
+
+		this.events.push(object);
+
+		this.all_events = jQuery.extend(true, [], this.events);
+
+		// Add checkboxes for calendar viewing
+		for (var i = 0; i < this.events.length; i++) {
+			this.$el.find('.calendar-status').append(this.events[i].calendar_title + " <input type='checkbox' class='calendar-status-change' checked calendar='" + this.events[i].calendar_title + "' />&nbsp;&nbsp;&nbsp;");
+		}
+
+		this.$el.find('#scheduling-new-event-calendar').fullCalendar({
+			eventSources: this.events,
+			header: {
+				left: 'prev,next,today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			defaultView: 'agendaWeek',
+			timezone: 'local'
+		});
+
+		setTimeout(function() {
+			$('#scheduling-new-event-calendar').fullCalendar('render');
+		}, 20);
+
+	},
+	change_scheduling_calendar: function(e) {
+
+		var calendar = $(e.currentTarget).attr('calendar');
+		var state = $(e.currentTarget).is(':checked');
+
+		if (state === false) { // Turn off a calendar
+
+			for (var i = 0; i < this.events.length; i++) {
+				if (this.events[i].calendar_title === calendar) {
+					this.events.splice(i, 1); // Remove the calendar
+				}
+			}
+
+		} else if (state === true) { // Turn on a calendar
+
+			for (var i = 0; i < this.all_events.length; i++) {
+				if (this.all_events[i].calendar_title === calendar) {
+					this.events.push(this.all_events[i]);
+				}
+			}
+
+		}
+
+		// Update calendar
+		this.$el.find('#scheduling-new-event-calendar').fullCalendar('removeEvents');
+		for (var j = 0; j < this.events.length; j++) {
+			this.$el.find('#scheduling-new-event-calendar').fullCalendar('addEventSource', this.events[j]);
+		}
+
+	}
+
+});
+
+app.EventView = Backbone.View.extend({
+
+	template: _.template($("#event-view-template").html()),
+	initialize: function() {
+		this.listenTo(app.eventList, "any", this.load);
+	},
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		this.$el.find('.events-landing').html(' ');
+		// Show all events
+		for (var i = 0; i < app.eventList.length; i++) {
+
+			this.addEventListItem(app.eventList.models[i], '.events-landing');
+
+		}
+
+	},
+	events: {
+		'click .create-event-click': 'create_event'
+	},
+	addEventListItem: function(event, element) {
+
+		var group = app.groupList.where({_id: event.attributes.groupID});
+		var view = new app.EventListView({model: {event: event, group: group[0]}});
+		this.$el.find(element).append(view.render().el);
+
+	},
+	create_event: function() {
+
+		// What's the flow?
+		var view = new app.NewEventView();
+		$('#modals').html(view.render().el);
+
+	},
+
+});
+
+app.GroupView = Backbone.View.extend({
+
+	template: _.template($("#group-view-template").html()),
+	initialize: function() {
+		this.listenTo(app.groupList, "any", this.load);
+	},
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		this.$el.find('.group-landing').html(' ');
+		for (var i = 0; i < app.groupList.length; i++) {
+
+			this.render_group(app.groupList.models[i]);
+
+		}
+
+	},
+	events: {
+		'keyup .search-val': 'search'
+	},
+	search: function() {
+
+		var value = this.$el.find('.search-val').val();
+		var groups = Helper.collectionContains(app.groupList.models, value, ['groupName', 'groupGroup', 'email']);
+		this.$el.find('.group-landing').html(' '); // Clear html
+		for (var i = 0; i < groups.length; i++) {
+			this.render_group(groups[i]);
+		}
+
+	},
+	render_group: function(group) {
+
+		var view = new app.GroupListView({model: group});
+		this.$el.find('.group-landing').append(view.render().el);
+
+	}
+
+});
+
+app.GroupListView = Backbone.View.extend({
+
+	template: _.template($('#group-list-item-view').html()),
+	initialize: function() {
+		this.listenTo(this.model, "change", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this; // chained commands
+	},
+	events: {
+		'click .event-view': 'view_events'
+	},
+	view_events: function() {
+
+		var event = app.eventList.where({groupID: this.model.attributes._id})[0];
+		var view = new app.EventDetailView({model:{event:event, group:this.model}});
+		$('#modals').html(view.render().el);
+		view.view_all_events();
+
+	}
+
+});
+	
+</script>

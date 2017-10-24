@@ -1,0 +1,395 @@
+<script type='text/javascript'>
+
+app.AppView = Backbone.View.extend({
+
+	initialize: function() {
+
+		$('#body').html('Loading... (Please refresh if it not loading)');
+
+		// Create collections
+		app.groupList = new app.GroupList();
+		app.eventList = new app.EventList();
+		app.transactionList = new app.TransactionList();
+		app.paymentList = new app.PaymentList();
+		app.projectList = new app.ProjectList();
+		app.taskList = new app.TaskList();
+		app.userList = new app.UserList();
+
+		// Load user information
+		google.script.run.withSuccessHandler(this.load)
+			.getProfile();
+
+	},
+	load: function(json) {
+
+		var login_view = new app.LoginView();
+		$('#body').html(login_view.render().el);
+
+	},
+	load_2: function(json) {
+
+		if (app.groupList.length === 0) {
+
+			app.appView.wait();
+
+		} else {
+
+			var user_object = JSON.parse(json);
+			User = user_object; // Set User object
+
+			// Welcome user
+			toastr.success("Hello user!");
+
+			$('#body').html(' ');
+
+			if (user_object.authorization === true) { // Is an authorized user
+
+				var sidebar = new app.AuthorizedSidebarView();
+				$('#sidebar_landing').append(sidebar.render().el);
+				//$('.profile .email').html(user_object.email);
+
+				app.appView.dashboard_view();
+
+			}
+
+		}
+
+	},
+	wait: function() {
+		var proxy = this;
+		setTimeout(function() {
+			proxy.load();
+		}, 20);
+	},
+	dashboard_view: function() {
+
+		this.clearContent();
+		var dashboard = new app.DashboardView();
+		$('#body').append(dashboard.render().el);
+
+	},
+	scheduling_dashboard_view: function() {
+
+		this.clearContent();
+		var scheduling_dashboard = new app.SchedulingDashboardView();
+		$('#body').append(scheduling_dashboard.render().el);
+
+	},
+	event_view: function() {
+
+		this.clearContent();
+		var event_view = new app.EventView();
+		$('#body').append(event_view.render().el);
+
+	},
+	group_view: function() {
+
+		this.clearContent();
+		var group_view = new app.GroupView();
+		$('#body').append(group_view.render().el);
+
+	},
+	settings_view: function() {
+
+		this.clearContent();
+		var settings_view = new app.SettingsView();
+		$('#body').append(settings_view.render().el);
+
+	},
+	accounting_dashboard_view: function() {
+
+		this.clearContent();
+		var accounting_dashboard_view = new app.AccountingDashboard();
+		$('#body').append(accounting_dashboard_view.render().el);
+
+	},
+	transaction_click: function() {
+
+		this.clearContent();
+		var transaction_view = new app.TransactionView();
+		$('#body').append(transaction_view.render().el);
+
+	},
+	payment_click: function() {
+
+		this.clearContent();
+		var payment_view = new app.PaymentView();
+		$('#body').append(payment_view.render().el);
+
+	},
+	clearContent: function() {
+		$('#body').html(' ');
+	}
+
+});
+
+app.LoginView = Backbone.View.extend({
+
+	template: _.template($('#login-view').html()),
+	render: function() {
+		this.$el.html(this.template());
+		return this;
+	},
+	events: {
+		'click .login-submit': 'login',
+		'keyup': 'test_key'
+	},
+	login: function() {
+
+		var username = this.$el.find('input.username').val();
+		var password = this.$el.find('input.password').val();
+
+		var users = app.userList.where({username: username});
+		if (users.length !== 0) {
+
+			for (var i = 0; i < users.length; i++) {
+
+				if (password === decrypt(users[i].attributes.password)) {
+
+					User = users[i];
+
+					toastr.success("Login successful! Welcome " + username);
+
+					$('#body').html(' ');
+
+					if (User.attributes.authorization === true) { // Is an authorized user
+
+						var sidebar = new app.AuthorizedSidebarView();
+						$('#sidebar_landing').append(sidebar.render().el);
+						//$('.profile .email').html(user_object.email);
+
+						app.appView.dashboard_view();
+
+					}					
+
+				} else {
+
+					toastr.error("Incorrect Password");
+
+				}
+
+			}
+
+		} else {
+
+			toastr.error("Username not found.");
+
+		}
+
+	},
+	test_key: function(e) {
+
+		if (e.keyCode === 13) { // Is enter key
+
+			this.login();
+
+		}
+
+	}
+
+});
+
+app.AuthorizedSidebarView = Backbone.View.extend({
+
+	template: _.template($('#authorized_sidebar-template').html()),
+	el: "#sidebar_landing",
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this;
+	},
+	events: {
+
+		'click .dashboard_view': 'dashboard_view',
+		'click #scheduling_dashboard_click': 'scheduling_dashboard_click',
+		'click #scheduling_events_click': 'event_view',
+		'click #scheduling_group_click': 'group_view',
+		'click #settings_view': 'settings_view',
+		'click #accounting_dashboard_click': 'accounting_dashboard_view',
+		'click #transaction_click': 'transaction_click',
+		'click #payment_click': 'payment_click'
+
+	},
+	load: function() {
+
+		// Set profile information
+		this.$el.find('.name').html(User.attributes.username);
+		this.$el.find('.email').html(User.attributes.email);
+
+	},
+	dashboard_view: function() {
+		
+		$('.nav').find('.active').removeClass('active');
+		$('.dashboard_view').addClass('active');
+		app.appView.dashboard_view();
+
+	},
+	scheduling_dashboard_click: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('#scheduling_dashboard_click').addClass('active');
+		app.appView.scheduling_dashboard_view();
+
+	},
+	event_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#scheduling_events_click').addClass('active');
+		app.appView.event_view();
+
+	},
+	group_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#scheduling_group_click').addClass('active');
+		app.appView.group_view();
+
+	},
+	settings_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#settings_view').addClass('active');
+		app.appView.settings_view();
+
+	},
+	accounting_dashboard_view: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#accounting_dashboard_click').addClass('active');
+		app.appView.accounting_dashboard_view();
+
+	},
+	transaction_click: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#transaction_click').addClass('active');
+		app.appView.transaction_click();
+
+	},
+	payment_click: function() {
+
+		$('.nav').find('.active').removeClass('active');
+		$('.nav').find('#payment_click').addClass('active');
+		app.appView.payment_click();
+
+	}
+
+});
+
+app.DashboardView = Backbone.View.extend({
+	
+	template: _.template($('#dashboard-template').html()),
+	initialize: function() {
+		this.listenTo(app.groupList, "all", this.render);
+		this.listenTo(app.eventList, "all", this.render);
+	},
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this; // chained commands
+	},
+	load: function() {
+
+		// Num of groups
+		this.$el.find('.num_groups').html(app.groupList.length);
+
+		// Num of upcoming events
+		var upcoming_events = app.eventList.getUpcomingEvents();
+		this.$el.find('.num_upcoming_events').html(upcoming_events.length);
+
+		// Num of projects
+		this.$el.find('.num_projects').html(app.projectList.length);
+
+		// Num of incomplete tasks
+		var tasks = app.taskList.where({completed: false});
+		this.$el.find('.num_incomplete_tasks').html(tasks.length);
+
+		// Create calendar
+		if (this.$el.find('#dashboard-calendar').children().length > 0) { // Calendar already exists
+
+			var events = Helper.getAllEvents();
+			this.$el.find('#dashboard-calendar').fullCalendar('removeEvents');
+			this.$el.find('#dashboard-calendar').fullCalendar('addEventSource', events);
+
+		} else { // Calendar doesn't exist yet
+
+			var proxy = this;
+			var events = Helper.getAllEvents();
+			this.$el.find('#dashboard-calendar').fullCalendar({
+				events: events,
+				defaultView: 'agendaWeek',
+				timezone: 'local',
+				eventClick: function(calEvent) {
+					proxy.eventClick(calEvent);
+				}
+			});
+
+			setTimeout(function() {
+				$('#dashboard-calendar').fullCalendar('render');
+			}, 10);
+
+		}	
+
+	},
+	eventClick: function(calEvent) {
+
+		var event = app.eventList.where({_id: calEvent.id});
+		var group = app.groupList.where({_id: event[0].attributes.groupID});
+		var view = new app.EventDetailView({model: {event: event[0], group: group[0]}});
+		$('#modals').html(view.render().el);
+
+	}
+	
+});
+
+app.SettingsView = Backbone.View.extend({
+
+	template: _.template($('#settings-view-template').html()),
+	render: function() {
+		this.$el.html(this.template());
+		this.load();
+		return this;
+	},
+	load: function() {
+
+		var view = new app.UserView({model: User});
+		this.$el.find('.panel-body').html(view.render().el);
+
+	}
+
+});
+
+app.UserView = Backbone.View.extend({
+
+	template: _.template($('#user-view-template').html()),
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this;
+	},
+	events: {
+		'click .change-password': 'change_password'
+	},
+	change_password: function() {
+
+		var password = prompt("Please enter a new password:");
+
+		if (password !== null && password !== '') {
+
+			var password_2 = prompt("Please confirm new password:");
+
+			if (password_2 === password) {
+
+				User.set({
+					password: encrypt(password)
+				});
+				toastr.success("Password changed!");
+
+			}
+
+		}
+
+	}
+
+});
+
+</script>
