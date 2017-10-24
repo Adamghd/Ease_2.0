@@ -273,11 +273,20 @@ app.EventListView = Backbone.View.extend({
 			};
 			app.transactionList.push(transaction);
 			toastr.success("Transaction Created");
+
+			transaction_2 = app.transactionList.where({_id: transaction._id});
+
 			// Show the transaction in detail view
+			var view = new app.TransactionDetailView({model: {transaction: transaction_2[0], event: this.model.event, group: this.model.group}});
+			$('#modals').html(view.render().el);
+
 		} else {
 			// Transaction exists
 			toastr.info("Transaction exists");
-			// SHow the transaction in detail view
+
+			// Show the transaction in detail view
+			var view = new app.TransactionDetailView({model: {transaction: transaction[0], event: this.model.event, group: this.model.group}});
+			$('#modals').html(view.render().el);
 		}
 
 	}
@@ -984,5 +993,5 @@ app.GroupListView = Backbone.View.extend({
 	}
 
 });
-	
+
 </script>

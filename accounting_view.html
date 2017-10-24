@@ -238,6 +238,59 @@ app.TransactionListItem = Backbone.View.extend({
 
 });
 
+app.TransactionDetailView = Backbone.View.extend({
+
+	template: _.template($('#transaction-detail-view-template').html()),
+	render: function() {
+		if (this.model.event) {
+			this.$el.html(this.template({transaction: this.model.transaction.attributes, event: this.model.event.attributes, group: this.model.group.attributes}));
+		} else {
+			this.$el.html(this.template({transaction: this.model.transaction}));
+		}
+		this.load();
+		return this;
+	},
+	load: function() {
+
+		// Get payments
+		var payments = app.paymentList.where({transactionID: this.model.transaction.attributes._id});
+		console.log(payments);
+
+		for (var i = 0; i < payments.length; i++) {
+
+			console.log(payments[i]);
+			this.loadPayment(payments[i]);
+
+		}
+
+		setTimeout(function() {
+			$('#modals .modal').modal('show');
+		}, 10);
+
+	},
+	loadPayment: function(payment) {
+
+		var view = new app.PaymentDetailView({model: payment});
+		this.$el.find('.payment-land').append(view.render().el);
+
+	}
+
+});
+
+app.PaymentDetailView = Backbone.View.extend({
+
+	template: _.template($('#payment-detail-view-template').html()),
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		this.load();
+		return this;
+	},
+	load: function() {
+
+	}
+
+});
+
 app.PaymentView = Backbone.View.extend({
 
 	template: _.template($('#payment-view-template').html()),

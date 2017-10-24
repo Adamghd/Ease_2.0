@@ -840,7 +840,6 @@
 
 		<script type='text/template' id='transaction-list-template'>
 
-
 			<div class='event-item'>
 				<h4><b><%if (paid === true) { %>Paid<% } else { %>Unpaid<% } %></b> $<%- amount %> - <%- moment(new Date(datePosted)).format("dddd, MMMM Do YYYY") %></h4>
 				<p></p>
@@ -849,7 +848,71 @@
 
 		</script>
 
-		<script type='text/'
+		<script type='text/template' id='transaction-detail-view-template'>
+
+        <div class="modal fade" tabindex="-1" role="dialog" data-backdrop='false'>
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Transaction</h4>
+              </div>
+              <div class="modal-body">
+              	<div class='row'>
+              		<div class='col-md-4'>
+              			<p>Amount: <b><%- transaction.amount %></b></p>
+              		</div>
+              		<div class='col-md-4'>
+              			<p>Date Posted: <b><%- moment(transaction.datePosted).format("dddd, MMMM Do YYYY") %></b></p>
+              		</div>
+              		<div class='col-md-4'>
+              			<p>Paid: <b><% if (transaction.paid === true) { %>Yes<% } else { %>No<% } %></b></p>
+              		</div>
+              		<% if (event) { %>
+              			<div class='col-md-4'>
+              				<p>Event Date: <b><%- event.calEvent.string %></b></p>
+              			</div>
+              			<div class='col-md-4'>
+              				<p>Contact: <b><%- group.groupName %></b></p>
+              			</div>
+              		<% } %>
+              		<div class='col-md-12'>
+              			<p><button class='btn btn-primary add-payment'>Add Payment</button></p>
+              		</div>
+              	</div>
+              	<hr />
+              	<div class='row'>
+              		<div class='col-md-12'>
+	              		<h4>Payments</h4>
+              		</div>
+              	</div>
+	      		<div class='payment-land'></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div> 			
+
+		</script>
+
+		<script type='text/template' id='payment-detail-view-template'>
+
+			<div class='row'>
+				<div class='col-md-4'>
+					Amount: <b><%- amount %></b>
+				</div>
+				<div class='col-md-4'>
+					Date Posted: <b><%- moment(datePosted).format("dddd, MMMM Do YYYY") %></b>
+				</div>
+				<div class='col-md-4'>
+					Payment Type: <b><%- paymentType %></b>
+				</div>
+			</div>
+			<hr />
+
+		</script>
 
 		<script type='text/template' id='payment-view-template'>
 
