@@ -254,14 +254,17 @@ app.TransactionDetailView = Backbone.View.extend({
 
 		// Get payments
 		var payments = app.paymentList.where({transactionID: this.model.transaction.attributes._id});
-		console.log(payments);
 
+		var total = 0;
 		for (var i = 0; i < payments.length; i++) {
 
-			console.log(payments[i]);
 			this.loadPayment(payments[i]);
+			total += parseInt(payments[i].attributes.amount);
 
 		}
+
+		// Write total
+		this.$el.find('.totals_land').html("Current Total: <b>$" + total + "</b>");
 
 		setTimeout(function() {
 			$('#modals .modal').modal('show');
